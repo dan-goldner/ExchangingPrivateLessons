@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.ExchangingPrivateLessons"
+        parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-    <style name="Theme.ExchangingPrivateLessons" parent="android:Theme.Material.Light.NoActionBar" />
+        <!-- הרקע הגלובלי של האפליקציה -->
+        <item name="android:windowBackground">@drawable/app_background</item>
+
+        <!-- שאר ההגדרות שלך ... -->
+    </style>
 </resources>

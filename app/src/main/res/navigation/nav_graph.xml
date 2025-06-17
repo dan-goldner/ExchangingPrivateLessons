@@ -3,48 +3,99 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.exchangingprivatelessons.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/myLessonsFragment"
+        android:name="com.example.exchangingprivatelessons.MyLessonsFragment"
+        android:label="My Lessons"
+        tools:layout="@layout/fragment_my_lessons">
+
+        <!-- ניווט לפרטי שיעור -->
+        <action
+            android:id="@+id/action_myLessonsFragment_to_lessonDetailsFragment"
+            app:destination="@id/lessonDetailsFragment">
+            <argument android:name="lessonId" app:argType="string" />
+            <argument android:name="title" app:argType="string" />
+            <argument android:name="description" app:argType="string" />
+        </action>
+
+        <!-- ניווט להוספת/עריכת שיעור -->
+        <action
+            android:id="@+id/action_myLessonsFragment_to_addEditLessonFragment"
+            app:destination="@id/addEditLessonFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.exchangingprivatelessons.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.exchangingprivatelessons.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="My Lessons"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_lessonDetailsFragment"
-            app:destination="@id/lessonDetailsFragment" />
+            app:destination="@id/lessonDetailsFragment">
+            <argument android:name="lessonId" app:argType="string" />
+            <argument android:name="title" app:argType="string" />
+            <argument android:name="description" app:argType="string" />
+        </action>
         <action
             android:id="@+id/action_homeFragment_to_addEditLessonFragment"
             app:destination="@id/addEditLessonFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.exchangingprivatelessons.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
-    <fragment
-        android:id="@+id/addEditLessonFragment"
-        android:name="com.example.exchangingprivatelessons.AddEditLessonFragment"
-        android:label="fragment_add_edit_lesson"
-        tools:layout="@layout/fragment_add_edit_lesson" />
+
     <fragment
         android:id="@+id/lessonDetailsFragment"
         android:name="com.example.exchangingprivatelessons.LessonDetailsFragment"
-        android:label="fragment_lesson_details"
-        tools:layout="@layout/fragment_lesson_details" />
+        android:label="Lesson Details"
+        tools:layout="@layout/fragment_lesson_details">
+        <argument android:name="lessonId" app:argType="string" />
+        <argument android:name="title" app:argType="string" />
+        <argument android:name="description" app:argType="string" />
+        <action
+            android:id="@+id/action_lessonDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment"/>
+    </fragment>
+
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.exchangingprivatelessons.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        android:id="@+id/addEditLessonFragment"
+        android:name="com.example.exchangingprivatelessons.AddEditLessonFragment"
+        android:label="Add/Edit Lesson"
+        tools:layout="@layout/fragment_add_edit_lesson" />
+
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.exchangingprivatelessons.ChatFragment"
-        android:label="fragment_chat"
+        android:label="Chat"
         tools:layout="@layout/fragment_chat" />
-    <fragment
-        android:id="@+id/myLessonsFragment"
-        android:name="com.example.exchangingprivatelessons.MyLessonsFragment"
-        android:label="fragment_my_lessons"
-        tools:layout="@layout/fragment_my_lessons" />
+
 </navigation>

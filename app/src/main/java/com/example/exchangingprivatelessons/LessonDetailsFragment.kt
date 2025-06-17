@@ -1,59 +1,43 @@
 package com.example.exchangingprivatelessons
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
+import androidx.appcompat.app.AppCompatActivity
+import com.example.exchangingprivatelessons.databinding.FragmentLessonDetailsBinding
+import androidx.navigation.fragment.findNavController
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LessonDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LessonDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class LessonDetailsFragment : Fragment(R.layout.fragment_lesson_details) {
+    private var _b: FragmentLessonDetailsBinding? = null
+    private val b get() = _b!!
+    private val args: LessonDetailsFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        _b = FragmentLessonDetailsBinding.bind(view)
+        Log.d("LessonDetailsFragment", "onViewCreated: Lesson Details Fragment displayed.")
+        b.textTitle.text = args.title
+        b.textDescription.text = args.description
+
+        b.buttonChat.setOnClickListener {
+            // לצורך הממשק – נווט לצ׳אט (לא מימשנו בפועל)
+            findNavController().navigate(R.id.action_lessonDetailsFragment_to_chatFragment)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lesson_details, container, false)
+    override fun onResume() {
+        super.onResume()
+        // השורה הבאה מיותרת וגורמת לשגיאת compile כי הפונקציה כבר לא קיימת
+        //(activity as? MainActivity)?.updateToolbar()
+
+        // אם אתה עדיין רוצה לוודא שה-Toolbar גלוי - זה מספיק:
+        (activity as? AppCompatActivity)?.supportActionBar?.show()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LessonDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LessonDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _b = null
     }
 }

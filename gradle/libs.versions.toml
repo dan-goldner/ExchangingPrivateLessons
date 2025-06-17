@@ -1,25 +1,50 @@
 [versions]
+# Android Gradle Plugin (AGP) - גרסה יציבה אחרונה
 agp = "8.10.1"
-kotlin = "2.1.21"
+
+# Kotlin - גרסה יציבה אחרונה
+kotlin = "2.0.21" # נשאר 2.0.21
+
+# AndroidX Core
 coreKtx = "1.16.0"
+
+# JUnit (לגרסאות בדיקה)
 junit = "4.13.2"
-junitVersion = "1.2.1"
+junitVersion = "1.2.1" # androidx.test.ext:junit
+
+# Espresso (לבדיקות UI)
 espressoCore = "3.6.1"
+
+# Lifecycle Runtime KTX
 lifecycleRuntimeKtx = "2.9.0"
-activityCompose = "1.10.1"
-composeBom = "2024.09.00"
+
+# Activity (עבור Compose וכללי)
+activity = "1.10.1" # שימוש חוזר עבור activityCompose
+
+# Compose BOM (Bill of Materials) - תואם ל-Kotlin 2.0.21
+composeBom = "2024.09.00" # נשאר כפי שהיה. ודא שגרסה זו תואמת לקומפוז 2.0.0
+
+# composeCompiler - הגדרה זו נמחקת לחלוטין מכיוון שהיא לא נדרשת.
+
+# AppCompat
 appcompat = "1.7.0"
+
+# Material Design (ל-Views, לא Compose)
 material = "1.12.0"
-activity = "1.10.1"
-constraintlayout = "2.2.1"
+
+# ConstraintLayout
+constraintlayout = "2.2.1" # הגרסה היציבה האחרונה
+
 
 [libraries]
+# compose.compiler או composeCompilerLib - הגדרות אלו נמחקות לחלוטין מכיוון שקומפיילר הקומפוז מטופל אוטומטית.
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" } # משתמש בגרסת activity
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
@@ -33,8 +58,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
