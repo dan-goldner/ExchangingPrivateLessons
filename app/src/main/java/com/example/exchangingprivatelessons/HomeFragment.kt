@@ -3,8 +3,10 @@ package com.example.exchangingprivatelessons
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider          // ★ חדש
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle            // ★ חדש
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.exchangingprivatelessons.adapter.LessonsAdapter
@@ -19,52 +21,47 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val vm: LessonViewModel by viewModels()
     private lateinit var adapter: LessonsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // מאפשר הצגת תפריט ב־Toolbar
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _b = FragmentHomeBinding.bind(view)
 
+        /* --- RecyclerView + Fab (ללא שינוי) --- */
         adapter = LessonsAdapter(emptyList()) { lesson ->
             val action = HomeFragmentDirections
                 .actionHomeFragmentToLessonDetailsFragment(
-                    lesson.id,
-                    lesson.title,
-                    lesson.description
+                    lesson.id, lesson.title, lesson.description
                 )
             findNavController().navigate(action)
         }
-
         b.recyclerViewLessons.layoutManager = LinearLayoutManager(requireContext())
         b.recyclerViewLessons.adapter = adapter
 
-        vm.lessons.observe(viewLifecycleOwner) {
-            adapter.updateLessons(it)
-        }
+        vm.lessons.observe(viewLifecycleOwner) { adapter.updateLessons(it) }
 
         b.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addEditLessonFragment)
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+        /* --- MenuProvider חדש --- */
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+                    inflater.inflate(R.menu.menu_main, menu)
+                }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_logout -> {
-                FirebaseAuth.getInstance().signOut()
-                val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
-                findNavController().navigate(action)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+                override fun onMenuItemSelected(item: MenuItem): Boolean =
+                    when (item.itemId) {
+                        R.id.action_logout -> {
+                            FirebaseAuth.getInstance().signOut()
+                            findNavController()
+                                .navigate(R.id.action_homeFragment_to_loginFragment)
+                            true
+                        }
+                        else -> false
+                    }
+            },
+            viewLifecycleOwner,            // קושר למחזור-חיים של הפרגמנט
+            Lifecycle.State.RESUMED        // מפעיל רק כשהוא במצב RESUMED
+        )
     }
 
     override fun onResume() {
