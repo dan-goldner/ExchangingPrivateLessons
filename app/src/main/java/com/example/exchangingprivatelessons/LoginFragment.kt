@@ -35,7 +35,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     if (task.isSuccessful) {
                         // התחברות הצליחה → ממשיכים ל-Home ללא בדיקות נוספות
                         findNavController()
-                            .navigate(R.id.action_loginFragment_to_homeFragment)
+                            .navigate(R.id.action_loginFragment_to_takeLessonsFragment)
                     } else {
                         Toast.makeText(
                             requireContext(),

@@ -11,8 +11,8 @@
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
+            android:id="@+id/action_loginFragment_to_takeLessonsFragment"
+            app:destination="@id/takeLessonsFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true"/>
         <action
@@ -25,8 +25,6 @@
         android:name="com.example.exchangingprivatelessons.MyLessonsFragment"
         android:label="My Lessons"
         tools:layout="@layout/fragment_my_lessons">
-
-        <!-- ניווט לפרטי שיעור -->
         <action
             android:id="@+id/action_myLessonsFragment_to_lessonDetailsFragment"
             app:destination="@id/lessonDetailsFragment">
@@ -34,8 +32,6 @@
             <argument android:name="title" app:argType="string" />
             <argument android:name="description" app:argType="string" />
         </action>
-
-        <!-- ניווט להוספת/עריכת שיעור -->
         <action
             android:id="@+id/action_myLessonsFragment_to_addEditLessonFragment"
             app:destination="@id/addEditLessonFragment" />
@@ -52,24 +48,24 @@
     </fragment>
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.exchangingprivatelessons.HomeFragment"
-        android:label="My Lessons"
-        tools:layout="@layout/fragment_home">
+        android:id="@+id/takeLessonsFragment"
+        android:name="com.example.exchangingprivatelessons.TakeLessonsFragment"
+        android:label="Take Lessons"
+        tools:layout="@layout/fragment_take_lessons">
         <action
-            android:id="@+id/action_homeFragment_to_lessonDetailsFragment"
+            android:id="@+id/action_takeLessonsFragment_to_lessonDetailsFragment"
             app:destination="@id/lessonDetailsFragment">
             <argument android:name="lessonId" app:argType="string" />
             <argument android:name="title" app:argType="string" />
             <argument android:name="description" app:argType="string" />
         </action>
         <action
-            android:id="@+id/action_homeFragment_to_addEditLessonFragment"
+            android:id="@+id/action_takeLessonsFragment_to_addEditLessonFragment"
             app:destination="@id/addEditLessonFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
+            android:id="@+id/action_takeLessonsFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/homeFragment"
+            app:popUpTo="@id/takeLessonsFragment"
             app:popUpToInclusive="true" />
     </fragment>
 

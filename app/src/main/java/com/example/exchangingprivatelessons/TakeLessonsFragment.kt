@@ -10,24 +10,24 @@ import androidx.lifecycle.Lifecycle            // ★ חדש
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.exchangingprivatelessons.adapter.LessonsAdapter
-import com.example.exchangingprivatelessons.databinding.FragmentHomeBinding
+import com.example.exchangingprivatelessons.databinding.FragmentTakeLessonsBinding
 import com.example.exchangingprivatelessons.viewmodel.LessonViewModel
 import com.google.firebase.auth.FirebaseAuth
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class TakeLessonsFragment : Fragment(R.layout.fragment_take_lessons) {
 
-    private var _b: FragmentHomeBinding? = null
+    private var _b: FragmentTakeLessonsBinding? = null
     private val b get() = _b!!
     private val vm: LessonViewModel by viewModels()
     private lateinit var adapter: LessonsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _b = FragmentHomeBinding.bind(view)
+        _b = FragmentTakeLessonsBinding.bind(view)
 
         /* --- RecyclerView + Fab (ללא שינוי) --- */
         adapter = LessonsAdapter(emptyList()) { lesson ->
-            val action = HomeFragmentDirections
-                .actionHomeFragmentToLessonDetailsFragment(
+            val action = TakeLessonsFragmentDirections
+                .actionTakeLessonsFragmentToLessonDetailsFragment(
                     lesson.id, lesson.title, lesson.description
                 )
             findNavController().navigate(action)
@@ -38,7 +38,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         vm.lessons.observe(viewLifecycleOwner) { adapter.updateLessons(it) }
 
         b.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addEditLessonFragment)
+            findNavController().navigate(R.id.action_takeLessonsFragment_to_addEditLessonFragment)
         }
 
         /* --- MenuProvider חדש --- */
@@ -53,7 +53,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         R.id.action_logout -> {
                             FirebaseAuth.getInstance().signOut()
                             findNavController()
-                                .navigate(R.id.action_homeFragment_to_loginFragment)
+                                .navigate(R.id.action_takeLessonsFragment_to_loginFragment)
                             true
                         }
                         else -> false
