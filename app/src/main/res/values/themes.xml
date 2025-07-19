@@ -1,6 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ExchangingPrivateLessons" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+    <!-- The single source of truth -->
+    <style name="Theme.SkillSwap" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- colour roles -->
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+
+        <item name="colorOutline">@color/md_theme_outline</item>
+
+        <!-- set the pastel illustration everywhere -->
         <item name="android:windowBackground">@drawable/app_background</item>
+
+        <!-- Material 3 shape defaults -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SkillSwap.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SkillSwap.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SkillSwap.Large</item>
+
+        <!-- Toolbar -->
+        <item name="toolbarStyle">@style/AppToolbar</item>
+
+
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.SkillSwap.HeadlineLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.SkillSwap.TitleMedium</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.SkillSwap.BodyLarge</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.SkillSwap.BodySmall</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.SkillSwap.LabelSmall</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.SkillSwap.Caption</item>
     </style>
+
+    <style name="AppToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/md_theme_primary</item>
+        <item name="titleTextColor">@color/md_theme_onPrimary</item>
+        <item name="navigationIconTint">@color/md_theme_onPrimary</item>
+    </style>
+
+    <!-- ─────  Shape appearances  ─────────────────────────────── -->
+    <!-- 8 dp for chips / small cards -->
+    <style name="ShapeAppearance.SkillSwap.Small" parent="@style/ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <!-- 12 dp for most containers -->
+    <style name="ShapeAppearance.SkillSwap.Medium" parent="@style/ShapeAppearance.SkillSwap.Small">
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <!-- 24 dp for large sheets / dialogs -->
+    <style name="ShapeAppearance.SkillSwap.Large" parent="@style/ShapeAppearance.SkillSwap.Small">
+        <item name="cornerSize">24dp</item>
+    </style>
+
+
+
 
 </resources>

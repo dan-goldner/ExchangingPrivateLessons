@@ -1,5 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ExchangingPrivateLessons</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <!-- App -->
+    <string name="app_name">SkillSwap</string>
+
+    <!-- Navigation -->
+    <string name="nav_add_edit_lesson">Add/Edit Lesson</string>
+    <string name="nav_chat">Chat</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_details">Lesson Details</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_lessons">Lessons</string>
+    <string name="nav_login">Login</string>
+    <string name="nav_lesson_details">Lesson Details</string>
+    <string name="nav_my_lessons">My Lessons</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_requests">Requests</string>
+    <string name="nav_sign_up">Sign Up</string>
+    <string name="nav_signup">Sign Up</string>
+    <string name="nav_take_lessons">Take Lessons</string>
+
+    <!-- Buttons -->
+    <string name="approve">Approve</string>
+    <string name="btn_add_lesson">Add Lesson</string>
+    <string name="btn_change_photo">Change Photo</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_my">Lessons I offer</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_save_profile">Save</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_start_chat">Start Chat</string>
+    <string name="btn_take">Lessons I want to take</string>
+    <string name="btn_take_lesson">Take this lesson</string>
+    <string name="cancel">Cancel</string>
+    <string name="decline">Decline</string>
+    <string name="edit">Edit</string>
+    <string name="login">Log In</string>
+    <string name="rate">Rate</string>
+    <string name="request">Request</string>
+    <string name="save">Save</string>
+    <string name="sign_up">Sign Up</string>
+
+    <!-- Auth fields -->
+    <string name="bio">Bio</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="display_name">Display name</string>
+    <string name="email">Email</string>
+    <string name="go_to_login">Already have an account? Log In →</string>
+    <string name="go_to_signup">No account? Sign Up →</string>
+    <string name="password">Password</string>
+
+    <!-- Forms -->
+    <string name="error_fill_fields">Fill in all fields</string>
+    <string name="comment_optional">Comment (optional)</string>
+
+    <!-- Greetings & Messages -->
+    <string name="already_taken">Already taken &#10003;</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="empty_lessons">No lessons to show</string>
+    <string name="empty_list">No items yet</string>
+    <string name="greeting">Hello, %1$s, welcome to SkillSwap</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lesson_taken">Lesson added to your list!</string>
+    <string name="msg_no_score">Score: %1$d</string>
+    <string name="no_bio">No bio yet</string>
+    <string name="no_chats_yet">No chats yet</string>
+    <string name="no_score">Score: %1$d</string>
+    <string name="profile_saved">Profile updated successfully</string>
+    <string name="rating_saved">Rating saved</string>
+    <string name="request_sent">Request sent ✔</string>
+    <string name="user_not_logged_in">User not logged in</string>
+    <string name="waiting_for_approval">Waiting for approval</string>
+
+    <!-- Lesson -->
+    <string name="choose_image">Choose image</string>
+    <string name="lesson_description">Description</string>
+    <string name="lesson_image">Lesson image</string>
+    <string name="lesson_meta">Created • %1$s • %2$d ratings</string>
+    <string name="lesson_meta_full">By %1$s • %2$s • ★ %3$.1f (%4$d)</string>
+    <string name="lesson_title">Title</string>
+    <string name="title_add_lesson">New lesson</string>
+    <string name="title_edit_lesson">Edit lesson</string>
+    <string name="title_lessons">Lessons</string>
+    <string name="tab_available">Available</string>
+    <string name="tab_my">Mine</string>
+    <string name="tab_taken">Taken</string>
+
+    <!-- Media -->
+    <string name="choose_camera">Camera</string>
+    <string name="choose_gallery">Gallery</string>
+    <string name="choose_photo_title">Choose Photo Source</string>
+    <string name="img_profile">Profile Photo</string>
+    <string name="photo_url">Photo URL</string>
+
+    <!-- Permissions -->
+    <string name="camera_required">Camera permission is required to take a photo</string>
+
+    <!-- Upload results -->
+    <string name="upload_failed">Changes failed: %1$s</string>
+    <string name="upload_success">Profile saved successfully</string>
+
+    <!-- Chat -->
+    <string name="write_message">Write a message…</string>
+
+    <!-- Score -->
+    <string name="score_placeholder">Score: %1$d</string>
+
+    <!-- Hints -->
+    <string name="hint_bio">Bio</string>
+    <string name="hint_display_name">Display Name</string>
+
 </resources>

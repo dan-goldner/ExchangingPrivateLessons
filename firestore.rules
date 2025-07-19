@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ─────────────  users  ───────────── */
+    match /users/{userId} {
+      // Anyone signed-in can read user profiles
+      allow get, list : if request.auth != null;
+
+      // All profile writes are done via Cloud Functions
+      allow create, update, delete : if false;
+
+      /* takenLessons sub-collection */
+      match /takenLessons/{lessonId} {
+        // Only the owner may read his/her taken lessons
+        allow get, list : if request.auth.uid == userId;
+        allow write     : if false;   // created & deleted by server code
+      }
+    }
+
+    /* ─────────────  lessons  ───────────── */
+    match /lessons/{lessonId} {
+      // Public catalogue (no login needed to browse)
+      allow get, list : if true;
+
+      // Create / update / archive / delete happen in Callable Functions
+      allow write : if false;
+
+      /* ratings sub-collection */
+      match /ratings/{raterId} {
+        allow get, list : if request.auth != null;
+        allow write     : if false;  // all rating writes go through rateLesson()
+      }
+    }
+
+    /* ─────────────  lessonRequests  ───────────── */
+    match /lessonRequests/{requestId} {
+      // Only participants (owner or requester) may read a request
+      allow get, list : if request.auth != null &&
+                         (request.auth.uid == resource.data.ownerId ||
+                          request.auth.uid == resource.data.requesterId);
+
+      // All writes (create / approve / decline / cancel) are on the server
+      allow write : if false;
+    }
+
+    /* ─────────────  chats & messages  ───────────── */
+    match /chats/{chatId} {
+      // Only chat members may see the chat document
+      allow get, list : if request.auth != null &&
+                         request.auth.uid in resource.data.participantIds;
+
+      // Chat metadata mutated by Cloud Functions only
+      allow write : if false;
+
+      match /messages/{messageId} {
+        // Only chat members may read messages
+        allow get, list : if request.auth != null &&
+                           request.auth.uid in
+                             get(/databases/$(database)/documents/chats/$(chatId))
+                             .data.participantIds;
+
+        // All message writes come from sendMessage() callable
+        allow write : if false;
+      }
+    }
+  }
+}

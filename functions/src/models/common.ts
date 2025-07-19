@@ -1,0 +1,1 @@
+export type TS = FirebaseFirestore.Timestamp | FirebaseFirestore.FieldValue;
