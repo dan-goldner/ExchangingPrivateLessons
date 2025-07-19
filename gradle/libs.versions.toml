@@ -1,65 +1,140 @@
 [versions]
-# Android Gradle Plugin (AGP) - גרסה יציבה אחרונה
-agp = "8.10.1"
+# ── plugins ───────────────────────────────────────────────────────────────
+androidGradlePlugin = "8.11.1"            # ← updated
+circleimageview = "3.1.0"
+coreTesting = "2.2.0"
+kotlin              = "2.0.0"
+ksp                 = "2.0.0-1.0.22"
 
-# Kotlin - גרסה יציבה אחרונה
-kotlin = "2.0.21" # נשאר 2.0.21
+hilt                = "2.56.2"
+googleServices      = "4.4.3"            # ← updated
+navigationSafeArgs  = "2.9.1"
+coil = "2.7.0"
 
-# AndroidX Core
-coreKtx = "1.16.0"
+# ── Android SDK levels ────────────────────────────────────────────────────
+compileSdk = "36"                        # ← updated
+minSdk     = "29"
+preferenceKtx = "1.2.1"
+targetSdk  = "36"                        # ← updated
 
-# JUnit (לגרסאות בדיקה)
-junit = "4.13.2"
-junitVersion = "1.2.1" # androidx.test.ext:junit
+# ── AndroidX / Google libraries ───────────────────────────────────────────
+coreKtx            = "1.16.0"           # ← updated
+appcompat          = "1.7.1"            # ← updated
+material           = "1.12.0"
+lifecycle          = "2.9.1"            # ← updated
+navigation         = "2.9.1"            # ← updated
+room               = "2.7.2"            # ← updated
+firebaseBom        = "33.16.0"          # ← updated
+glide              = "4.16.0"
+swipeRefreshLayout = "1.1.0"
+kotlinxCoroutines  = "1.10.2"           # ← new & updated
 
-# Espresso (לבדיקות UI)
-espressoCore = "3.6.1"
+kotlinSerialization = "1.6.3"
 
-# Lifecycle Runtime KTX
-lifecycleRuntimeKtx = "2.9.0"
+# ------ ★  updated  ↓ -----------------------------------------
+paging             = "3.3.6"
+composeBom         = "2025.06.01"       # ← updated
+composeCompiler    = "1.7.0-alpha05"
+composeMaterial3   = "1.3.2"            # ← updated
+composeUi          = "1.8.3"
+composePreview     = "1.8.3"
+composeTooling     = "1.8.3"
+navCompose         = "2.9.1"
+constraintLayout   = "2.2.1"
+recyclerView       = "1.4.0"
+# ------ ★  updated  ↑ -----------------------------------------
 
-# Activity (עבור Compose וכללי)
-activity = "1.10.1" # שימוש חוזר עבור activityCompose
+junit              = "4.13.2"
+androidxJunitExt   = "1.2.1"
+espressoCore       = "3.6.1"
+firebaseFirestoreKtx = "25.1.4"           # ← updated
 
-# Compose BOM (Bill of Materials) - תואם ל-Kotlin 2.0.21
-composeBom = "2024.09.00" # נשאר כפי שהיה. ודא שגרסה זו תואמת לקומפוז 2.0.0
+mapstruct = "1.6.3"
 
-# composeCompiler - הגדרה זו נמחקת לחלוטין מכיוון שהיא לא נדרשת.
-
-# AppCompat
-appcompat = "1.7.0"
-
-# Material Design (ל-Views, לא Compose)
-material = "1.12.0"
-
-# ConstraintLayout
-constraintlayout = "2.2.1" # הגרסה היציבה האחרונה
+vectordrawableAnimated = "1.2.0"
 
 
 [libraries]
-# compose.compiler או composeCompilerLib - הגדרות אלו נמחקות לחלוטין מכיוון שקומפיילר הקומפוז מטופל אוטומטית.
+# AndroidX core / UI
+androidx-core-ktx           = { group = "androidx.core",           name = "core-ktx",            version.ref = "coreKtx" }
+androidx-appcompat          = { group = "androidx.appcompat",      name = "appcompat",           version.ref = "appcompat" }
+androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
+androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
+androidx-vectordrawable = { module = "androidx.vectordrawable:vectordrawable", version.ref = "vectordrawableAnimated" }
+androidx-vectordrawable-animated = { module = "androidx.vectordrawable:vectordrawable-animated", version.ref = "vectordrawableAnimated" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+google-material             = { group = "com.google.android.material", name = "material",        version.ref = "material" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" } # משתמש בגרסת activity
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+# Lifecycle
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-livedata-ktx  = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx",  version.ref = "lifecycle" }
 
+# Navigation (fragment / UI  & Compose)
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+androidx-navigation-ui-ktx       = { group = "androidx.navigation", name = "navigation-ui-ktx",       version.ref = "navigation" }
+androidx-navigation-compose      = { group = "androidx.navigation", name = "navigation-compose",      version.ref = "navCompose" }
+
+# Room
+androidx-room-runtime  = { group = "androidx.room", name = "room-runtime",  version.ref = "room" }
+androidx-room-ktx      = { group = "androidx.room", name = "room-ktx",      version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# Firebase BoM + individual artifacts …
+firebase-bom              = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth             = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-analytics        = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-storage          = { group = "com.google.firebase", name = "firebase-storage-ktx" }
+firebase-functions        = { group = "com.google.firebase", name = "firebase-functions-ktx" }
+firebase-firestore-ktx    = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+
+# Glide – KSP flavour
+glide          = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "ksp",   version.ref = "glide" }
+
+# Hilt
+hilt-android  = { group = "com.google.dagger", name = "hilt-android",          version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+# Compose
+androidx-compose-bom                 = { group = "androidx.compose",          name = "compose-bom",            version.ref = "composeBom" }
+androidx-compose-material3           = { group = "androidx.compose.material3", name = "material3",             version.ref = "composeMaterial3" }
+androidx-compose-ui                  = { group = "androidx.compose.ui",       name = "ui",                    version.ref = "composeUi" }
+androidx-compose-ui-tooling          = { group = "androidx.compose.ui",       name = "ui-tooling",            version.ref = "composeTooling" }
+androidx-compose-ui-tooling-preview  = { group = "androidx.compose.ui",       name = "ui-tooling-preview",    version.ref = "composePreview" }
+
+# Coroutines
+kotlinxCoroutinesPlayServices = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines" }
+kotlinxCoroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+
+# Extra AndroidX
+androidx-paging-runtime-ktx = { group = "androidx.paging",          name = "paging-runtime-ktx", version.ref = "paging" }
+androidx-recyclerview       = { group = "androidx.recyclerview",    name = "recyclerview",       version.ref = "recyclerView" }
+androidx-constraintlayout   = { group = "androidx.constraintlayout", name = "constraintlayout",  version.ref = "constraintLayout" }
+
+# Tests
+junit                   = { group = "junit",              name = "junit",           version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit",           version.ref = "androidxJunitExt" }
+androidx-espresso-core  = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+mapstruct     = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
+mapstruct-ksp = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
+
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+
+coil                = { group = "io.coil-kt", name = "coil",          version.ref = "coil" } # ל‑View‑based XML
+coil-compose        = { group = "io.coil-kt", name = "coil-compose",  version.ref = "coil" } # AsyncImage / rememberAsyncImagePainter
+coil-svg            = { group = "io.coil-kt", name = "coil-svg",      version.ref = "coil" } # תמונות SVG (אופציונלי)
+coil-gif            = { group = "io.coil-kt", name = "coil-gif",      version.ref = "coil" } # תמונות GIF (אופציונלי)
+# coil-ksp            = { group = "io.coil-kt", name = "coil-ksp",      version.ref = "coil" } # גנרציית @ImageLoader (אופציונלי)
+coil-compiler = { group = "io.coil-kt", name = "coil-compiler", version.ref = "coil" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-application = { id = "com.android.application",             version.ref = "androidGradlePlugin" }
+kotlin-android      = { id = "org.jetbrains.kotlin.android",        version.ref = "kotlin" }
+kotlin-compose      = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp                 = { id = "com.google.devtools.ksp",             version.ref = "ksp" }
+hilt-android        = { id = "com.google.dagger.hilt.android",      version.ref = "hilt" }
+google-services     = { id = "com.google.gms.google-services",      version.ref = "googleServices" }
+navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationSafeArgs" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
