@@ -43,10 +43,16 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         vm.event.observe(viewLifecycleOwner) { ev ->
             if (ev is AuthViewModel.UiEvent.AuthSuccess) {
                 findNavController().navigate(AuthFragmentDirections.actionAuthToHome())
-                showToast("Login successfully completed!")
+
+                val msg = if (vm.uiState.value?.mode == AuthViewModel.Mode.SIGNUP)
+                    "You have successfully registered!"
+                else  "Login successfully completed!"
+                showToast(msg)
+
                 vm.clearEvent()
             }
         }
+
     }
 
     private fun render(state: AuthViewModel.UiState) = with(binding) {

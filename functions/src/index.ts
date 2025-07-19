@@ -77,7 +77,6 @@ const messagesCol = (chatId: string) =>
 /* TRIGGERS                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** 0️⃣  Login / Sign‑Up + החזרת UserDto */
 export const signInOrUp = onCall<{
   email: string;
   password: string;
@@ -93,46 +92,58 @@ export const signInOrUp = onCall<{
     throw new HttpsError("invalid-argument", "Missing email / password");
   }
 
-  /* 1‑2. Auth */
-  let userRec: admin.auth.UserRecord;
+  /* ---------- 1.  Auth ---------- */
+  let userRec: admin.auth.UserRecord | null = null;
+
   try {
+    // 👈 ל‑TS ברור שהשמה תתבצע כאן אם לא נזרק Exception
     userRec = await admin.auth().getUserByEmail(email);
-  } catch (e) {
-    if ((e as any).code === "auth/user-not-found") {
-      userRec = await admin.auth().createUser({ email, password, displayName });
+  } catch (err) {
+    const e = err as { code?: string };
+    if (e.code === "auth/user-not-found") {
+      if (displayName || bio) {
+        userRec = await admin.auth().createUser({ email, password, displayName });
+      } else {
+        throw new HttpsError("not-found", "User does not exist");
+      }
     } else {
-      throw e;
+      throw err;
     }
   }
 
-  /* 3. Firestore user‑doc */
-  const userRef  = usersCol.doc(userRec.uid);
+
+  if (!userRec) throw new HttpsError("internal", "Auth failed");
+
+  /* ---------- 2.  Firestore user‑doc ---------- */
+  const userRef = usersCol.doc(userRec.uid);
+
   const initData = {
-    displayName : displayName || userRec.displayName || "",
-    email       : email,
-    photoUrl    : userRec.photoURL ?? "",
-    bio         : bio,
-    score       : 0,
-    createdAt   : FieldValue.serverTimestamp(),
-    lastLoginAt : FieldValue.serverTimestamp(),
+    displayName,
+    email,
+    photoUrl   : userRec.photoURL ?? "",
+    bio,
+    score      : 0,
+    createdAt  : FieldValue.serverTimestamp(),
+    lastLoginAt: FieldValue.serverTimestamp(),
   };
 
   await userRef.set(initData, { merge: true });
 
-  /* 4. החזרה כ‑DTO */
-  const snap = await userRef.get();
-  const doc  = snap.data() as User;
+  const doc = (await userRef.get()).data() as User;
 
-  return {
-    uid         : userRec.uid,
-    displayName : doc.displayName,
-    email       : doc.email,
-    photoUrl    : doc.photoUrl,
-    bio         : doc.bio,
-    score       : doc.score,
-    createdAt   : (doc.createdAt  as any)?.toMillis() ?? 0,
-    lastLoginAt : (doc.lastLoginAt as any)?.toMillis() ?? 0,
-  };
+    const toMillis = (ts?: FirebaseFirestore.Timestamp | null): number =>
+      ts ? ts.toMillis() : 0;
+
+    return {
+      uid         : userRec.uid,
+      displayName : doc.displayName,
+      email       : doc.email,
+      photoUrl    : doc.photoUrl,
+      bio         : doc.bio,
+      score       : doc.score,
+      createdAt   : toMillis(doc.createdAt  as FirebaseFirestore.Timestamp | null),
+      lastLoginAt : toMillis(doc.lastLoginAt as FirebaseFirestore.Timestamp | null),
+    };
 });
 
 

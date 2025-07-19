@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         navController = navHost.navController
 
         /* Home הוא ה‑Top‑Level היחיד */
-        appBarConfig = AppBarConfiguration(setOf(R.id.homeFragment))
+        appBarConfig = AppBarConfiguration
+            .Builder(R.id.homeFragment, R.id.authFragment)
+            .build()
 
         /* קישור ActionBar ↔︎ NavController */
         setupActionBarWithNavController(navController, appBarConfig)

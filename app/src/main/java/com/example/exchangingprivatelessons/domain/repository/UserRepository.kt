@@ -19,6 +19,7 @@ interface UserRepository {
         bio: String? = null
     ): Result<User>
 
+
     suspend fun updateProfile(
         displayName: String? = null,
         bio: String? = null,

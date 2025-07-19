@@ -122,24 +122,39 @@ class UserRepositoryImpl @Inject constructor(
         bio: String?
     ): Result<User> = withContext(io) {
 
-        suspend fun createOrSignIn(): String =
-            try {
-                auth.createUserWithEmailAndPassword(email, password).await().user!!.uid
-            } catch (e: FirebaseAuthUserCollisionException) {
-                auth.signInWithEmailAndPassword(email, password).await().user!!.uid
+        /** true → Sign‑Up, false → Login */
+        val isSignup = !displayName.isNullOrBlank() || !bio.isNullOrBlank()
+
+        /** מחזיר UID אם הצליח */
+        suspend fun authFlow(): String =
+            if (isSignup) {
+                // ▶️  יצירת משתמש חדש – אם כבר קיים → שגיאה
+                auth.createUserWithEmailAndPassword(email, password)
+                    .await().user!!.uid
+            } else {
+                // ▶️  LOGIN  – אם לא קיים → שגיאה
+                auth.signInWithEmailAndPassword(email, password)
+                    .await().user!!.uid
             }
 
         runCatching {
-            createOrSignIn()
-            val dto     = functions.signInOrUp(email, password, displayName, bio)
-            val entity  = mapper.toEntity(dto)
-            dao.upsert(entity)                   // ← נשמר גם ב‑Room
+            authFlow()                                           // ← אין יצירה אוטומטית ב‑Login
+            val dto = functions.signInOrUp(
+                email       = email,
+                password    = password,
+                displayName = if (isSignup) displayName else null,
+                bio         = if (isSignup) bio         else null
+            )
+            val entity = mapper.toEntity(dto)
+            dao.upsert(entity)                                  // Cache ב‑Room
             mapper.toDomain(entity)
         }.fold(
             onSuccess = { Result.Success(it) },
             onFailure = { Result.Failure(it) }
         )
     }
+
+
 
 
 
