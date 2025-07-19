@@ -23,11 +23,35 @@ class FunctionsDataSource @Inject constructor(
 
     /* ───────────── Account / User ───────────── */
 
-    suspend fun signInOrUp(email: String, password: String): UserDto =
-        invoke(
-            "signInOrUp",                       // ← *שם הפונקציה בצד‑הענן*
-            mapOf("email" to email, "password" to password)
+    /* ───────────── Account / User ───────────── */
+    suspend fun signInOrUp(
+        email: String,
+        password: String,
+        displayName: String?,
+        bio: String?
+    ): UserDto {
+        val res: Map<*, *> = invoke(
+            "signInOrUp",
+            mapOf(
+                "email"       to email,
+                "password"    to password,
+                "displayName" to displayName,
+                "bio"         to bio
+            )
         )
+        return UserDto(
+            id          = res["uid"]         as String,
+            displayName = res["displayName"] as? String ?: "",
+            email       = res["email"]       as? String ?: "",
+            photoUrl    = res["photoUrl"]    as? String ?: "",
+            bio         = res["bio"]         as? String ?: "",
+            score       = (res["score"]      as? Number)?.toInt() ?: 0,
+            createdAt   = (res["createdAt"]  as? Number)?.toLong(),
+            lastLoginAt = (res["lastLoginAt"]as? Number)?.toLong()
+        )
+    }
+
+
     suspend fun deleteMyAccount() = invoke<Unit>("deleteMyAccount")
 
     suspend fun touchLogin()      = invoke<Unit>("touchLogin")

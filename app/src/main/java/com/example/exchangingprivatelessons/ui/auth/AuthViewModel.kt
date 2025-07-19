@@ -12,42 +12,43 @@ class AuthViewModel @Inject constructor(
     private val signInOrUp: SignInOrUp
 ) : ViewModel() {
 
-    /* ---------- UI state ---------- */
     enum class Mode { LOGIN, SIGNUP }
 
     data class UiState(
-        val mode: Mode = Mode.LOGIN,
+        val mode: Mode    = Mode.LOGIN,
         val loading: Boolean = false,
-        val error: String? = null
+        val error: String?   = null
     )
 
     private val _uiState = MutableLiveData(UiState())
     val uiState: LiveData<UiState> = _uiState
 
-    /* ---------- One-time events (navigation, Toast…) ---------- */
-    sealed interface UiEvent {
-        object AuthSuccess : UiEvent
-    }
-
+    sealed interface UiEvent { object AuthSuccess : UiEvent }
     private val _event = MutableLiveData<UiEvent?>()
     val event: LiveData<UiEvent?> = _event
 
     fun toggleMode() {
-        _uiState.value = _uiState.value?.copy(
-            mode = if (_uiState.value?.mode == Mode.LOGIN) Mode.SIGNUP else Mode.LOGIN
-        )
+        _uiState.value = _uiState.value?.let {
+            it.copy(mode = if (it.mode == Mode.LOGIN) Mode.SIGNUP else Mode.LOGIN)
+        }
     }
 
-    fun authenticate(name: String, email: String, pass: String, confirm: String?) {
+    fun authenticate(
+        name: String,
+        email: String,
+        pass: String,
+        confirm: String?,
+        bio: String
+    ) {
         val state = _uiState.value ?: return
-        val mode = state.mode
+        val isSignup = state.mode == Mode.SIGNUP
 
-        // לקוח ולידציה בסיסית
+        /* ולידציה בסיסית */
         if (email.isBlank() || pass.isBlank()) {
             _uiState.value = state.copy(error = "Email address or password is empty")
             return
         }
-        if (mode == Mode.SIGNUP && pass != confirm) {
+        if (isSignup && pass != confirm) {
             _uiState.value = state.copy(error = "The passwords do not match")
             return
         }
@@ -55,29 +56,24 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = state.copy(loading = true, error = null)
 
-            val result = signInOrUp(
+            val res = signInOrUp(
                 email.trim(),
                 pass,
-                displayName = if (mode == Mode.SIGNUP) name.trim() else null
+                displayName = if (isSignup) name.trim() else null,
+                bio         = if (isSignup) bio.trim()  else null
             )
 
             _uiState.value = _uiState.value?.copy(loading = false)
 
-            when (result) {
+            when (res) {
                 is Result.Success -> _event.value = UiEvent.AuthSuccess
-                is Result.Failure -> _uiState.value = _uiState.value?.copy(
-                    error = result.throwable.message ?: "Unknown error"
-                )
-                is Result.Loading -> {} // אין צורך כאן כי אנחנו מנהלים loading עם השדה
+                is Result.Failure -> _uiState.value =
+                    _uiState.value?.copy(error = res.throwable.message ?: "Unknown error")
+                Result.Loading    -> Unit
             }
         }
     }
 
-    fun clearError() {
-        _uiState.value = _uiState.value?.copy(error = null)
-    }
-
-    fun clearEvent() {
-        _event.value = null
-    }
+    fun clearError() { _uiState.value = _uiState.value?.copy(error = null) }
+    fun clearEvent() { _event.value = null }
 }

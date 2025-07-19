@@ -18,11 +18,11 @@ object TimestampConverter {
     /* ---------- MapStruct ---------- */
     /** Long?  → Date?  */
     @JvmStatic @Named("toDateNullable")
-    fun toDateNullable(epoch: Long?): Date? = toDate(epoch)
+    fun toDateNullable(epoch: Long?): Date? = epoch?.let { Date(it) }
 
     /** Date?  → Long?  */
     @JvmStatic @Named("toEpochNullable")
-    fun toEpochNullable(date: Date?): Long? = toEpoch(date)
+    fun toEpochNullable(date: Date?): Long = date?.time ?: 0L
 
     /** Long   → Date   */
     @JvmStatic @Named("toDateNonNull")

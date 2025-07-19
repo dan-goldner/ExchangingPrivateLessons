@@ -31,12 +31,11 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val firestore:  FirestoreDataSource,
-    private val functions:  FunctionsDataSource,   // ←  **ככה!**
+    private val functions:  FunctionsDataSource,
     private val dao:        UserDao,
     private val mapper:     UserMapper,
     private val auth:       FirebaseAuth,
-    @IoDispatcher
-    private val io:         CoroutineDispatcher
+    @IoDispatcher private val io: CoroutineDispatcher
 ) : NetworkCacheRepository<UserEntity, UserDto, User>(io), UserRepository {
 
     /* ───────────── Network-Bound  (cache + server) ───────────── */
@@ -114,43 +113,34 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    /** Registration + Login  */
+
+
     override suspend fun signInOrUpWithEmail(
         email: String,
-        password: String
+        password: String,
+        displayName: String?,
+        bio: String?
     ): Result<User> = withContext(io) {
 
-        suspend fun createOrSignIn(): String /* uid */ = try {
-            // ① מנסה ליצור משתמש חדש
-            auth.createUserWithEmailAndPassword(email, password)
-                .await().user!!.uid
-        } catch (e: FirebaseAuthUserCollisionException) {
-            // ② אם האימייל כבר קיים → Login
-            auth.signInWithEmailAndPassword(email, password)
-                .await().user!!.uid
-        }
-
-        try {
-            val uid = createOrSignIn()
-
-            val dto    = functions.signInOrUp(email, password)
-            val entity = mapper.toEntity(dto)
-            dao.upsert(entity)
-            Result.Success(mapper.toDomain(entity))
-
-        } catch (err: Exception) {
-            val msg = when (err) {
-                is FirebaseAuthInvalidCredentialsException ->
-                    "סיסמה שגויה"                       // ← רק במקרה LOGIN
-                is FirebaseAuthWeakPasswordException ->
-                    "הסיסמה חייבת להיות בת 6 תווים לפחות"
-                is FirebaseAuthInvalidUserException ->
-                    "החשבון לא קיים – הירשם תחילה"
-                else -> err.message ?: "שגיאה לא ידועה"
+        suspend fun createOrSignIn(): String =
+            try {
+                auth.createUserWithEmailAndPassword(email, password).await().user!!.uid
+            } catch (e: FirebaseAuthUserCollisionException) {
+                auth.signInWithEmailAndPassword(email, password).await().user!!.uid
             }
-            Result.Failure(Exception(msg, err))
-        }
+
+        runCatching {
+            createOrSignIn()
+            val dto     = functions.signInOrUp(email, password, displayName, bio)
+            val entity  = mapper.toEntity(dto)
+            dao.upsert(entity)                   // ← נשמר גם ב‑Room
+            mapper.toDomain(entity)
+        }.fold(
+            onSuccess = { Result.Success(it) },
+            onFailure = { Result.Failure(it) }
+        )
     }
+
 
 
 

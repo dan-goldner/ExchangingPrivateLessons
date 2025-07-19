@@ -77,56 +77,64 @@ const messagesCol = (chatId: string) =>
 /* TRIGGERS                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/* ──────────────────────────────────────────────────────────────── */
-/* 1️⃣  signInOrUp –� Login� או� Sign‑Up                              */
-/*     1. בודק אם קיים משתמש ב‑Auth                               */
-/*     2. יוצר אחד חדש אם צריך                                     */
-/*     3. דואג שקיים user‑doc ב‑Firestore                          */
-/*     4. מעדכן lastLoginAt בכל קריאה                              */
-/*     5. מחזיר UserDto� (כולל� uid)                                 */
-/* ──────────────────────────────────────────────────────────────── */
-export const signInOrUp = onCall<{ email: string; password: string }>(async ({ data }) => {
-  const email    = data.email?.trim().toLowerCase() ?? "";
-  const password = data.password?.trim()             ?? "";
+/** 0️⃣  Login / Sign‑Up + החזרת UserDto */
+export const signInOrUp = onCall<{
+  email: string;
+  password: string;
+  displayName?: string;
+  bio?: string;
+}>(async ({ data }) => {
+  const email       = data.email?.trim().toLowerCase() ?? "";
+  const password    = data.password?.trim()            ?? "";
+  const displayName = data.displayName?.trim()         ?? "";
+  const bio         = data.bio?.trim()                 ?? "";
 
   if (!email || !password) {
     throw new HttpsError("invalid-argument", "Missing email / password");
   }
 
-  /* 1‑2. � Auth */
+  /* 1‑2. Auth */
   let userRec: admin.auth.UserRecord;
-try {
-  userRec = await admin.auth().getUserByEmail(email);
-} catch (e) {
-  const err = e as { code?: string };          // cast ממוקד
-  if (err.code === "auth/user-not-found") {
-    userRec = await admin.auth().createUser({ email, password });
-  } else {
-    throw err;                                  // מעביר הלאה
-  }
-}
-
-  /* 3. � Firestore� user‑doc (טריגר onCreate דואג, אבל � וודא) */
-  const userRef = usersCol.doc(userRec.uid);
-  const userSnap = await userRef.get();
-  if (!userSnap.exists) {
-    await userRef.set({
-      displayName : userRec.displayName ?? "",
-      email       : userRec.email       ?? "",
-      photoUrl    : userRec.photoURL    ?? "",
-      bio         : "",
-      score       : 0,
-      createdAt   : FieldValue.serverTimestamp(),
-      lastLoginAt : FieldValue.serverTimestamp(),
-    });
-  } else {
-    /* 4. מעדכן lastLoginAt בכל כ� יסה (merge בלבד) */
-    await userRef.update({ lastLoginAt: FieldValue.serverTimestamp() });
+  try {
+    userRec = await admin.auth().getUserByEmail(email);
+  } catch (e) {
+    if ((e as any).code === "auth/user-not-found") {
+      userRec = await admin.auth().createUser({ email, password, displayName });
+    } else {
+      throw e;
+    }
   }
 
-  /* 5. � מחזיר UserDto� – עם� uid� כ‑key */
-  return { uid: userRec.uid, ...(await userRef.get()).data() };
+  /* 3. Firestore user‑doc */
+  const userRef  = usersCol.doc(userRec.uid);
+  const initData = {
+    displayName : displayName || userRec.displayName || "",
+    email       : email,
+    photoUrl    : userRec.photoURL ?? "",
+    bio         : bio,
+    score       : 0,
+    createdAt   : FieldValue.serverTimestamp(),
+    lastLoginAt : FieldValue.serverTimestamp(),
+  };
+
+  await userRef.set(initData, { merge: true });
+
+  /* 4. החזרה כ‑DTO */
+  const snap = await userRef.get();
+  const doc  = snap.data() as User;
+
+  return {
+    uid         : userRec.uid,
+    displayName : doc.displayName,
+    email       : doc.email,
+    photoUrl    : doc.photoUrl,
+    bio         : doc.bio,
+    score       : doc.score,
+    createdAt   : (doc.createdAt  as any)?.toMillis() ?? 0,
+    lastLoginAt : (doc.lastLoginAt as any)?.toMillis() ?? 0,
+  };
 });
+
 
 
 /** 2️⃣ Firestore user deleted → remove Auth */
