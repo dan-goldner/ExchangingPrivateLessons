@@ -51,6 +51,23 @@
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Bio (signup only) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bioInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/bio"
+            android:visibility="gone"
+            android:layout_marginTop="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bioEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <!-- Password -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordInputLayout"

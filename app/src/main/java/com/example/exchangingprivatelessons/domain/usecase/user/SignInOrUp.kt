@@ -13,15 +13,8 @@ class SignInOrUp @Inject constructor(
     suspend operator fun invoke(
         email: String,
         password: String,
-        displayName: String? = null          // null ⇒ LOGIN, not null ⇒ SIGN-UP
+        displayName: String? = null,
+        bio: String? = null
     ): Result<User> =
-        if (displayName == null)
-            repo.signInOrUpWithEmail(email, password)           // LOGIN
-        else {
-            // SIGN-UP: אחרי יצירה מעדכנים שם תצוגה אם צריך
-            repo.signInOrUpWithEmail(email, password).also { res ->
-                if (res is Result.Success && displayName.isNotBlank())
-                    repo.updateProfile(displayName = displayName)
-            }
-        }
+        repo.signInOrUpWithEmail(email, password, displayName, bio)
 }

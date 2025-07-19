@@ -6,14 +6,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.FragmentAuthBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.fragment_auth) {
@@ -25,32 +21,30 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentAuthBinding.bind(view)
 
-        // לחצן התחברות/הרשמה
+        /* לחצן LOGIN / SIGNUP */
         binding.authButton.setOnClickListener {
             vm.authenticate(
                 name    = binding.nameEditText.text.toString(),
                 email   = binding.emailEditText.text.toString(),
                 pass    = binding.passwordEditText.text.toString(),
-                confirm = binding.confirmPasswordEditText.text.toString()
+                confirm = binding.confirmPasswordEditText.text.toString(),
+                bio     = binding.bioEditText.text.toString()          // ← חדש
             )
             requireActivity().currentFocus?.clearFocus()
         }
 
-        // החלפת מצב LOGIN / SIGNUP
+        /* החלפת מצב */
         binding.toggleModeText.setOnClickListener { vm.toggleMode() }
 
-        // צפייה בשינויים במצב המסך
+        /* state */
         vm.uiState.observe(viewLifecycleOwner) { render(it) }
 
-        // אירועים חד-פעמיים (כמו ניווט)
-        vm.event.observe(viewLifecycleOwner) { event ->
-            when (event) {
-                is AuthViewModel.UiEvent.AuthSuccess -> {
-                    findNavController().navigate(AuthFragmentDirections.actionAuthToHome())
-                    showToast("Login successfully completed!")
-                    vm.clearEvent()  // כדי לא לטרגט שוב בעת סיבוב מסך
-                }
-                null -> Unit
+        /* events */
+        vm.event.observe(viewLifecycleOwner) { ev ->
+            if (ev is AuthViewModel.UiEvent.AuthSuccess) {
+                findNavController().navigate(AuthFragmentDirections.actionAuthToHome())
+                showToast("Login successfully completed!")
+                vm.clearEvent()
             }
         }
     }
@@ -69,14 +63,16 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         }
 
         val isSignup = state.mode == AuthViewModel.Mode.SIGNUP
-        nameInputLayout.visibility = if (isSignup) View.VISIBLE else View.GONE
+        nameInputLayout.visibility        = if (isSignup) View.VISIBLE else View.GONE
+        bioInputLayout.visibility         = if (isSignup) View.VISIBLE else View.GONE // ← חדש
         confirmPasswordInputLayout.visibility = if (isSignup) View.VISIBLE else View.GONE
-        titleText.text = if (isSignup) "הרשמה" else "התחברות"
+
+        titleText.text      = if (isSignup) "הרשמה" else "התחברות"
         toggleModeText.text = if (isSignup) "כבר רשום? התחבר" else "אין חשבון? הירשם"
 
         state.error?.let {
-            emailInputLayout.error = if (it.contains("email", ignoreCase = true)) it else null
-            passwordInputLayout.error = if (it.contains("password", ignoreCase = true)) it else null
+            emailInputLayout.error    = if (it.contains("email",    true)) it else null
+            passwordInputLayout.error = if (it.contains("password", true)) it else null
             showToast(it)
             vm.clearError()
         }
@@ -85,8 +81,5 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     private fun showToast(msg: String) =
         android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_LONG).show()
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun onDestroyView() { _binding = null; super.onDestroyView() }
 }
