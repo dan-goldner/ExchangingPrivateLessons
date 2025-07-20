@@ -23,6 +23,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!-- Greeting -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txtGreeting"
+                    style="@style/TextAppearance.SkillSwap.TitleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/greeting"
+                android:layout_marginBottom="@dimen/space_l"/>
+
+
                 <!-- טקסט סטטיסטיקה -->
                 <TextView
                     android:id="@+id/txtLessonsCount"

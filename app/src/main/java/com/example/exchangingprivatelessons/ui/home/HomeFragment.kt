@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +23,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _b = FragmentHomeBinding.bind(view)
+
+        /* ───── Greeting ───── */
+        val user = FirebaseAuth.getInstance().currentUser
+        val displayName = user?.displayName          // מהפרופיל
+            ?: user?.email?.substringBefore('@')     // fallback לשם שמופיע באימייל
+            ?: "there"                               // fallback כללי
+
+        b.txtGreeting.text = getString(R.string.greeting, displayName)
 
         /* ───────────── Navigation ───────────── */
         b.btnMyLessons.setOnClickListener   {
