@@ -6,6 +6,7 @@ import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.domain.repository.LessonRepository
 import com.example.exchangingprivatelessons.domain.usecase.lesson.CreateLesson
 import com.example.exchangingprivatelessons.domain.usecase.lesson.UpdateLesson
+import com.example.exchangingprivatelessons.domain.usecase.lesson.RefreshLessons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,6 +16,7 @@ class AddEditLessonViewModel @Inject constructor(
     private val repo: LessonRepository,
     private val createLesson: CreateLesson,
     private val updateLesson: UpdateLesson,
+    private val refreshLessons: RefreshLessons,
     savedStateHandle: SavedStateHandle          // lessonId מגיע מפאראם ה‑Nav
 ) : ViewModel() {
 
@@ -32,13 +34,24 @@ class AddEditLessonViewModel @Inject constructor(
     fun onSaveClicked(title: String, description: String) = viewModelScope.launch {
         updateUi { copy(loading = true, errorMsg = null) }
 
-        val savedId: String? = if (lessonId == null) {
+        val savedId: String? = if (lessonId.isNullOrBlank()) {
             val res = createLesson(title, description, _ui.value?.imageUri?.toString())
-            if (res is Result.Success) res.data else return@launch updateUi {
-                copy(loading = false, errorMsg = (res as? Result.Failure)?.throwable?.localizedMessage)
+            if (res is Result.Success) {
+                refreshLessons() // ✅ Refresh after creating lesson
+                res.data
+            } else return@launch updateUi {
+                copy(
+                    loading = false,
+                    errorMsg = (res as? Result.Failure)?.throwable?.localizedMessage
+                )
             }
         } else {
-            val res = updateLesson(lessonId, title, description, _ui.value?.imageUri?.toString())
+            val res = updateLesson(
+                lessonId,
+                title,
+                description,
+                _ui.value?.imageUri?.toString()
+            )
             if (res is Result.Failure) return@launch updateUi {
                 copy(loading = false, errorMsg = res.throwable.localizedMessage)
             }

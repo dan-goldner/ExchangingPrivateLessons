@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "ExchangingPrivateLessons"
+location: "me-west1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "exchangingprivatelessons-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

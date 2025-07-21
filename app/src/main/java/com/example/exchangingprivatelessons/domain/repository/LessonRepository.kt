@@ -11,6 +11,8 @@ interface LessonRepository {
 
     fun observeLesson(lessonId: String): Flow<Result<Lesson>>
 
+    suspend fun refreshMineLessons(userId: String)
+
     /* refresh + mutations */
     suspend fun forceRefreshLessons(): Result<Unit>
     suspend fun updateLesson(

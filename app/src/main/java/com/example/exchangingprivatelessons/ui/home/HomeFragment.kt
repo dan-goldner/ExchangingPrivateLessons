@@ -38,8 +38,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(dir)
         }
 
-        b.btnAvailabaleLessons.setOnClickListener   {
+        b.btnAvailableLessons.setOnClickListener   {
             val dir = HomeFragmentDirections.actionHomeToLessonListAvailable()
+            findNavController().navigate(dir)
+        }
+
+        b.btnMyOfferedLessons.setOnClickListener {
+            val dir = HomeFragmentDirections.actionHomeToLessonListMine()
             findNavController().navigate(dir)
         }
 

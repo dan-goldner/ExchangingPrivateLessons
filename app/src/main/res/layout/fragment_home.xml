@@ -52,7 +52,7 @@
 
                 <!-- כפתורים -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAvailabaleLessons"
+                    android:id="@+id/btnAvailableLessons"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,6 +67,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="השיעורים שלי"
+                    android:icon="@drawable/ic_book"
+                    app:iconPadding="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMyOfferedLessons"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="השיעורים שאני מציע"
                     android:icon="@drawable/ic_book"
                     app:iconPadding="8dp" />
 

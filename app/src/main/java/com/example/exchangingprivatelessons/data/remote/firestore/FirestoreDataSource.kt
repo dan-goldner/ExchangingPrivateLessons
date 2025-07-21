@@ -105,6 +105,15 @@ class FirestoreDataSource @Inject constructor(
             .mapNotNull { it.toObject(LessonDto::class.java) }
     }
 
+    suspend fun getLessonsOfferedByUser(userId: String): List<LessonDto> {
+        return db.collection("lessons")
+            .whereEqualTo("ownerId", userId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { it.toObject(LessonDto::class.java) }
+    }
+
     suspend fun getLessonRequests(): List<LessonRequestDto> {
         val uid = auth.currentUser?.uid
             ?: throw IllegalStateException("User must be logged in before calling getLessonRequests()")

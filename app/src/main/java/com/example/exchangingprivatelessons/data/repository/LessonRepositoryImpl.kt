@@ -38,34 +38,25 @@ class LessonRepositoryImpl @Inject constructor(
     override suspend fun fetchRemote() = firestore.getLessons()
 
     override suspend fun saveRemote(remote: List<LessonDto>) {
-        dao.upsertAll(remote.map(mapper::toEntity))   // בלי named‑args
+        dao.upsertAll(remote.map(mapper::toEntity))
     }
-
-
-
-
 
     override suspend fun getLesson(lessonId: String): Result<Lesson> = withContext(io) {
         dao.get(lessonId)?.let { return@withContext Result.Success(mapper.toDomain(it)) }
 
-        // אין ב‑Room → נסה Firestore
         runCatching {
             firestore.getLessons().first { it.id == lessonId }
         }.fold(
             onSuccess = { dto ->
                 val entity = mapper.toEntity(dto)
-                dao.upsert(entity)                         // cache
+                dao.upsert(entity)
                 Result.Success(mapper.toDomain(entity))
             },
             onFailure = { Result.Failure(it) }
         )
     }
 
-
-
     override fun map(local: LessonEntity) = mapper.toDomain(local)
-
-    /* ───── Lesson-specific API ───── */
 
     override fun observeLessons(onlyMine: Boolean): Flow<Result<List<Lesson>>> =
         if (onlyMine) {
@@ -75,7 +66,7 @@ class LessonRepositoryImpl @Inject constructor(
             dao.observeMine(uid)
                 .map { Result.Success(it.map(mapper::toDomain)) }
         } else {
-            observe()      // NetworkCacheRepository.observe()
+            observe()
         }
 
     override fun observeLesson(lessonId: String): Flow<Result<Lesson>> =
@@ -106,7 +97,6 @@ class LessonRepositoryImpl @Inject constructor(
             onFailure = { Result.Failure(it) }
         )
 
-
     override suspend fun archiveLesson(lessonId: String, archived: Boolean): Result<Unit> =
         runCatching {
             functions.archiveLesson(lessonId, archived)
@@ -114,7 +104,6 @@ class LessonRepositoryImpl @Inject constructor(
             onSuccess = { Result.Success(Unit) },
             onFailure = { Result.Failure(it) }
         )
-
 
     override suspend fun createLesson(
         title: String,
@@ -126,4 +115,10 @@ class LessonRepositoryImpl @Inject constructor(
                 onSuccess = { Result.Success(it) },
                 onFailure = { Result.Failure(it) }
             )
+
+    // ✅ Newly added method
+    override suspend fun refreshMineLessons(userId: String) {
+        val remote = firestore.getLessonsOfferedByUser(userId)
+        dao.upsertAll(remote.map(mapper::toEntity))
+    }
 }
