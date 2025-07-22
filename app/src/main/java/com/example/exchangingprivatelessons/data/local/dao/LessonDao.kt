@@ -31,4 +31,12 @@ interface LessonDao {
     @Query("SELECT * FROM lessons WHERE id = :id LIMIT 1")
     suspend fun get(id: String): LessonEntity?
 
+    /*@Query("""
+    SELECT * FROM lessons WHERE id IN (:lessonIds)
+    ORDER BY createdAt DESC
+""")
+    fun observeLessonsByIds(lessonIds: List<String>): Flow<List<LessonEntity>>*/
+    @Query("SELECT * FROM lessons WHERE id IN (:ids)")
+    fun observeLessonsByIds(ids: List<String>): Flow<List<LessonEntity>>
+
 }

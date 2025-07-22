@@ -3,21 +3,18 @@ package com.example.exchangingprivatelessons.data.repository
 import com.example.exchangingprivatelessons.common.di.IoDispatcher
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.data.local.dao.LessonDao
+import com.example.exchangingprivatelessons.data.local.dao.LessonRequestDao
 import com.example.exchangingprivatelessons.data.local.entity.LessonEntity
 import com.example.exchangingprivatelessons.data.mapper.LessonMapper
 import com.example.exchangingprivatelessons.data.remote.cloud.FunctionsDataSource
 import com.example.exchangingprivatelessons.data.remote.dto.LessonDto
-import com.example.exchangingprivatelessons.data.remote.dto.RatingDto
 import com.example.exchangingprivatelessons.data.remote.firestore.FirestoreDataSource
 import com.example.exchangingprivatelessons.data.repository.base.NetworkCacheRepository
 import com.example.exchangingprivatelessons.domain.model.Lesson
-import com.example.exchangingprivatelessons.domain.model.Rating
 import com.example.exchangingprivatelessons.domain.repository.LessonRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +24,7 @@ class LessonRepositoryImpl @Inject constructor(
     private val firestore: FirestoreDataSource,
     private val functions: FunctionsDataSource,
     private val dao: LessonDao,
+    private val lessonRequestDao: LessonRequestDao, // added this clearly
     private val mapper: LessonMapper,
     private val auth: FirebaseAuth,
     @IoDispatcher
@@ -85,18 +83,34 @@ class LessonRepositoryImpl @Inject constructor(
             onFailure = { Result.Failure(it) }
         )
 
+    override fun observeTakenLessons(userId: String): Flow<Result<List<Lesson>>> {
+        return lessonRequestDao.observeTakenByUser(userId)
+            .flatMapLatest { lessonIds ->
+                if (lessonIds.isEmpty()) {
+                    flowOf<Result<List<Lesson>>>(Result.Success(emptyList()))
+                } else {
+                    dao.observeLessonsByIds(lessonIds)
+                        .map { entities ->
+                            Result.Success(entities.map(mapper::toDomain))
+                        }
+                }
+            }
+            .catch { e ->
+                emit(Result.Failure(e))  // valid only if return type is Flow<Result<List<Lesson>>>
+            }
+    }
+
     override suspend fun updateLesson(
         lessonId: String,
         title: String?,
         description: String?,
         imageUrl: String?
-    ): Result<Unit> =
-        runCatching {
-            functions.updateLesson(lessonId, title, description, imageUrl)
-        }.fold(
-            onSuccess = { Result.Success(Unit) },
-            onFailure = { Result.Failure(it) }
-        )
+    ): Result<Unit> = runCatching {
+        functions.updateLesson(lessonId, title, description, imageUrl)
+    }.fold(
+        onSuccess = { Result.Success(Unit) },
+        onFailure = { Result.Failure(it) }
+    )
 
     override suspend fun archiveLesson(lessonId: String, archived: Boolean): Result<Unit> =
         runCatching {
@@ -106,36 +120,17 @@ class LessonRepositoryImpl @Inject constructor(
             onFailure = { Result.Failure(it) }
         )
 
-    /*override suspend fun createLesson(
-        title: String,
-        description: String,
-        imageUrl: String?
-    ): Result<String> =
-        runCatching { functions.createLesson(title, description, imageUrl) }
-            .fold(
-                onSuccess = { Result.Success(it) },
-                onFailure = { Result.Failure(it) }
-            )  */
-
     override suspend fun createLesson(
         title: String,
         description: String,
         imageUrl: String?
     ): Result<String> = runCatching {
         val newId = functions.createLesson(title, description, imageUrl)
-
-        // Fetch the created lesson from Firestore
         val dto = firestore.getLessons().first { it.id == newId }
-
-        // Save to Room
         dao.upsert(mapper.toEntity(dto))
-
         Result.Success(newId)
-    }.getOrElse {
-        Result.Failure(it)
-    }
+    }.getOrElse { Result.Failure(it) }
 
-    // ✅ Newly added method
     override suspend fun refreshMineLessons(userId: String) {
         val remote = firestore.getLessonsOfferedByUser(userId)
         dao.upsertAll(remote.map(mapper::toEntity))
