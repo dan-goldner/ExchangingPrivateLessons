@@ -112,4 +112,10 @@
     <string name="hint_display_name">Display Name</string>
     <string name="remove_photo">Remove Photo</string>
 
+
+    <string name="err_camera_permission">Camera permission is denied</string>
+    <string name="err_camera_permission_rationale">
+        Camera permission is required in order to take a photo
+    </string>
+    <string name="ok">OK</string>
 </resources>
