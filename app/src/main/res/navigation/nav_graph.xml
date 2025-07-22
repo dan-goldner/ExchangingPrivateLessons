@@ -51,7 +51,7 @@
 
         <!-- 🔹 שיעורים שאני יכול לקחת (זמינים, לא שלי) -->
         <action
-            android:id="@+id/action_home_to_lessonList_available"
+            android:id="@+id/action_home_to_lessonListAvailable"
             app:destination="@id/lessonListFragment">
             <argument
                 android:name="mode"

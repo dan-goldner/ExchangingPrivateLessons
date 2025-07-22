@@ -36,18 +36,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         /* ───────────── Navigation ───────────── */
-        b.btnMyLessons.setOnClickListener   {
-            val dir = HomeFragmentDirections.actionHomeToLessonListMine()
-            findNavController().navigate(dir)
-        }
-
         b.btnAvailableLessons.setOnClickListener   {
             val dir = HomeFragmentDirections.actionHomeToLessonListAvailable()
             findNavController().navigate(dir)
         }
 
+        b.btnMyLessons.setOnClickListener   {
+            val dir = HomeFragmentDirections.actionHomeToLessonListMine("taken")
+            findNavController().navigate(dir)
+        }
+
+
         b.btnMyOfferedLessons.setOnClickListener {
-            val dir = HomeFragmentDirections.actionHomeToLessonListMine()
+            val dir = HomeFragmentDirections.actionHomeToLessonListMine("mine")
             findNavController().navigate(dir)
         }
 
