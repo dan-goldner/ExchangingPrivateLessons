@@ -58,16 +58,17 @@ class LessonRepositoryImpl @Inject constructor(
 
     override fun map(local: LessonEntity) = mapper.toDomain(local)
 
-    override fun observeLessons(onlyMine: Boolean): Flow<Result<List<Lesson>>> =
-        if (onlyMine) {
-            val uid = auth.currentUser?.uid ?: return flowOf(Result.Failure(
-                IllegalStateException("User not logged in")
-            ))
+    override fun observeLessons(onlyMine: Boolean): Flow<Result<List<Lesson>>> {
+        return if (onlyMine) {
+            val uid = auth.currentUser?.uid ?: return flowOf(
+                Result.Failure(IllegalStateException("User not logged in"))
+            )
             dao.observeMine(uid)
                 .map { Result.Success(it.map(mapper::toDomain)) }
         } else {
             observe()
         }
+    }
 
     override fun observeLesson(lessonId: String): Flow<Result<Lesson>> =
         dao.observe(lessonId).map { entity ->
@@ -105,7 +106,7 @@ class LessonRepositoryImpl @Inject constructor(
             onFailure = { Result.Failure(it) }
         )
 
-    override suspend fun createLesson(
+    /*override suspend fun createLesson(
         title: String,
         description: String,
         imageUrl: String?
@@ -114,7 +115,25 @@ class LessonRepositoryImpl @Inject constructor(
             .fold(
                 onSuccess = { Result.Success(it) },
                 onFailure = { Result.Failure(it) }
-            )
+            )  */
+
+    override suspend fun createLesson(
+        title: String,
+        description: String,
+        imageUrl: String?
+    ): Result<String> = runCatching {
+        val newId = functions.createLesson(title, description, imageUrl)
+
+        // Fetch the created lesson from Firestore
+        val dto = firestore.getLessons().first { it.id == newId }
+
+        // Save to Room
+        dao.upsert(mapper.toEntity(dto))
+
+        Result.Success(newId)
+    }.getOrElse {
+        Result.Failure(it)
+    }
 
     // ✅ Newly added method
     override suspend fun refreshMineLessons(userId: String) {

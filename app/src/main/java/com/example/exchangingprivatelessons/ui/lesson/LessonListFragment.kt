@@ -42,16 +42,9 @@ class LessonListFragment : Fragment() {
 
         /* מצב ראשוני – Safe‑Args */
         vm.setMode(LessonListViewModel.Mode.valueOf(args.mode))
-        selectChip(args.mode)
+        //selectChip(args.mode)
 
-        modeChips.setOnCheckedStateChangeListener { _, ids ->
-            val mode = when (ids.first()) {
-                R.id.chip_my    -> LessonListViewModel.Mode.MINE
-                R.id.chip_taken -> LessonListViewModel.Mode.TAKEN
-                else            -> LessonListViewModel.Mode.AVAILABLE
-            }
-            vm.setMode(mode)
-        }
+
 
         swipeRefresh.setOnRefreshListener { vm.onRefresh() }
         addFab.setOnClickListener {
@@ -77,13 +70,7 @@ class LessonListFragment : Fragment() {
         }
     }
 
-    private fun selectChip(mode: String) = vb.modeChips.check(
-        when (LessonListViewModel.Mode.valueOf(mode)) {
-            LessonListViewModel.Mode.MINE      -> R.id.chip_my
-            LessonListViewModel.Mode.TAKEN     -> R.id.chip_taken
-            LessonListViewModel.Mode.AVAILABLE -> R.id.chip_available
-        }
-    )
+
 
     private fun onLessonClicked(id: String) =
         findNavController().navigate(

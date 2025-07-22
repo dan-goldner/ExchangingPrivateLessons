@@ -61,6 +61,7 @@ object DataModule {
                 AppDatabase.MIGRATION_2_3,
                 AppDatabase.MIGRATION_3_4
             )
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides fun chatDao(db: AppDatabase): ChatDao               = db.chatDao()
