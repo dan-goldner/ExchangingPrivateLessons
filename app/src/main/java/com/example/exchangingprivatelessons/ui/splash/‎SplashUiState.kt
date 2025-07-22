@@ -1,3 +1,4 @@
+/* SplashUiState.kt */
 package com.example.exchangingprivatelessons.ui.splash
 
 data class SplashUiState(

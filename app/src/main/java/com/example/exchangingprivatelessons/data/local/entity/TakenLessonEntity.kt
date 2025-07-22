@@ -9,6 +9,6 @@ data class TakenLessonEntity(
     @PrimaryKey val lessonJson: String,
     val ownerName:     String,
     val ownerPhotoUrl: String?,
-    val takenAt:       Long,
+    val takenAt:       Date?,
     val canRate:       Boolean
 )

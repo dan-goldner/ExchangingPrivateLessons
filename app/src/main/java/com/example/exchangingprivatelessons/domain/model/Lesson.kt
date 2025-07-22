@@ -1,6 +1,8 @@
 package com.example.exchangingprivatelessons.domain.model
 
+import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.serialization.Serializable
+import java.security.Timestamp
 
 @Serializable
 data class Lesson(
@@ -15,6 +17,7 @@ data class Lesson(
     val ratingSum: Int,
     val ratingCount: Int,
 
+    @get:ServerTimestamp
     val createdAt: Long,
     val lastUpdated: Long,
 ) {

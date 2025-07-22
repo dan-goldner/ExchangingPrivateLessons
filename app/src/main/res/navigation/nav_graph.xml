@@ -180,10 +180,18 @@
         android:id="@+id/profileFragment"
         android:name="com.example.exchangingprivatelessons.ui.profile.ProfileFragment"
         android:label="Profile">
+
+        <!-- NEW – מאפשר כניסה לפרופיל שלי (null) או של משתמש אחר -->
+        <argument
+            android:name="uid"
+            app:argType="string"
+            app:nullable="true" />
+
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/editProfileSheet" />
     </fragment>
+
 
     <dialog
         android:id="@+id/editProfileSheet"

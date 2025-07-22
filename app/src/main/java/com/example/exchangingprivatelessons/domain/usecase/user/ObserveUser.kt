@@ -11,6 +11,10 @@ import javax.inject.Singleton
 class ObserveUser @Inject constructor(
     private val repo: UserRepository
 ) {
-    /** זרם “אני” – תמיד המשתמש המחובר */
-    operator fun invoke(): Flow<Result<User>> = repo.observeMe()
+    /**
+     * *uid == null* ➜ זרם “אני” (`observeMe`)
+     * אחרת ➜ זרם משתמש לפי id
+     */
+    operator fun invoke(uid: String? = null): Flow<Result<User>> =
+        if (uid == null) repo.observeMe() else repo.observeUser(uid)
 }

@@ -22,4 +22,13 @@ interface ChatDao {
 
     @Query("UPDATE chats SET lastMessage = :text, lastMessageAt = :ts WHERE id = :chatId")
     suspend fun updateLastMessage(chatId: String, text: String, ts: Date?)
+
+    @Query("DELETE FROM chats")            // ← חדש
+    suspend fun clear()
+
+    @Transaction
+    suspend fun replaceAll(list: List<ChatEntity>) {
+        clear()
+        upsertAll(list)
+    }
 }

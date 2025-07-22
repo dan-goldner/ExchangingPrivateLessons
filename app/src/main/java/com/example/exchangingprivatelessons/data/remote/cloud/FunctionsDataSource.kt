@@ -1,6 +1,7 @@
 package com.example.exchangingprivatelessons.data.remote.cloud
 
 import com.example.exchangingprivatelessons.data.remote.dto.UserDto
+import com.google.firebase.Timestamp
 import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -21,7 +22,6 @@ class FunctionsDataSource @Inject constructor(
         .await()
         .data as R           // לא מצליח להמיר? ייזרק Exception → נתפס בריפו
 
-    /* ───────────── Account / User ───────────── */
 
     /* ───────────── Account / User ───────────── */
     suspend fun signInOrUp(
@@ -46,9 +46,10 @@ class FunctionsDataSource @Inject constructor(
             photoUrl    = res["photoUrl"]    as? String ?: "",
             bio         = res["bio"]         as? String ?: "",
             score       = (res["score"]      as? Number)?.toInt() ?: 0,
-            createdAt   = (res["createdAt"]  as? Number)?.toLong(),
-            lastLoginAt = (res["lastLoginAt"]as? Number)?.toLong()
+            createdAt   = res["createdAt"]   as? Timestamp,
+            lastLoginAt = res["lastLoginAt"] as? Timestamp
         )
+
     }
 
 

@@ -1,13 +1,12 @@
-/* ─────────────────────────────  Chat  ────────────────────────────── */
+/* ChatDto.kt */
 package com.example.exchangingprivatelessons.data.remote.dto
 
-import kotlinx.serialization.Serializable
+import com.google.firebase.Timestamp
 
-@Serializable
 data class ChatDto(
     val id: String = "",
     val participantIds: List<String> = emptyList(),
     val lastMessage: String = "",
-    val createdAt: Long = 0L,
-    val lastMessageAt: Long? = null
+    val createdAt: Timestamp? = null,
+    val lastMessageAt: Timestamp? = null
 )

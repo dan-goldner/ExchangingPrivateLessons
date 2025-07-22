@@ -5,21 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- Avatar preview -->
+    <ImageView
+        android:id="@+id/avatarIv"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile_placeholder"/>
+
+    <Button
+        android:id="@+id/removeAvatarBtn"
+        android:text="@string/remove_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_gravity="center_horizontal"/>
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/displayEt"
         android:hint="@string/display_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/bioEt"
         android:hint="@string/bio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/photoEt"
-        android:hint="@string/photo_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -28,5 +40,5 @@
         android:text="@string/save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

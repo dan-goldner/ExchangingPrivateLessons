@@ -8,8 +8,8 @@ data class ViewChatPreview(
     val chatId: String,
     val peerName: String,
     val lastMessage: String,
-    val lastMessageAt: Date?
+    val lastMessageAt: Long?
 ) {
     val formattedTime: String
-        get() = lastMessageAt?.time?.pretty() ?: ""
+        get() = lastMessageAt?.pretty() ?: ""
 }

@@ -110,5 +110,6 @@
     <!-- Hints -->
     <string name="hint_bio">Bio</string>
     <string name="hint_display_name">Display Name</string>
+    <string name="remove_photo">Remove Photo</string>
 
 </resources>

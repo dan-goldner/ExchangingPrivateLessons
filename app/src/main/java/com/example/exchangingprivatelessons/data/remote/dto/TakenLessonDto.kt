@@ -1,13 +1,12 @@
-/* ───────────────────────────  TakenLesson  ────────────────────────── */
+// data/remote/dto/TakenLessonDto.kt
 package com.example.exchangingprivatelessons.data.remote.dto
 
-import kotlinx.serialization.Serializable
+import com.google.firebase.Timestamp   // ⬅️ חדש
 
-@Serializable
 data class TakenLessonDto(
-    val lesson:        LessonDto,
-    val ownerName:     String = "",
-    val ownerPhotoUrl: String? = null,
-    val takenAt:       Long   = 0L,
-    val canRate:       Boolean = false
+    val lesson        : LessonDto,
+    val ownerName     : String   = "",
+    val ownerPhotoUrl : String?  = null,
+    val takenAt       : Timestamp? = null,  // ⬅️ היה Long
+    val canRate       : Boolean  = false
 )

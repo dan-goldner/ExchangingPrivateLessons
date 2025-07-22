@@ -9,28 +9,48 @@ import org.mapstruct.*
 @Mapper(
     componentModel = "kotlin",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-    uses = [TimestampConverter::class]
+    uses = [TimestampConverter::class],
+    builder = Builder(disableBuilder = true)
 )
 interface MessageMapper {
 
-    /* Entity ➜ Domain */
-    @Mapping(source = "sentAt", target = "sentAt", qualifiedByName = ["toEpochNonNull"])
+    /* ---------- DTO ➜ Domain ---------- */
+    @Mapping(source = "sentAt", target = "sentAt",
+        qualifiedByName = ["tsToEpochNonNull"])
+    fun toDomain(dto: MessageDto): Message
+
+
+    /* ---------- Domain ➜ DTO  (ידני) ---------- */
+    fun toDto(domain: Message): MessageDto = MessageDto(
+        id       = domain.id,
+        chatId   = domain.chatId,
+        senderId = domain.senderId,
+        text     = domain.text,
+        sentAt   = TimestampConverter.epochToTsNullable(domain.sentAt)
+    )
+
+
+    /* ---------- Entity ↔ Domain ---------- */
+    @Mapping(source = "sentAt", target = "sentAt",
+        qualifiedByName = ["toEpochNullable"])
     fun toDomain(entity: MessageEntity): Message
 
-    /* Domain ➜ Entity */
-    @Mapping(source = "sentAt", target = "sentAt", qualifiedByName = ["toDateNonNull"])
+    @Mapping(source = "sentAt", target = "sentAt",
+        qualifiedByName = ["toDateNullable"])
     fun toEntity(domain: Message): MessageEntity
 
 
-    /* DTO ↔ Domain (Long ↔ Long) */
-    fun toDomain(dto: MessageDto): Message
-    fun toDto(domain: Message): MessageDto
-
-
-    /* DTO ➜ Entity */
-    @Mapping(source = "sentAt", target = "sentAt", qualifiedByName = ["toDateNonNull"])
+    /* ---------- DTO ↔ Entity ---------- */
+    @Mapping(source = "sentAt", target = "sentAt",
+        qualifiedByName = ["tsToDateNullable"])
     fun toEntity(dto: MessageDto): MessageEntity
 
-    /* Entity ➜ DTO – בלי אנוטציה */
-    fun toDto(entity: MessageEntity): MessageDto
+    /* Entity ➜ DTO – ידני */
+    fun toDto(entity: MessageEntity): MessageDto = MessageDto(
+        id       = entity.id,
+        chatId   = entity.chatId,
+        senderId = entity.senderId,
+        text     = entity.text,
+        sentAt   = TimestampConverter.dateToTsNullable(entity.sentAt)
+    )
 }

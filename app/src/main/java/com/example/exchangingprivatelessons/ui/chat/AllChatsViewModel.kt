@@ -30,7 +30,7 @@ class AllChatsViewModel @Inject constructor(
                         chatId        = chat.id,
                         peerName      = chat.peerName.orEmpty(),
                         lastMessage   = chat.lastMessage.orEmpty(),
-                        lastMessageAt = chat.lastMessageAt?.let { Date(it) }
+                        lastMessageAt = chat.lastMessageAt
                     )
                 }
             }

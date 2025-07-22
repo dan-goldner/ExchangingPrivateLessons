@@ -4,8 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onStart
-import com.example.exchangingprivatelessons.common.util.Result
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
-/** הופך Flow<Result<T>> → LiveData<Result<T>>, ומזריק Result.Loading בתחילת הזרם. */
-fun <T> Flow<Result<T>>.toResultLiveData() : LiveData<Result<T>> =
-    onStart { emit(Result.Loading) }.asLiveData()
+/**
+ * Flow<Result<T>> ➜ LiveData<Result<T>>
+ * @param context  CoroutineContext שבו יתבצע האיסוף (ברירת‑מחדל = Main.immediate)
+ */
+fun <T> Flow<Result<T>>.toResultLiveData(
+    context: CoroutineContext = EmptyCoroutineContext
+): LiveData<Result<T>> =
+    onStart { emit(Result.Loading) }.asLiveData(context)

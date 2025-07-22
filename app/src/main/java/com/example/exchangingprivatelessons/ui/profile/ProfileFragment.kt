@@ -7,49 +7,60 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.FragmentProfileBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    private var _b: FragmentProfileBinding? = null
-    private val b get() = _b!!
-    private val vm: ProfileViewModel by viewModels()
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View =
-        FragmentProfileBinding.inflate(i, c, false).also { _b = it }.root
+    private val args: ProfileFragmentArgs by navArgs()
+    private val vm by viewModels<ProfileViewModel>()
 
-    override fun onViewCreated(v: View, s: Bundle?) {
+    override fun onCreateView(
+        i: LayoutInflater, c: ViewGroup?, s: Bundle?
+    ): View = FragmentProfileBinding.inflate(i, c, false)
+        .also { _binding = it }
+        .root
 
-        /* עריכת פרופיל */
-        b.editFab.setOnClickListener { EditProfileSheet().show(childFragmentManager, null) }
+    override fun onViewCreated(v: View, s: Bundle?) = with(binding) {
 
-        /* מחיקה (לחיצה ארוכה) */
-        b.avatarIv.setOnLongClickListener { vm.deleteMyAccount(); true }
+        /* צפייה בפרופיל */
+        vm.setProfileUid(args.uid)
+        editFab.isVisible = vm.isMine
 
-        /* --- observers --- */
+        /* עריכה */
+        editFab.setOnClickListener { EditProfileSheet().show(childFragmentManager, null) }
+
+        /* מחיקה (לחיצה ארוכה על האווטאר) */
+        avatarIv.setOnLongClickListener { vm.deleteMyAccount(); true }
+
+        /* Snackbars */
         vm.snackbar.observe(viewLifecycleOwner) {
-            Snackbar.make(b.root, it, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(root, it, Snackbar.LENGTH_LONG).show()
         }
 
+        /* User‑UI */
         vm.user.observe(viewLifecycleOwner) { u ->
-            b.progressBar.isVisible = u == null
-            b.content.isVisible     = u != null
+            progressBar.isVisible = u == null
+            content.isVisible     = u != null
             u ?: return@observe
 
-            b.avatarIv.load(u.photoUrl) { crossfade(true) }
-            b.nameTv .text = u.displayName
-            b.emailTv.text = u.email
-            b.bioTv  .text = if (u.bio.isBlank()) getString(R.string.no_bio) else u.bio
+            avatarIv.load(u.photoUrl) { crossfade(true) }
+            nameTv .text = u.displayName
+            emailTv.text = u.email
+            bioTv  .text = if (u.bio.isBlank()) getString(R.string.no_bio) else u.bio
         }
     }
 
-    override fun onDestroyView() { _b = null; super.onDestroyView() }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

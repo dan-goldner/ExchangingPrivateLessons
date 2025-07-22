@@ -63,6 +63,3 @@ fun Long.toRelativeTime(ctx: Context): String =
         DateUtils.FORMAT_ABBREV_RELATIVE
     ).toString()
 
-
-/** המרה מ־Long ל־Date בצורה פשוטה */
-fun Long?.asDate(): Date? = this?.let { Date(it) }

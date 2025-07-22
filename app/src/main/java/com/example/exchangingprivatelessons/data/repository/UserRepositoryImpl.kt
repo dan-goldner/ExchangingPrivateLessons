@@ -1,119 +1,132 @@
 package com.example.exchangingprivatelessons.data.repository
 
 import com.example.exchangingprivatelessons.common.di.IoDispatcher
+import com.example.exchangingprivatelessons.common.di.ApplicationScope
 import com.example.exchangingprivatelessons.common.util.Result
+import com.example.exchangingprivatelessons.common.util.map
 import com.example.exchangingprivatelessons.data.local.dao.UserDao
 import com.example.exchangingprivatelessons.data.local.entity.UserEntity
 import com.example.exchangingprivatelessons.data.mapper.UserMapper
 import com.example.exchangingprivatelessons.data.remote.cloud.FunctionsDataSource
 import com.example.exchangingprivatelessons.data.remote.dto.UserDto
 import com.example.exchangingprivatelessons.data.remote.firestore.FirestoreDataSource
-import com.example.exchangingprivatelessons.data.repository.base.NetworkCacheRepository
+import com.example.exchangingprivatelessons.data.repository.base.LiveSyncRepository
 import com.example.exchangingprivatelessons.domain.model.User
 import com.example.exchangingprivatelessons.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val firestore:  FirestoreDataSource,
-    private val functions:  FunctionsDataSource,
-    private val dao:        UserDao,
-    private val mapper:     UserMapper,
-    private val auth:       FirebaseAuth,
-    @IoDispatcher private val io: CoroutineDispatcher
-) : NetworkCacheRepository<UserEntity, UserDto, User>(io), UserRepository {
+    private val firestore : FirestoreDataSource,
+    private val functions : FunctionsDataSource,
+    private val dao       : UserDao,
+    private val mapper    : UserMapper,
+    private val auth      : FirebaseAuth,
+    @IoDispatcher           private val io       : CoroutineDispatcher,
+    @ApplicationScope       private val appScope : CoroutineScope   // scope גלובלי
+) : LiveSyncRepository<UserDto, UserEntity, User>(), UserRepository {
 
-    /* ───────────── Network-Bound  (cache + server) ───────────── */
+    private var liveSyncJob: Job? = null
+    /* ───────────── Live‑sync (Firestore → Room) ───────────── */
+    /* Live‑sync: מאזין למסמך של המשתמש בלבד */
+    /* ───────────── Live‑sync רק למסמך‑המשתמש ───────────── */
 
-    override fun queryLocal(): Flow<List<UserEntity>> {
-        val uid = auth.currentUser?.uid
-            ?: throw IllegalStateException("User must be logged-in before observing")
-        return dao.observe(uid).map { listOfNotNull(it) }      // יחיד-ברשימה
+    override fun listenRemote(): Flow<Result<List<UserDto>>> =
+        firestore.listenMyUserDoc(currentUid() ?: error("Not logged‑in"))
+            .map { res ->
+                when (res) {
+                    is Result.Success -> Result.Success(listOf(res.data))
+                    is Result.Failure -> Result.Failure(res.throwable)
+                    Result.Loading    -> Result.Loading
+                }
+            }
+
+    /** החלפה מלאה מגיעה רק מאזין‐הכל */
+    override suspend fun replaceAllLocal(list: List<UserEntity>) =
+        dao.replaceAll(list)
+
+    /* ───────────── סנכרון כל המשתמשים ───────────── */
+
+    private var allUsersSyncJob: Job? = null
+
+    private fun startAllUsersSync() {
+        if (allUsersSyncJob != null) return   // כבר רץ
+        allUsersSyncJob = firestore.listenUsers()         // Flow<Result<List<UserDto>>>
+            .onEach { res ->
+                if (res is Result.Success) {
+                    val entities = res.data.map(mapper::toEntity)
+                    withContext(io) { dao.replaceAll(entities) }
+                }
+            }
+            .launchIn(appScope)
     }
 
-    override suspend fun fetchRemote(): List<UserDto> =
-        listOf(firestore.getMe())         // תמיד משתמש יחיד
+    init { startAllUsersSync() }
 
-    override suspend fun saveRemote(remote: List<UserDto>) {
-        remote.firstOrNull()?.let { dao.upsert(mapper.toEntity(it)) }
-    }
-
-    override fun map(local: UserEntity): User = mapper.toDomain(local)
-
-    /* ───────────── Public API  (implements UserRepository) ───────────── */
-
-    override fun observeUser(uid: String): Flow<Result<User>> =
-        dao.observe(uid).map { entity ->
-            if (entity == null)
-                Result.Failure(NoSuchElementException("User $uid not found"))
-            else
-                Result.Success(mapper.toDomain(entity))
-        }
-
+    /* ───── observeMe ───── */
     override fun observeMe(): Flow<Result<User>> {
-        val uid = auth.currentUser?.uid
-            ?: throw IllegalStateException("User must be logged-in to observeMe()")
+        val uid = currentUid()
+            ?: return flowOf(Result.Failure(IllegalStateException("Not logged‑in")))
 
-        return dao.observe(uid).map { entity ->
-            if (entity == null)
-                Result.Failure(NoSuchElementException("Current user not found in local DB"))
-            else
-                Result.Success(mapper.toDomain(entity))
+        // מאזין למסמך האישי ומעדכן את הרשומה (לא מוחק הכול)
+        liveSyncJob ?: listenRemote()
+            .onEach { res ->
+                if (res is Result.Success) dao.upsert(toEntity(res.data.first()))
+            }
+            .launchIn(appScope)
+
+        return dao.observe(uid).map { ent ->
+            ent?.let { Result.Success(toDomain(it)) } ?: Result.Loading
         }
     }
 
+    /* ---------- observeUser (אחר) ---------- */
+    override fun observeUser(uid: String): Flow<Result<User>> =
+        dao.observe(uid).map { ent ->
+            ent?.let { Result.Success(toDomain(ent)) }
+                ?: Result.Failure(NoSuchElementException("User $uid not found"))
+        }
+
+
+    /* ───────────── Direct getters ───────────── */
 
     override suspend fun getMe(): Result<User> = withContext(io) {
         runCatching {
-            val uid = auth.currentUser?.uid
-                ?: throw IllegalStateException("User must be logged-in to getMe()")
-
-            val local = dao.get(uid)
-            if (local != null) mapper.toDomain(local)
-            else {
-                val remote = firestore.getMe()
-                val entity = mapper.toEntity(remote)
+            val uid = currentUid() ?: throw IllegalStateException("Not logged‑in")
+            dao.get(uid)?.let(mapper::toDomain) ?: run {             // ← cache miss
+                val dto    = firestore.getMe()
+                val entity = mapper.toEntity(dto)
                 dao.upsert(entity)
                 mapper.toDomain(entity)
             }
-        }.fold(
-            onSuccess = { Result.Success(it) },
-            onFailure = { Result.Failure(it) }
-        )
+        }.fold({ Result.Success(it) }, { Result.Failure(it) })
     }
 
     override suspend fun getUser(uid: String): Result<User> = withContext(io) {
         runCatching {
-            val local = dao.get(uid)
-            if (local != null) mapper.toDomain(local)
-            else {
-                val remote = firestore.getUser(uid)
-                val entity = mapper.toEntity(remote)
+            dao.get(uid)?.let(mapper::toDomain) ?: run {
+                val dto    = firestore.getUser(uid)
+                val entity = mapper.toEntity(dto)
                 dao.upsert(entity)
                 mapper.toDomain(entity)
             }
-        }.fold(
-            onSuccess = { Result.Success(it) },
-            onFailure = { Result.Failure(it) }
-        )
+        }.fold({ Result.Success(it) }, { Result.Failure(it) })
     }
 
-
+    /* ───────────── Auth / Profile ───────────── */
 
     override suspend fun signInOrUpWithEmail(
         email: String,
@@ -122,23 +135,16 @@ class UserRepositoryImpl @Inject constructor(
         bio: String?
     ): Result<User> = withContext(io) {
 
-        /** true → Sign‑Up, false → Login */
         val isSignup = !displayName.isNullOrBlank() || !bio.isNullOrBlank()
 
-        /** מחזיר UID אם הצליח */
         suspend fun authFlow(): String =
-            if (isSignup) {
-                // ▶️  יצירת משתמש חדש – אם כבר קיים → שגיאה
-                auth.createUserWithEmailAndPassword(email, password)
-                    .await().user!!.uid
-            } else {
-                // ▶️  LOGIN  – אם לא קיים → שגיאה
-                auth.signInWithEmailAndPassword(email, password)
-                    .await().user!!.uid
-            }
+            if (isSignup)
+                auth.createUserWithEmailAndPassword(email, password).await().user!!.uid
+            else
+                auth.signInWithEmailAndPassword(email, password).await().user!!.uid
 
         runCatching {
-            authFlow()                                           // ← אין יצירה אוטומטית ב‑Login
+            authFlow()                                               // ← Firebase‑Auth
             val dto = functions.signInOrUp(
                 email       = email,
                 password    = password,
@@ -146,60 +152,41 @@ class UserRepositoryImpl @Inject constructor(
                 bio         = if (isSignup) bio         else null
             )
             val entity = mapper.toEntity(dto)
-            dao.upsert(entity)                                  // Cache ב‑Room
+            dao.upsert(entity)
             mapper.toDomain(entity)
-        }.fold(
-            onSuccess = { Result.Success(it) },
-            onFailure = { Result.Failure(it) }
-        )
+        }.fold({ Result.Success(it) }, { Result.Failure(it) })
     }
-
-
-
-
-
-
-
-
-    /* ---------------- helper קטנטן ---------------- */
-    private suspend fun <T> retry(times: Int, delayMs: Long, block: suspend () -> T): T {
-        repeat(times - 1) {
-            try { return block() } catch (_: Exception) { delay(delayMs) }
-        }
-        return block()           // ניסיון אחרון – אם ייכשל  ➔  ייזרק החוצה
-    }
-
 
     override suspend fun updateProfile(
-        displayName: String?,
-        bio: String?,
-        photoUrl: String?
+        displayName: String?, bio: String?, photoUrl: String?
     ): Result<Unit> = withContext(io) {
-        runCatching {
-            functions.updateProfile(displayName, bio, photoUrl)
-        }.fold(
-            onSuccess = { Result.Success(Unit) },
-            onFailure = { Result.Failure(it) }
-        )
+        runCatching { functions.updateProfile(displayName, bio, photoUrl) }
+            .fold({ Result.Success(Unit) }, { Result.Failure(it) })
     }
 
     override suspend fun deleteMyAccount(): Result<Unit> = withContext(io) {
         runCatching { functions.deleteMyAccount() }
-            .fold(
-                onSuccess = { Result.Success(Unit) },
-                onFailure = { Result.Failure(it) }
-            )
+            .fold({ Result.Success(Unit) }, { Result.Failure(it) })
     }
 
     override suspend fun touchLogin(): Result<Unit> = withContext(io) {
         runCatching { functions.touchLogin() }
-            .fold(
-                onSuccess = { Result.Success(Unit) },
-                onFailure = { Result.Failure(it) }
-            )
+            .fold({ Result.Success(Unit) }, { Result.Failure(it) })
+    }
+
+    /* ───────────── Misc ───────────── */
+
+    private suspend fun <T> retry(times: Int, delayMs: Long, block: suspend () -> T): T {
+        repeat(times - 1) { try  { return block() } catch (_: Exception) { delay(delayMs) } }
+        return block()
     }
 
 
-    override fun currentUid(): String? = auth.currentUser?.uid
+    override fun toEntity(dto: UserDto)  = mapper.toEntity(dto)
+    override fun toDomain(e: UserEntity) = mapper.toDomain(e)
+    override fun currentUid(): String?   = auth.currentUser?.uid
+
+
+
 
 }

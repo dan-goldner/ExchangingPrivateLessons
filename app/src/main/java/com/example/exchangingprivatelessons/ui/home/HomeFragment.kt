@@ -21,16 +21,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val vm: HomeViewModel by viewModels()
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _b = FragmentHomeBinding.bind(view)
 
-        /* ───── Greeting ───── */
-        val user = FirebaseAuth.getInstance().currentUser
-        val displayName = user?.displayName          // מהפרופיל
-            ?: user?.email?.substringBefore('@')     // fallback לשם שמופיע באימייל
-            ?: "there"                               // fallback כללי
-
-        b.txtGreeting.text = getString(R.string.greeting, displayName)
+        /* ----- Greeting (Reactive) ----- */
+        vm.userName.observe(viewLifecycleOwner) { name ->        // 🔵
+            val finalName =
+                name.ifBlank {                                   // אם עדיין ריק …
+                    FirebaseAuth.getInstance().currentUser
+                        ?.email?.substringBefore('@') ?: "there" // fallback
+                }
+            b.txtGreeting.text = getString(R.string.greeting, finalName)
+        }
 
         /* ───────────── Navigation ───────────── */
         b.btnMyLessons.setOnClickListener   {
@@ -56,10 +59,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val dir = HomeFragmentDirections.actionHomeFragmentToAllChatsFragment()
             findNavController().navigate(dir)
         }
-        b.btnProfile.setOnClickListener   {
-            val dir = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
+        b.btnProfile.setOnClickListener {
+            val dir = HomeFragmentDirections.actionHomeFragmentToProfileFragment(null)
             findNavController().navigate(dir)
         }
+
 
         /* ───────────── State ───────────── */
         vm.state.observe(viewLifecycleOwner) { state ->

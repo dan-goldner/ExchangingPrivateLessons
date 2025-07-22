@@ -6,10 +6,13 @@ import java.util.Date
 
 @Entity(tableName = "chats")
 data class ChatEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey            val id: String,
+    /** המשתתף הראשון (Index 0 ברשימה) */
     val participantIdA: String,
+    /** המשתתף השני (Index 1 ברשימה) */
     val participantIdB: String,
-    val createdAt: Date,
+
+    val createdAt:  Date?,
     val lastMessage: String,
     val lastMessageAt: Date?
 )

@@ -1,4 +1,4 @@
-/* ───────────  ChatMapper  ─────────── */
+/* ─────────── ChatMapper (Fixed) ─────────── */
 package com.example.exchangingprivatelessons.data.mapper
 
 import com.example.exchangingprivatelessons.common.util.TimestampConverter
@@ -6,46 +6,73 @@ import com.example.exchangingprivatelessons.data.local.entity.ChatEntity
 import com.example.exchangingprivatelessons.data.remote.dto.ChatDto
 import com.example.exchangingprivatelessons.domain.model.Chat
 import org.mapstruct.*
-import java.util.Date
 
 @Mapper(
     componentModel = "kotlin",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-    uses = [TimestampConverter::class],          // המרות Long ↔ Date
+    uses = [TimestampConverter::class],
     builder = Builder(disableBuilder = true)
 )
 abstract class ChatMapper {
 
-    /* ---------- Entity ⇢ Domain ---------- */
-    fun toDomain(entity: ChatEntity): Chat = Chat(
+    /* ---------- DTO ➜ Domain (MapStruct) ---------- */
+    @Mappings(
+        Mapping(source = "createdAt",     target = "createdAt",
+            qualifiedByName = ["tsToEpochNullable"]),
+        Mapping(source = "lastMessageAt", target = "lastMessageAt",
+            qualifiedByName = ["tsToEpochNullable"]),
+        Mapping(target = "peerName", ignore = true)
+    )
+    abstract fun dtoToDomain(dto: ChatDto): Chat
+
+    // Alias for repository compatibility
+    fun toDomain(dto: ChatDto): Chat = dtoToDomain(dto)
+
+    /* ---------- Domain ➜ DTO  (ידני) ---------- */
+    fun domainToDto(domain: Chat): ChatDto = ChatDto(
+        id             = domain.id,
+        participantIds = domain.participantIds,
+        lastMessage    = domain.lastMessage ?: "",
+        createdAt      = TimestampConverter.epochToTsNullable(domain.createdAt),
+        lastMessageAt  = TimestampConverter.epochToTsNullable(domain.lastMessageAt)
+    )
+
+    /* ---------- Entity ↔ Domain (ידני – בגלל פיצול IDs) ---------- */
+
+    fun entityToDomain(entity: ChatEntity): Chat = Chat(
         id             = entity.id,
         participantIds = listOfNotNull(entity.participantIdA, entity.participantIdB),
         lastMessage    = entity.lastMessage,
-        lastMessageAt  = TimestampConverter.toEpoch(entity.lastMessageAt),
-        peerName       = ""                              // מתמלא בריפו
+        // ⬇︎  השורה הבעייתית
+        createdAt = TimestampConverter.toEpochNullable(entity.createdAt) ?: 0L,
+        lastMessageAt  = TimestampConverter.toEpochNullable(entity.lastMessageAt),
+        peerName       = ""
     )
 
-    /* ---------- Domain ⇢ Entity ---------- */
-    fun toEntity(domain: Chat): ChatEntity = ChatEntity(
+
+    // Alias for repository compatibility
+    fun toDomain(entity: ChatEntity): Chat = entityToDomain(entity)
+
+    fun domainToEntity(domain: Chat): ChatEntity = ChatEntity(
         id             = domain.id,
         participantIdA = domain.participantIds.getOrNull(0) ?: "",
         participantIdB = domain.participantIds.getOrNull(1) ?: "",
-        createdAt      = Date(),                         // השרת יקבע בפועל
+        createdAt      = TimestampConverter.toDateNonNull(domain.createdAt),
         lastMessage    = domain.lastMessage ?: "",
-        lastMessageAt  = domain.lastMessageAt?.let(TimestampConverter::toDate)
+        lastMessageAt  = TimestampConverter.toDateNullable(domain.lastMessageAt)
     )
 
-    /* ---------- DTO ⇄ Domain (MapStruct מייצר) ---------- */
-    abstract fun toDomain(dto: ChatDto): Chat
-    abstract fun toDto(domain: Chat): ChatDto
+    /* ---------- DTO → Entity (ידני) ---------- */
 
-    /* ---------- DTO ⇢ Entity  – מימוש ידני ---------- */
-    fun toEntity(dto: ChatDto): ChatEntity = ChatEntity(
+    fun dtoToEntity(dto: ChatDto): ChatEntity = ChatEntity(
         id             = dto.id,
         participantIdA = dto.participantIds.getOrNull(0) ?: "",
         participantIdB = dto.participantIds.getOrNull(1) ?: "",
-        createdAt      = TimestampConverter.toDateNonNull(dto.createdAt),
+        createdAt      = TimestampConverter.tsToDateNullable(dto.createdAt) ?: error("createdAt missing"),
         lastMessage    = dto.lastMessage,
-        lastMessageAt  = dto.lastMessageAt?.let(TimestampConverter::toDate)
+        lastMessageAt  = TimestampConverter.tsToDateNullable(dto.lastMessageAt)
     )
+
+    // Alias for repository compatibility
+    fun toEntity(dto: ChatDto): ChatEntity = dtoToEntity(dto)
 }

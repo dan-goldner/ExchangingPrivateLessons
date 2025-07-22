@@ -2,10 +2,12 @@
 package com.example.exchangingprivatelessons.data.mapper
 
 import com.example.exchangingprivatelessons.common.util.TimestampConverter
+import com.example.exchangingprivatelessons.common.util.millis   // extension שכבר יש לך ב‑TimeExt
 import com.example.exchangingprivatelessons.data.local.entity.UserEntity
 import com.example.exchangingprivatelessons.data.remote.dto.UserDto
 import com.example.exchangingprivatelessons.domain.model.User
 import org.mapstruct.*
+import java.util.Date
 
 @Mapper(
     componentModel = "kotlin",
@@ -15,16 +17,23 @@ import org.mapstruct.*
 )
 abstract class UserMapper {
 
-    /* ---------- Entity ⇢ Domain ---------- */
-    @Mappings(
-        Mapping(source = "id",          target = "uid"),
-        Mapping(source = "createdAt",   target = "createdAt",   qualifiedByName = ["toEpochNullable"]),
-        Mapping(source = "lastLoginAt", target = "lastLoginAt", qualifiedByName = ["toEpochNullable"]),
-        Mapping(target = "lastUpdated", ignore = true)          // ל‑Domain אין כרגע field תואם
-    )
-    abstract fun toDomain(entity: UserEntity): User
+    /* ---------- Entity → Domain ---------- */
+    fun toDomain(entity: UserEntity) = with(entity) {
+        User(
+            uid         = id,
+            displayName = displayName,
+            email       = email,
+            photoUrl    = photoUrl,
+            bio         = bio,
+            score       = score,
+            createdAt   = createdAt?.time   ?: 0L,
+            lastLoginAt = lastLoginAt?.time ?: 0L,
+            lastUpdated = lastUpdated?.time ?: 0L
+        )
+    }
 
-    /* ---------- Domain ⇢ Entity ---------- */
+
+    /* ---------- Domain → Entity ---------- */
     @Mappings(
         Mapping(source = "uid",         target = "id"),
         Mapping(source = "createdAt",   target = "createdAt",   qualifiedByName = ["toDateNullable"]),
@@ -34,55 +43,61 @@ abstract class UserMapper {
     abstract fun toEntity(domain: User): UserEntity
 
 
-    /* === המרות   DTO ⇄ Entity / Domain – ידני, כדי להימנע מ‑val‑setter errors === */
+    /* -------- DTO ◄► Domain / Entity – ידני -------- */
 
-    /** DTO → Domain (אין lastUpdated ב‑DTO) */
+    /** DTO → Domain */
     fun toDomain(dto: UserDto): User = User(
-        uid          = dto.id,
-        displayName  = dto.displayName,
-        email        = dto.email,
-        photoUrl     = dto.photoUrl,
-        bio          = dto.bio,
-        score        = dto.score,
-        createdAt    = dto.createdAt ?: 0L,
-        lastLoginAt  = dto.lastLoginAt ?: 0L,
-        lastUpdated  = null
+        uid         = dto.id,
+        displayName = dto.displayName,
+        email       = dto.email,
+        photoUrl    = dto.photoUrl,
+        bio         = dto.bio,
+        score       = dto.score,
+        createdAt   = dto.createdAt?.millis ?: 0L,
+        lastLoginAt = dto.lastLoginAt?.millis ?: 0L,
+        lastUpdated = null
     )
 
     /** DTO → Entity */
-    fun toEntity(dto: UserDto): UserEntity = UserEntity(
-        id           = dto.id,
-        displayName  = dto.displayName,
-        email        = dto.email,
-        photoUrl     = dto.photoUrl,
-        bio          = dto.bio,
-        score        = dto.score,
-        createdAt    = TimestampConverter.toDateNullable(dto.createdAt),
-        lastLoginAt  = TimestampConverter.toDateNullable(dto.lastLoginAt),
-        lastUpdated  = null
+    fun toEntity(dto: UserDto) = UserEntity(
+        id          = dto.id,
+        displayName = dto.displayName,
+        email       = dto.email,
+        photoUrl    = dto.photoUrl,
+        bio         = dto.bio,
+        score       = dto.score,
+        // ← ברירת‑מחדל אם Firebase עדיין לא כותב serverTimestamp
+        createdAt   = TimestampConverter.tsToDateNullable(dto.createdAt) ?: Date(),
+        lastLoginAt = TimestampConverter.tsToDateNullable(dto.lastLoginAt) ?: Date(),
+        lastUpdated = null
     )
+
 
     /** Domain → DTO */
     fun toDto(domain: User): UserDto = UserDto(
-        id           = domain.uid,
-        displayName  = domain.displayName,
-        email        = domain.email,
-        photoUrl     = domain.photoUrl,
-        bio          = domain.bio,
-        score        = domain.score,
-        createdAt    = domain.createdAt,
-        lastLoginAt  = domain.lastLoginAt
+        id          = domain.uid,
+        displayName = domain.displayName,
+        email       = domain.email,
+        photoUrl    = domain.photoUrl,
+        bio         = domain.bio,
+        score       = domain.score,
+        createdAt   = TimestampConverter.epochToTsNullable(domain.createdAt),
+        lastLoginAt = TimestampConverter.epochToTsNullable(domain.lastLoginAt)
     )
 
     /** Entity → DTO */
     fun toDto(entity: UserEntity): UserDto = UserDto(
-        id           = entity.id,
-        displayName  = entity.displayName,
-        email        = entity.email,
-        photoUrl     = entity.photoUrl,
-        bio          = entity.bio,
-        score        = entity.score,
-        createdAt    = TimestampConverter.toEpochNullable(entity.createdAt),
-        lastLoginAt  = TimestampConverter.toEpochNullable(entity.lastLoginAt)
+        id          = entity.id,
+        displayName = entity.displayName,
+        email       = entity.email,
+        photoUrl    = entity.photoUrl,
+        bio         = entity.bio,
+        score       = entity.score,
+        createdAt   = TimestampConverter.epochToTsNullable(
+            TimestampConverter.toEpochNullable(entity.createdAt)
+        ),
+        lastLoginAt = TimestampConverter.epochToTsNullable(
+            TimestampConverter.toEpochNullable(entity.lastLoginAt)
+        )
     )
 }

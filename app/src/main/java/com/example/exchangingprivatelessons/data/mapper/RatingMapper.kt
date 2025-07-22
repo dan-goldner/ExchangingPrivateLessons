@@ -1,4 +1,4 @@
-/* ───────────  RatingMapper  ─────────── */
+/* ─────────── RatingMapper (Fixed) ─────────── */
 package com.example.exchangingprivatelessons.data.mapper
 
 import com.example.exchangingprivatelessons.common.util.TimestampConverter
@@ -15,32 +15,59 @@ import org.mapstruct.*
 )
 abstract class RatingMapper {
 
-    /* ----- Entity ⇄ Domain (כבר קיימות) ----- */
+    /* ---------- Entity ↔ Domain ---------- */
 
     @Mapping(source = "ratedAt", target = "ratedAt",
         qualifiedByName = ["toEpochNullable"])
-    abstract fun toDomain(entity: RatingEntity): Rating
+    abstract fun entityToDomain(entity: RatingEntity): Rating
+
+    // Alias for repository compatibility
+    fun toDomain(entity: RatingEntity): Rating = entityToDomain(entity)
 
     @Mapping(source = "ratedAt", target = "ratedAt",
         qualifiedByName = ["toDateNullable"])
-    abstract fun toEntity(domain: Rating): RatingEntity
+    abstract fun domainToEntity(domain: Rating): RatingEntity
 
+    /* ---------- DTO ↔ Domain ---------- */
 
-    /* ----- DTO ⇄ Domain  (ללא lessonId / userId) ----- */
-    fun toDomain(dto: RatingDto): Rating = Rating(
-        lessonId      = dto.lessonId,
-        userId        = dto.uid,
-        numericValue  = dto.numericValue,
-        comment       = dto.comment,
-        ratedAt       = dto.ratedAt ?: 0L
+    fun dtoToDomain(dto: RatingDto): Rating = Rating(
+        lessonId     = dto.lessonId,
+        userId       = dto.uid,
+        numericValue = dto.numericValue,
+        comment      = dto.comment,
+        ratedAt      = TimestampConverter.tsToEpochNullable(dto.ratedAt) ?: 0L
     )
 
-    /* ----- DTO ⇄ Entity  (Date? ←→ Long?) ----- */
-    fun toEntity(dto: RatingDto): RatingEntity = RatingEntity(
-        lessonId      = dto.lessonId,
-        userId        = dto.uid,
-        numericValue  = dto.numericValue,
-        comment       = dto.comment,
-        ratedAt       = TimestampConverter.toDateNullable(dto.ratedAt)
+    // Alias for repository compatibility
+    fun toDomain(dto: RatingDto): Rating = dtoToDomain(dto)
+
+    fun domainToDto(domain: Rating): RatingDto = RatingDto(
+        lessonId     = domain.lessonId,
+        uid          = domain.userId,
+        numericValue = domain.numericValue,
+        comment      = domain.comment,
+        ratedAt      = TimestampConverter.epochToTsNullable(domain.ratedAt)
+    )
+
+    /* ---------- DTO ↔ Entity ---------- */
+
+    fun dtoToEntity(dto: RatingDto): RatingEntity = RatingEntity(
+        lessonId     = dto.lessonId,
+        userId       = dto.uid,
+        numericValue = dto.numericValue,
+        comment      = dto.comment,
+        ratedAt      = TimestampConverter.tsToDateNullable(dto.ratedAt)
+    )
+
+    // Alias for repository compatibility
+    fun toEntity(dto: RatingDto): RatingEntity = dtoToEntity(dto)
+
+    fun entityToDto(entity: RatingEntity): RatingDto = RatingDto(
+        lessonId     = entity.lessonId,
+        uid          = entity.userId,
+        numericValue = entity.numericValue,
+        comment      = entity.comment,
+        ratedAt      = TimestampConverter.epochToTsNullable(
+            TimestampConverter.toEpochNullable(entity.ratedAt))
     )
 }

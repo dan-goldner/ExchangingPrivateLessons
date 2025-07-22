@@ -11,14 +11,21 @@ class StorageDataSource @Inject constructor(
     private val storage: FirebaseStorage
 ) {
 
-    /** מעלה קובץ (תמונת שיעור / פרופיל) ומחזיר URL ציבורי */
-    suspend fun upload(path: String, fileUri: Uri): String {
+    /* ───────────  generic (private) ─────────── */
+
+    private suspend fun upload(path: String, local: Uri): String {
         val ref = storage.reference.child(path)
-        ref.putFile(fileUri).await()
+        ref.putFile(local).await()
         return ref.downloadUrl.await().toString()
     }
 
-    /** מוחק קובץ אם קיים */
+    /* ───────────  public helpers  ─────────── */
+
+    /** ‎`avatars/{uid}.jpg` – תמונה אחת מסודרת למשתמש */
+    suspend fun uploadUserAvatar(uid: String, local: Uri): String =
+        upload("avatars/$uid.jpg", local)
+
+    /** מחיקת קובץ (אם קיים) – אופציונלי */
     suspend fun delete(path: String) = runCatching {
         storage.reference.child(path).delete().await()
     }.getOrNull()

@@ -1,19 +1,18 @@
 // data/remote/dto/LessonDto.kt
 package com.example.exchangingprivatelessons.data.remote.dto
 
-import kotlinx.serialization.Serializable
 import com.example.exchangingprivatelessons.domain.model.LessonStatus
+import com.google.firebase.Timestamp
 
-@Serializable
 data class LessonDto(
-    val id: String,
-    val ownerId: String,
-    val title: String,
-    val description: String,
-    val imageUrl: String,
-    val status: LessonStatus,
-    val ratingSum: Int,
-    val ratingCount: Int,
-    val createdAt: Long?,
-    val lastUpdated: Long?
+    val id          : String          = "",
+    val ownerId     : String          = "",
+    val title       : String          = "",
+    val description : String          = "",
+    val imageUrl    : String          = "",
+    val status      : LessonStatus    = LessonStatus.Active,
+    val ratingSum   : Int             = 0,
+    val ratingCount : Int             = 0,
+    val createdAt   : Timestamp?      = null,   // ⬅️ היה Long?
+    val lastUpdated : Timestamp?      = null    // ⬅️ היה Long?
 )

@@ -7,16 +7,28 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
+    /* --- זרמים --- */
     @Query("SELECT * FROM users WHERE id = :id")
     fun observe(id: String): Flow<UserEntity?>
 
+    /* --- upsert יחיד + רשימה --- */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(user: UserEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAll(users: List<UserEntity>)
+    suspend fun upsertAll(list: List<UserEntity>)
 
+    /* --- Get חד‑פעמי --- */
     @Query("SELECT * FROM users WHERE id = :id")
     suspend fun get(id: String): UserEntity?
 
+    /* --- החלפה מלאה --- */
+    @Query("DELETE FROM users")
+    suspend fun clear()
+
+    @Transaction
+    suspend fun replaceAll(list: List<UserEntity>) {
+        clear()
+        upsertAll(list)
+    }
 }

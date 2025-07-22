@@ -1,14 +1,12 @@
-/* ──────────────────────────────  Rating  ──────────────────────────── */
+// data/remote/dto/RatingDto.kt
 package com.example.exchangingprivatelessons.data.remote.dto
 
-import kotlinx.serialization.Serializable
+import com.google.firebase.Timestamp   // ⬅️ חדש
 
-@Serializable
 data class RatingDto(
-    val lessonId: String = "",      // ➊  ← מזהים איזה שיעור דורג
-    val uid: String = "",           // rater’s uid
-    val numericValue: Int = 0,      // 1‑5
-    val comment: String? = null,
-    val ratedAt: Long? = null
+    val lessonId    : String  = "",
+    val uid         : String  = "",     // rater UID
+    val numericValue: Int     = 0,      // 1‑5
+    val comment     : String? = null,
+    val ratedAt     : Timestamp? = null // ⬅️ היה Long?
 )
-
