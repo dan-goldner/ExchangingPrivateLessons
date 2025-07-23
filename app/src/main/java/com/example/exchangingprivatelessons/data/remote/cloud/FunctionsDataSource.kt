@@ -32,29 +32,32 @@ class FunctionsDataSource @Inject constructor(
         bio: String?
     ): UserDto {
 
-
+        /* 1. בניית ה‑payload */
         val payload = mutableMapOf(
-            "email"    to email,
-            "password" to password
+            "email"    to  email,
+            "password" to  password
         ).apply {
             displayName?.let { put("displayName", it) }
-            bio        ?.let { put("bio", it) }
+            bio        ?.let { put("bio", it)         }
         }
 
+        /* 2. קריאה ל‑Cloud Function */
         val res: Map<*, *> = invoke("signInOrUp", payload)
 
+        /* 3. מיפוי לתוך UserDto */
         return UserDto(
-            id          = res["uid"]         as String,
-            displayName = res["displayName"] as? String ?: "",
-            email       = res["email"]       as? String ?: "",
-            photoUrl    = res["photoUrl"]    as? String ?: "",
-            bio         = res["bio"]         as? String ?: "",
-            score       = (res["score"]      as? Number)?.toInt() ?: 0,
-            createdAt   = res["createdAt"]   as? Timestamp,
-            lastLoginAt = res["lastLoginAt"] as? Timestamp
+            id          = res["uid"]          as String,
+            displayName = res["displayName"]  as? String ?: "",
+            email       = res["email"]        as? String ?: "",
+            photoUrl    = res["photoUrl"]     as? String ?: "",
+            bio         = res["bio"]          as? String ?: "",
+            score       = (res["score"]       as? Number)?.toInt() ?: 0,
+            createdAt   = res["createdAt"]    as? Timestamp,
+            lastLoginAt = res["lastLoginAt"]  as? Timestamp,
+            lastUpdatedAt = res["lastUpdated"]  as? Timestamp      // ⬅︎ חדש
         )
-
     }
+
 
 
     suspend fun deleteMyAccount() {

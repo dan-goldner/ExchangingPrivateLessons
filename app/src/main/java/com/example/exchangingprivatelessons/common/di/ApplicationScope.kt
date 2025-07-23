@@ -4,5 +4,5 @@ import javax.inject.Qualifier
 
 /** Qualifier ל‑CoroutineScope גלובלי החי כל זמן חיי‑האפליקציה */
 @Qualifier
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.BINARY)
 annotation class ApplicationScope

@@ -79,79 +79,94 @@ const messagesCol = (chatId: string) =>
 
 
 /*1️⃣----signInOrUp------*/
-export const signInOrUp = onCall<{
-  email: string; password: string;
-  displayName?: string; bio?: string;
-}>(async ({ data }) => {
+/* ---------- types ---------- */
+interface SignInOrUpInput {
+  email: string;
+  password: string;
+  displayName?: string;
+  bio?: string;
+}
 
-  const email    = data.email?.trim().toLowerCase() ?? "";
-  const password = data.password?.trim()            ?? "";
-  // ❗ אל תהפוך undefined -> "" – שמור על undefined
-  const display  =
-    typeof data.displayName === "string" && data.displayName.trim() !== ""
-      ? data.displayName.trim()
-      : undefined;
-  const bio =
-    typeof data.bio === "string" && data.bio.trim() !== ""
-      ? data.bio.trim()
-      : undefined;
+/* ---------- util ---------- */
+const toMillis = (ts?: admin.firestore.Timestamp | null): number =>
+  ts ? ts.toMillis() : 0;
 
-  if (!email || !password)
-    throw new HttpsError("invalid-argument", "Missing email / password");
+/* ---------- callable ---------- */
+export const signInOrUp = onCall<SignInOrUpInput>(async ({ data }) => {
+  /* ---- 0. Normalise input ---- */
+  const email       = (data.email ?? '').trim().toLowerCase();
+  const password    = (data.password ?? '').trim();
+  const displayName = data.displayName?.trim() || undefined;
+  const bio         = data.bio?.trim()         || undefined;
 
-  /* ---------- 1. Auth ---------- */
+  if (!email || !password) {
+    throw new HttpsError('invalid-argument', 'Missing email / password');
+  }
+
+  /* ---- 1. Auth ---- */
   let userRec: admin.auth.UserRecord;
   try {
     userRec = await admin.auth().getUserByEmail(email);
-  } catch (e: any) {
-    if (e.code === "auth/user-not-found") {
-      if (display || bio) {
+  } catch (err: unknown) {
+    const e = err as { code?: string };
+    if (e.code === 'auth/user-not-found') {
+      if (displayName || bio) {
         userRec = await admin.auth().createUser({
-          email, password, displayName: display,
+          email,
+          password,
+          displayName,
         });
       } else {
-        throw new HttpsError("not-found", "User does not exist");
+        throw new HttpsError('not-found', 'User does not exist');
       }
-    } else { throw e; }
+    } else {
+      throw err;
+    }
   }
 
-  /* ---------- 2. Firestore ---------- */
+  /* ---- 2. Firestore ---- */
   const userRef = usersCol.doc(userRec.uid);
-  const snap = await userRef.get();
+  const snap    = await userRef.get();
 
   if (!snap.exists) {
     // משתמש חדש – צור מסמך מלא
     await userRef.set({
-      displayName : display  ?? "",
-      email       : email,
-      photoUrl    : userRec.photoURL ?? "",
-      bio         : bio      ?? "",
+      displayName : displayName ?? '',
+      email,
+      photoUrl    : userRec.photoURL ?? '',
+      bio         : bio ?? '',
       score       : 0,
       createdAt   : FieldValue.serverTimestamp(),
       lastLoginAt : FieldValue.serverTimestamp(),
     });
   } else {
-    // משתמש קיים – אל תדרוס ערכים שלא סופקו
-    const patch: any = { lastLoginAt: FieldValue.serverTimestamp() };
-    if (display !== undefined) patch.displayName = display;
-    if (bio     !== undefined) patch.bio         = bio;
-    if (Object.keys(patch).length > 1) await userRef.update(patch);
+    // משתמש קיים – עדכן רק שדות שסופקו
+    const patch: Record<string, unknown> = {
+      lastLoginAt: FieldValue.serverTimestamp(),
+    };
+    if (displayName !== undefined) patch.displayName = displayName;
+    if (bio         !== undefined) patch.bio         = bio;
+
+    if (Object.keys(patch).length > 1) {
+      await userRef.update(patch);
+    }
   }
 
-  const doc = (await userRef.get()).data()! as User;
-  const toMs = (ts?: admin.firestore.Timestamp|null) => ts ? ts.toMillis() : 0;
+  /* ---- 3. Build response ---- */
+  const doc = (await userRef.get()).data() as User;
 
   return {
-    uid        : userRec.uid,
-    displayName: doc.displayName,
-    email      : doc.email,
-    photoUrl   : doc.photoUrl,
-    bio        : doc.bio,
-    score      : doc.score,
-    createdAt  : toMs(doc.createdAt  as any),
-    lastLoginAt: toMs(doc.lastLoginAt as any),
+    uid         : userRec.uid,
+    displayName : doc.displayName,
+    email       : doc.email,
+    photoUrl    : doc.photoUrl,
+    bio         : doc.bio,
+    score       : doc.score,
+    createdAt   : toMillis(doc.createdAt  as admin.firestore.Timestamp | null),
+    lastLoginAt : toMillis(doc.lastLoginAt as admin.firestore.Timestamp | null),
   };
 });
+
 
 
 

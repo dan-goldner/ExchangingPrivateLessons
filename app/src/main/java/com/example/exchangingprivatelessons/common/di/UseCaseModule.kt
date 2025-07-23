@@ -6,6 +6,7 @@ import com.example.exchangingprivatelessons.domain.usecase.lesson.*
 import com.example.exchangingprivatelessons.domain.usecase.rating.RateLesson
 import com.example.exchangingprivatelessons.domain.usecase.request.*
 import com.example.exchangingprivatelessons.domain.usecase.user.*
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,10 +17,10 @@ import dagger.hilt.components.SingletonComponent
 object UseCaseModule {
 
     /* ---------- user ---------- */
-    @Provides fun signInOrUp   (r: UserRepository) = SignInOrUp(r)
-    @Provides fun updateProfile(r: UserRepository) = UpdateProfile(r)
-    @Provides fun observeUser (r: UserRepository) = ObserveUser(r)
-    @Provides fun deleteAccount(r: UserRepository)= DeleteAccount(r)
+    @Provides fun signInOrUp      (r: UserRepository) = SignInOrUp(r)
+    @Provides fun updateProfile   (r: UserRepository) = UpdateProfile(r)
+    @Provides fun observeUser     (r: UserRepository) = ObserveUser(r)
+    @Provides fun deleteAccount   (r: UserRepository) = DeleteAccount(r)
 
     /* ---------- chat ---------- */
     @Provides fun createChat      (c: ChatRepository)                         = CreateChat(c)
@@ -33,7 +34,7 @@ object UseCaseModule {
     @Provides fun updateLesson    (l: LessonRepository)                       = UpdateLesson(l)
     @Provides fun observeLessons  (l: LessonRepository)                       = ObserveLessons(l)
     @Provides fun observeTaken    (t: TakenLessonRepository)                  = ObserveTakenLessons(t)
-    @Provides fun refreshLessons  (l: LessonRepository)                       = RefreshLessons(l)
+    @Provides fun refreshLessons  (l: LessonRepository, a: FirebaseAuth)      = RefreshLessons(l, a)
     @Provides fun archiveLesson   (l: LessonRepository)                       = ArchiveLesson(l)
     @Provides
     fun getLessonDetails(

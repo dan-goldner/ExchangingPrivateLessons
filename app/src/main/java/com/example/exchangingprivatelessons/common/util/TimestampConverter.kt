@@ -11,7 +11,7 @@ object TimestampConverter {
     /* ---------- Room (Date ↔ Long) ---------- */
 
     /** epoch ms? → Date? (null אם 0/‑1/null) */
-    @JvmStatic @Named("toDateNullable")
+    @TypeConverter @JvmStatic @Named ("toDateNullable")
     fun toDateNullable(epoch: Long?): Date? =
         epoch?.takeIf { it > 0 }?.let { Date(it) }
 
@@ -19,7 +19,7 @@ object TimestampConverter {
     fun toDateNonNull(epoch: Long): Date = Date(epoch)
 
     /** Date? → epoch ms (0 אם null) */
-    @JvmStatic @Named("toEpochNullable")
+    @TypeConverter @JvmStatic @Named("toEpochNullable")
     fun toEpochNullable(date: Date?): Long = date?.time ?: 0L
 
     @TypeConverter @JvmStatic @Named("toEpochNonNull")

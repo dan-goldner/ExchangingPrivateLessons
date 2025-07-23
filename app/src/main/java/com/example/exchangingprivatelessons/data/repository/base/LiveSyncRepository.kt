@@ -15,7 +15,7 @@ abstract class LiveSyncRepository<TDto, TEntity, TDomain> {
     fun observe(): Flow<Result<List<TDomain>>> =
         listenRemote().map { res ->
             if (res is Result.Success) {
-                replaceAllLocal(res.data.map(::toEntity))
+                replaceAllLocal(res.data.map { dto -> toEntity(dto) })
             }
             res.mapList { dto -> toDomain(toEntity(dto)) }
         }

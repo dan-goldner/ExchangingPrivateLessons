@@ -12,6 +12,7 @@ data class UserDto(
     val photoUrl: String = "",
     val bio: String = "",
     val score: Int = 0,
-    val createdAt: Timestamp? = null,      // ⬅️ שונֵה
-    val lastLoginAt: Timestamp? = null     // ⬅️ שונֵה
+    val createdAt: Timestamp? = null,
+    val lastLoginAt: Timestamp? = null,
+    val lastUpdatedAt: Timestamp? = null
 )
