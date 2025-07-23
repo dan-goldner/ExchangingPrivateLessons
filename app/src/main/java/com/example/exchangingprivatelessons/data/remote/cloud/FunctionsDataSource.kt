@@ -12,6 +12,7 @@ class FunctionsDataSource @Inject constructor(
     private val functions: FirebaseFunctions
 ) {
 
+
     /* ───────────── Low-level invoke ───────────── */
     private suspend inline fun <reified R> invoke(
         name: String,
@@ -30,15 +31,18 @@ class FunctionsDataSource @Inject constructor(
         displayName: String?,
         bio: String?
     ): UserDto {
-        val res: Map<*, *> = invoke(
-            "signInOrUp",
-            mapOf(
-                "email"       to email,
-                "password"    to password,
-                "displayName" to displayName,
-                "bio"         to bio
-            )
-        )
+
+
+        val payload = mutableMapOf(
+            "email"    to email,
+            "password" to password
+        ).apply {
+            displayName?.let { put("displayName", it) }
+            bio        ?.let { put("bio", it) }
+        }
+
+        val res: Map<*, *> = invoke("signInOrUp", payload)
+
         return UserDto(
             id          = res["uid"]         as String,
             displayName = res["displayName"] as? String ?: "",

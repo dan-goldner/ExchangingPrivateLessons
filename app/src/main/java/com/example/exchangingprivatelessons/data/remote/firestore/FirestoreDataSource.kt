@@ -204,5 +204,6 @@ class FirestoreDataSource @Inject constructor(
     suspend fun updateUserFields(uid: String, map: Map<String, Any?>) {
         db.collection("users").document(uid).update(map).await()
     }
-    /* ------------------------------------------ */
 }
+
+

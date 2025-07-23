@@ -2,15 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
 
-    /* -------- users -------- */
+ /* -------- users -------- */
     match /users/{uid} {
-
-        allow read : if request.auth != null;
-        allow write: if request.auth.uid == uid;
-
+      // כל מי שמחובר רשאי לקרוא כל משתמש
+      allow read  : if request.auth != null;
+      // כתיבה רק על המסמך של עצמו
+      allow write : if request.auth != null && request.auth.uid == uid;
 
       match /takenLessons/{lessonId} {
-        allow read : if request.auth.uid == uid;
+        allow read : if request.auth != null && request.auth.uid == uid;
         allow write: if false;
       }
     }
