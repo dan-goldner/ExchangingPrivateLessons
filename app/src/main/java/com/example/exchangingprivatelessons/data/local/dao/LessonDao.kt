@@ -10,10 +10,10 @@ interface LessonDao {
     @Query("SELECT * FROM lessons WHERE status = :status ORDER BY CASE WHEN createdAt IS NULL THEN 1 ELSE 0 END, createdAt DESC")
     fun observeByStatus(status: String): Flow<List<LessonEntity>>
 
-    @Query("SELECT * FROM lessons WHERE status = 'ACTIVE' ORDER BY CASE WHEN createdAt IS NULL THEN 1 ELSE 0 END, createdAt DESC")
+    @Query("SELECT * FROM lessons WHERE status = 'Active' ORDER BY CASE WHEN createdAt IS NULL THEN 1 ELSE 0 END, createdAt DESC")
     fun observeActive(): Flow<List<LessonEntity>>
 
-    @Query("SELECT * FROM lessons WHERE status = 'ACTIVE' AND ownerId = :uid ORDER BY CASE WHEN createdAt IS NULL THEN 1 ELSE 0 END, createdAt DESC")
+    @Query("SELECT * FROM lessons WHERE status = 'Active' AND ownerId = :uid ORDER BY CASE WHEN createdAt IS NULL THEN 1 ELSE 0 END, createdAt DESC")
     fun observeMine(uid: String): Flow<List<LessonEntity>>
 
     @Query("SELECT * FROM lessons WHERE id = :id")

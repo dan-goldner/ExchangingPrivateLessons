@@ -68,12 +68,18 @@ class LessonListViewModel @Inject constructor(
                         _ui.value?.copy(loading = false,
                             errorMsg = res.throwable?.localizedMessage)
                     )
-                    is Result.Success -> _ui.postValue(
-                        UiState(
-                            lessons = res.data.map { it.toItem(ctx) },
-                            loading = false
+                    is Result.Success -> {
+                        android.util.Log.d(
+                            "LessonVM",
+                            "Received ${res.data.size} lessons in mode: $mode"
                         )
-                    )
+                        _ui.postValue(
+                            UiState(
+                                lessons = res.data.map { it.toItem(ctx) },
+                                loading = false
+                            )
+                        )
+                    }
                 }
             }
         }

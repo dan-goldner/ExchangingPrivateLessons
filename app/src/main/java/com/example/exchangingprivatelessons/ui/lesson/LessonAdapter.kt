@@ -25,8 +25,9 @@ class LessonAdapter(
     inner class VH(private val row: RowLessonBinding) : RecyclerView.ViewHolder(row.root) {
         fun bind(item: LessonItem) = with(row) {
             titleTv.text  = item.title
-            dateTv.text   = item.date
-            ratingTv.text = item.rating
+            descPreviewTv.text  = item.description
+            dateTv.text   = "Listed at: ${item.date}"
+            ratingTv.text = "Lesson Rating: ${item.rating}"
             lessonImg.load(item.imageUrl) { crossfade(true) }
 
             archiveBtn.run {

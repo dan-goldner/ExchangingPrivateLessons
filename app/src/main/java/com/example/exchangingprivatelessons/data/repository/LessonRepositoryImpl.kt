@@ -1,5 +1,6 @@
 package com.example.exchangingprivatelessons.data.repository
 
+import android.util.Log
 import com.example.exchangingprivatelessons.common.di.IoDispatcher
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.data.local.dao.LessonDao
@@ -126,10 +127,29 @@ class LessonRepositoryImpl @Inject constructor(
         imageUrl: String?
     ): Result<String> = runCatching {
         val newId = functions.createLesson(title, description, imageUrl)
-        val dto = firestore.getLessons().first { it.id == newId }
-        dao.upsert(mapper.toEntity(dto))
+
+        // Retry getting the lesson directly from Firestore by ID
+        var dto: LessonDto? = null
+        repeat(10) { attempt ->
+            dto = firestore.getLessonById(newId)
+            if (dto != null) return@repeat
+            kotlinx.coroutines.delay(500L)
+        }
+
+        dto ?: throw IllegalStateException("Created lesson not found in Firestore (getLessonById)")
+
+        val currentUid = auth.currentUser?.uid ?: ""
+        val entity = mapper.toEntity(dto!!).copy(ownerId = currentUid)
+
+        Log.d("LessonRepo", "Creating lesson: id=${entity.id}, ownerId=${entity.ownerId}, status=${entity.status}, createdAt=${entity.createdAt}")
+        Log.d("Repo", "Lesson saved locally: $entity")
+        dao.upsert(entity)
+
         Result.Success(newId)
-    }.getOrElse { Result.Failure(it) }
+    }.getOrElse {
+        Log.e("Repo", "Failed to create lesson: ${it.localizedMessage}")
+        Result.Failure(it)
+    }
 
     override suspend fun refreshMineLessons(userId: String) {
         val remote = firestore.getLessonsOfferedByUser(userId)
