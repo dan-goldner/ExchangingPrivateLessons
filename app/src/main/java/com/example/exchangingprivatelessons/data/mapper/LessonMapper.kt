@@ -21,6 +21,7 @@ interface LessonMapper {
     @Mapping(source = "status", target = "status", qualifiedByName = ["stringToLessonStatus"])
     fun toDomain(entity: LessonEntity): Lesson
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "ownerId", target = "ownerId")
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = ["toDateNonNull"])
     @Mapping(source = "lastUpdated", target = "lastUpdated", qualifiedByName = ["toDateNonNull"])

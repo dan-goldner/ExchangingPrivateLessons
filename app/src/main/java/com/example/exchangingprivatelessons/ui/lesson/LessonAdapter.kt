@@ -1,5 +1,6 @@
 package com.example.exchangingprivatelessons.ui.lesson
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -45,5 +46,10 @@ class LessonAdapter(
     private class DiffCallback : DiffUtil.ItemCallback<LessonItem>() {
         override fun areItemsTheSame(o: LessonItem, n: LessonItem) = o.id == n.id
         override fun areContentsTheSame(o: LessonItem, n: LessonItem) = o == n
+    }
+
+    override fun submitList(list: List<LessonItem>?) {
+        Log.d("LessonAdapter", "Submitting list with ${list?.size ?: 0} items")
+        super.submitList(list)
     }
 }
