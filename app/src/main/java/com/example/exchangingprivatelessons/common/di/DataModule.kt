@@ -61,6 +61,7 @@ object DataModule {
                 AppDatabase.MIGRATION_2_3,
                 AppDatabase.MIGRATION_3_4
             )
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides fun chatDao(db: AppDatabase): ChatDao               = db.chatDao()
@@ -83,8 +84,8 @@ object DataModule {
     /* ---------- Data‑Sources ---------- */
 
     @Provides @Singleton
-    fun firestoreDS(fs: FirebaseFirestore, au: FirebaseAuth) =
-        FirestoreDataSource(fs, au)
+    fun firestoreDS(fs: FirebaseFirestore, auth: FirebaseAuth) =
+        FirestoreDataSource(fs, auth)
 
     @Provides @Singleton fun functionsDS(fn: FirebaseFunctions)   = FunctionsDataSource(fn)
     @Provides @Singleton fun storageDS  (st: FirebaseStorage)     = StorageDataSource(st)
@@ -133,7 +134,7 @@ object UseCaseModule {
     @Provides fun updateLesson (l: LessonRepository)                           = UpdateLesson(l)
     @Provides fun observeLessons(l: LessonRepository)                          = ObserveLessons(l)
     @Provides fun observeTaken  (t: TakenLessonRepository)                     = ObserveTakenLessons(t)
-    @Provides fun refreshLessons(l: LessonRepository)                          = RefreshLessons(l)
+    @Provides fun refreshLessons(l: LessonRepository, auth: FirebaseAuth)      = RefreshLessons(l, auth)
     @Provides fun archiveLesson (l: LessonRepository)                          = ArchiveLesson(l)
     @Provides
     fun getLessonDetails(

@@ -21,6 +21,7 @@ interface LessonMapper {
     @Mapping(source = "status", target = "status", qualifiedByName = ["stringToLessonStatus"])
     fun toDomain(entity: LessonEntity): Lesson
 
+    @Mapping(source = "ownerId", target = "ownerId")
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = ["toDateNonNull"])
     @Mapping(source = "lastUpdated", target = "lastUpdated", qualifiedByName = ["toDateNonNull"])
     @Mapping(source = "status", target = "status", qualifiedByName = ["lessonStatusToString"])
@@ -37,7 +38,7 @@ interface LessonMapper {
         ownerId      = domain.ownerId,
         title        = domain.title,
         description  = domain.description,
-        imageUrl     = domain.imageUrl,
+        imageUrl     = domain.imageUrl?: "", // Default to empty string if null
         status       = domain.status,
         ratingSum    = domain.ratingSum,
         ratingCount  = domain.ratingCount,
@@ -57,7 +58,7 @@ interface LessonMapper {
         ownerId      = entity.ownerId,
         title        = entity.title,
         description  = entity.description,
-        imageUrl     = entity.imageUrl,
+        imageUrl     = entity.imageUrl ?: "", // Default to empty string if null
         status       = stringToLessonStatus(entity.status),
         ratingSum    = entity.ratingSum,
         ratingCount  = entity.ratingCount,

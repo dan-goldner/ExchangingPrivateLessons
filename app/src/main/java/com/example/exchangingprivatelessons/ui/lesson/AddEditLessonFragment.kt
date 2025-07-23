@@ -56,14 +56,33 @@ class AddEditLessonFragment : Fragment() {
         errorTv.text            = state.errorMsg
 
         /* בשלב טעינת שיעור קיים */
-        state.existingLesson?.let { lesson ->
-            if (titleEt.text?.isEmpty() == true) titleEt.setText(lesson.title)
-            if (descEt.text?.isEmpty() == true)  descEt.setText(lesson.description)
+
+
+        /*state.existingLesson?.let { lesson ->
+            if (args.lessonId != null) {
+                titleEt.setText(lesson.title)
+                descEt.setText(lesson.description)
+            }
+
             metaTv.apply {
                 text = getString(
                     R.string.lesson_meta,
                     lesson.createdAt.pretty(),
                     lesson.ratingCount
+                )
+                isVisible = true
+            }
+        }*/
+
+        if (!args.lessonId.isNullOrEmpty() && state.existingLesson != null) {
+            val lesson = state.existingLesson
+            titleEt.setText(lesson?.title.orEmpty())
+            descEt.setText(lesson?.description.orEmpty())
+            metaTv.apply {
+                text = getString(
+                    R.string.lesson_meta,
+                    lesson?.createdAt?.pretty().orEmpty(),
+                    lesson?.ratingCount ?: 0
                 )
                 isVisible = true
             }

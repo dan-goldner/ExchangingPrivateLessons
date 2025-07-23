@@ -86,6 +86,9 @@
     <string name="tab_available">Available</string>
     <string name="tab_my">Mine</string>
     <string name="tab_taken">Taken</string>
+    <string name="empty_available">No available lessons right now.</string>
+    <string name="empty_mine">You haven’t offered any lessons yet.</string>
+    <string name="empty_taken">You haven’t signed up for any lessons yet.</string>
 
     <!-- Media -->
     <string name="choose_camera">Camera</string>

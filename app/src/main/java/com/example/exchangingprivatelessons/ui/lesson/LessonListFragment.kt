@@ -40,23 +40,25 @@ class LessonListFragment : Fragment() {
             DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         )
 
-        /* מצב ראשוני – Safe‑Args */
-        vm.setMode(LessonListViewModel.Mode.valueOf(args.mode))
-        selectChip(args.mode)
+        // 🔹 Set mode from arguments
+        val mode = LessonListViewModel.Mode.valueOf(args.mode)
+        vm.setMode(mode)
 
-        modeChips.setOnCheckedStateChangeListener { _, ids ->
-            val mode = when (ids.first()) {
-                R.id.chip_my    -> LessonListViewModel.Mode.MINE
-                R.id.chip_taken -> LessonListViewModel.Mode.TAKEN
-                else            -> LessonListViewModel.Mode.AVAILABLE
-            }
-            vm.setMode(mode)
+        // 🔹 Show FAB only in MINE mode
+        addFab.isVisible = mode == LessonListViewModel.Mode.MINE
+
+        // 🔹 Optional: Set empty message based on mode
+        emptyTv.text = when (mode) {
+            LessonListViewModel.Mode.AVAILABLE -> getString(R.string.empty_available)
+            LessonListViewModel.Mode.MINE      -> getString(R.string.empty_mine)
+            LessonListViewModel.Mode.TAKEN     -> getString(R.string.empty_taken)
         }
 
         swipeRefresh.setOnRefreshListener { vm.onRefresh() }
+
         addFab.setOnClickListener {
             findNavController().navigate(
-                LessonListFragmentDirections.actionLessonListToAddEditLesson("") // מחרוזת ריקה במקום null
+                LessonListFragmentDirections.actionLessonListToAddEditLesson("")
             )
         }
 
@@ -77,14 +79,6 @@ class LessonListFragment : Fragment() {
         }
     }
 
-    private fun selectChip(mode: String) = vb.modeChips.check(
-        when (LessonListViewModel.Mode.valueOf(mode)) {
-            LessonListViewModel.Mode.MINE      -> R.id.chip_my
-            LessonListViewModel.Mode.TAKEN     -> R.id.chip_taken
-            LessonListViewModel.Mode.AVAILABLE -> R.id.chip_available
-        }
-    )
-
     private fun onLessonClicked(id: String) =
         findNavController().navigate(
             LessonListFragmentDirections.actionLessonListToLessonDetails(id)
@@ -93,5 +87,8 @@ class LessonListFragment : Fragment() {
     private fun onArchiveClicked(id: String, archived: Boolean) =
         vm.onArchiveToggle(id, archived)
 
-    override fun onDestroyView() { _vb = null; super.onDestroyView() }
+    override fun onDestroyView() {
+        _vb = null
+        super.onDestroyView()
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.exchangingprivatelessons.ui.splash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,9 +22,11 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private val viewModel: SplashViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("SplashFragment", "onViewCreated called")
         _binding = FragmentSplashBinding.bind(view)
 
         viewModel.authState.observe(viewLifecycleOwner) { isLoggedIn ->
+            Log.d("SplashFragment", "authState: $isLoggedIn")
             val action = if (isLoggedIn)
                 SplashFragmentDirections.actionSplashToHome()
             else

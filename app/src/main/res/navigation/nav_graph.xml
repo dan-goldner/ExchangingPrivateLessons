@@ -39,6 +39,27 @@
         android:name="com.example.exchangingprivatelessons.ui.home.HomeFragment"
         android:label="Home">
 
+
+        <!-- 🔹 שיעורים שאני יכול לקחת (זמינים, לא שלי) -->
+        <action
+            android:id="@+id/action_home_to_lessonListAvailable"
+            app:destination="@id/lessonListFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="AVAILABLE" />
+        </action>
+
+        <!-- 🔹 שיעורים שאני נרשמתי אליהם -->
+        <action
+            android:id="@+id/action_home_to_lessonListTaken"
+            app:destination="@id/lessonListFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="TAKEN" />
+        </action>
+
         <!-- 🔹 השיעורים שאני מציע -->
         <action
             android:id="@+id/action_home_to_lessonList_mine"
@@ -47,16 +68,6 @@
                 android:name="mode"
                 app:argType="string"
                 android:defaultValue="MINE" />
-        </action>
-
-        <!-- 🔹 שיעורים שאני יכול לקחת (זמינים, לא שלי) -->
-        <action
-            android:id="@+id/action_home_to_lessonList_available"
-            app:destination="@id/lessonListFragment">
-            <argument
-                android:name="mode"
-                app:argType="string"
-                android:defaultValue="AVAILABLE" />
         </action>
 
         <action

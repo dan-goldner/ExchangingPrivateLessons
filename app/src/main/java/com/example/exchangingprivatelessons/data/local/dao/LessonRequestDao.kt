@@ -36,5 +36,9 @@ interface LessonRequestDao {
 """)
     suspend fun getMyRequest(lessonId: String, uid: String): LessonRequestEntity?
 
-
+    @Query("""
+        SELECT lessonId FROM lesson_requests
+        WHERE requesterId = :userId AND status = 'approved'
+    """)
+    fun observeTakenByUser(userId: String): Flow<List<String>>
 }

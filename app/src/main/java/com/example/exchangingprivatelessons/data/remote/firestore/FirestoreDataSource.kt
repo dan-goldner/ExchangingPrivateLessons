@@ -1,5 +1,6 @@
 package com.example.exchangingprivatelessons.data.remote.firestore
 
+import android.util.Log
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.data.remote.dto.*
 import com.google.firebase.auth.FirebaseAuth
@@ -124,6 +125,33 @@ class FirestoreDataSource @Inject constructor(
             .get().await().documents.mapNotNull { it.toObject(LessonRequestDto::class.java) }
     }
 
+    suspend fun getLessonById(id: String): LessonDto? {
+        return try {
+            val snap = db.collection("lessons").document(id).get().await()
+            if (snap.exists()) {
+                val dto = snap.toObject(LessonDto::class.java)
+                Log.d("Firestore", "Fetched lesson [$id]: $dto") // ✅ log full object
+                dto?.copy(id = id)
+            } else {
+                Log.e("Firestore", "Lesson [$id] does not exist.")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("Firestore", "Failed to fetch lesson [$id]: ${e.message}", e)
+            null
+        }
+    }
+
+    suspend fun getTakenLessons(): List<TakenLessonDto> {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("Must be logged in")
+        return db.collection("takenLessons")
+            .whereEqualTo("userId", uid)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { it.toObject(TakenLessonDto::class.java) }
+    }
+
     suspend fun getRatings(lessonId: String): List<RatingDto> =
         db.collection("lessons")
             .document(lessonId)
@@ -144,15 +172,7 @@ class FirestoreDataSource @Inject constructor(
             }
 
 
-    suspend fun getTakenLessons(): List<TakenLessonDto> {
-        val uid = auth.currentUser?.uid ?: throw IllegalStateException("Must be logged in")
-        return db.collection("takenLessons")
-            .whereEqualTo("userId", uid)
-            .get()
-            .await()
-            .documents
-            .mapNotNull { it.toObject(TakenLessonDto::class.java) }
-    }
+
 
     /* ─────────── Users ─────────── */
 
@@ -177,6 +197,8 @@ class FirestoreDataSource @Inject constructor(
             db.collection("chats").whereArrayContains("participantIds", uid)
         )
     }
+
+
 
     fun listenLessonRequests(): Flow<Result<List<LessonRequestDto>>> {
         val uid = auth.currentUser?.uid ?: error("User not logged‑in")

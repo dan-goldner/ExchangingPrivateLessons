@@ -25,14 +25,23 @@ class AddEditLessonViewModel @Inject constructor(
     private val _ui = MutableLiveData(AddEditUiState())
     val ui: LiveData<AddEditUiState> = _ui            // חשוף לקריאה בלבד
 
-    init { lessonId?.let(::loadExisting) }
+    init {
+        if (!lessonId.isNullOrBlank()) {
+            loadExisting(lessonId)
+        }
+    }
 
     /* ---------- public events ---------- */
 
     fun onImageChosen(uri: Uri) = updateUi { copy(imageUri = uri) }
 
     fun onSaveClicked(title: String, description: String) = viewModelScope.launch {
-        updateUi { copy(loading = true, errorMsg = null) }
+        updateUi { copy(
+            loading = true,
+            errorMsg = null,
+            savedLessonId = null,
+            existingLesson = null
+        ) }
 
         val savedId: String? = if (lessonId.isNullOrBlank()) {
             val res = createLesson(title, description, _ui.value?.imageUri?.toString())
