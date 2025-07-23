@@ -103,18 +103,20 @@ class FirestoreDataSource @Inject constructor(
     /* ───────────── Lessons ───────────── */
 
 
-    suspend fun getLessons(): List<LessonDto> {
-        val uid = auth.currentUser?.uid ?: error("User not logged‑in")
-        return db.collection("lessons")
-            .whereEqualTo("ownerId", uid)
-            .get().await().documents.mapNotNull { it.toObject(LessonDto::class.java) }
-    }
-
-    suspend fun getAllActiveLessons(): List<LessonDto> =
+    suspend fun getLessons(): List<LessonDto> =
         db.collection("lessons")
-            .whereEqualTo("status", "Active")        // אופציונלי
-            .get().await()
-            .documents.mapNotNull { it.toObject(LessonDto::class.java) }
+            // .whereEqualTo("status", "Active")  // ← השאר/הסר בהתאם למודל שלך
+            .get()
+            .await()
+            .documents
+            .mapNotNull { doc -> doc.toObject(LessonDto::class.java)?.copy(id = doc.id) }
+
+
+
+
+
+
+
 
     suspend fun getLessonsOfferedByUser(userId: String): List<LessonDto> =
         db.collection("lessons")
