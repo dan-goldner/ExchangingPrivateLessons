@@ -49,9 +49,9 @@ class ProfileViewModel @Inject constructor(
     private val _previewAvatar = MutableLiveData<Any>("")
     val previewAvatar: LiveData<Any> = _previewAvatar
 
-    fun initPreview(url: String?) {
-        if (_previewAvatar.value == "") _previewAvatar.value = url ?: ""
-    }
+     fun initPreview(url: String?) {
+         _previewAvatar.value = url ?: ""
+     }
     fun onNewAvatar(uri: Uri) { _previewAvatar.value = uri }
     fun onDeleteAvatar()      { _previewAvatar.value = "" }
 
