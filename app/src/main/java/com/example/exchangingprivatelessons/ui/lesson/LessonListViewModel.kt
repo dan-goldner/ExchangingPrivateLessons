@@ -3,13 +3,11 @@ package com.example.exchangingprivatelessons.ui.lesson
 import android.content.Context
 import androidx.lifecycle.*
 import com.example.exchangingprivatelessons.common.util.Result
+import com.example.exchangingprivatelessons.common.util.toResultLiveData
+import com.example.exchangingprivatelessons.domain.model.ViewLesson
 import com.example.exchangingprivatelessons.domain.usecase.lesson.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import com.example.exchangingprivatelessons.ui.lesson.toItem
-
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,74 +20,67 @@ class LessonListViewModel @Inject constructor(
     @ApplicationContext private val ctx: Context
 ) : ViewModel() {
 
+    /* ───────────── מצב רשימה ───────────── */
     enum class Mode { AVAILABLE, MINE, TAKEN }
 
-    private val _ui = MutableLiveData(UiState(loading = true))
-    val uiState: LiveData<UiState> = _ui
+    private val mode = MutableLiveData(Mode.AVAILABLE)
 
-    private var job: Job? = null
-    private var currentMode = Mode.AVAILABLE
+    /**  זרם תוצאות (Flow) → LiveData<Result<…>>  */
+    private val lessonsRes: LiveData<Result<List<ViewLesson>>> =
+        mode.switchMap { m ->
+            when (m) {
+                Mode.AVAILABLE -> observeLessons()
+                Mode.MINE      -> observeLessons(true)
+                Mode.TAKEN     -> observeTaken()
+            }.toResultLiveData()
+        }
 
-    init { collect(Mode.AVAILABLE) }
+    /*  אינדיקציה ל‑Swipe‑to‑Refresh */
+    private val _refreshing = MutableLiveData(false)
 
-    fun setMode(m: Mode) { if (m != currentMode) collect(m) }
-
-    fun onRefresh() = launch {
-        _ui.postValue(_ui.value?.copy(refreshing = true))
-        refreshLessons()
-        _ui.postValue(_ui.value?.copy(refreshing = false))
-    }
-
-    fun onArchiveToggle(id: String, archived: Boolean) = launch {
-        archiveLesson(id, archived)
-    }
-
-    fun errorShown() { _ui.postValue(_ui.value?.copy(errorMsg = null)) }
-
-    /* ---------- private ---------- */
-
-    private fun collect(mode: Mode) {
-        job?.cancel()
-        currentMode = mode
-
-        job = launch {
-            _ui.postValue(_ui.value?.copy(loading = true))
-
-            val flow = when (mode) {
-                Mode.AVAILABLE -> observeLessons()        // ‎כבר מחזיר ‎ViewLesson
-                Mode.MINE      -> observeLessons(true)    // ‎ idem
-                Mode.TAKEN     -> observeTaken()          // ‎ idem
-            }
-
-            flow.collect { res ->
-                when (res) {
-                    is Result.Loading  -> _ui.postValue(_ui.value?.copy(loading = true))
-                    is Result.Failure  -> _ui.postValue(
-                        _ui.value?.copy(loading = false,
-                            errorMsg = res.throwable?.localizedMessage)
-                    )
-                    is Result.Success -> {
-                        android.util.Log.d(
-                            "LessonVM",
-                            "Received ${res.data.size} lessons in mode: $mode"
-                        )
-                        _ui.postValue(
-                            UiState(
-                                lessons = res.data.map { it.toItem(ctx) },
-                                loading = false
-                            )
-                        )
-                    }
-                }
+    /* ───────────── UI‑State מאוחד ───────────── */
+    private val _uiState = MediatorLiveData<UiState>().apply {
+        fun build(): UiState {
+            val res = lessonsRes.value
+            return when (res) {
+                null, is Result.Loading -> UiState(
+                    loading    = true,
+                    refreshing = _refreshing.value ?: false
+                )
+                is Result.Failure -> UiState(
+                    errorMsg   = res.throwable?.localizedMessage,
+                    refreshing = _refreshing.value ?: false
+                )
+                is Result.Success -> UiState(
+                    lessons    = res.data.map { it.toItem(ctx) },
+                    refreshing = _refreshing.value ?: false
+                )
             }
         }
+        addSource(lessonsRes)  { value = build() }
+        addSource(_refreshing) { value = build() }
+    }
+    val uiState: LiveData<UiState> = _uiState   // חשיפה לקריאה בלבד
+
+    /* ───────────── API לצריכת ה‑UI ───────────── */
+
+    fun setMode(m: Mode) { if (mode.value != m) mode.value = m }
+
+    fun onRefresh() = viewModelScope.launch {
+        _refreshing.value = true
+        refreshLessons()
+        _refreshing.value = false
     }
 
-    private fun launch(block: suspend () -> Unit) =
-        viewModelScope.launch { block() }
+    fun onArchiveToggle(id: String, archived: Boolean) =
+        viewModelScope.launch { archiveLesson(id, archived) }
 
-    /* ---------- UI state ---------- */
+    /** ה‑UI קרא את השגיאה – מאפסים אותה */
+    fun errorShown() {
+        _uiState.value = _uiState.value?.copy(errorMsg = null)
+    }
 
+    /* ───────────── מייצג מצב מסך ───────────── */
     data class UiState(
         val lessons   : List<LessonItem> = emptyList(),
         val loading   : Boolean          = false,

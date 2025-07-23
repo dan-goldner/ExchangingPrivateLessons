@@ -110,6 +110,12 @@ class FirestoreDataSource @Inject constructor(
             .get().await().documents.mapNotNull { it.toObject(LessonDto::class.java) }
     }
 
+    suspend fun getAllActiveLessons(): List<LessonDto> =
+        db.collection("lessons")
+            .whereEqualTo("status", "Active")        // אופציונלי
+            .get().await()
+            .documents.mapNotNull { it.toObject(LessonDto::class.java) }
+
     suspend fun getLessonsOfferedByUser(userId: String): List<LessonDto> =
         db.collection("lessons")
             .whereEqualTo("ownerId", userId)

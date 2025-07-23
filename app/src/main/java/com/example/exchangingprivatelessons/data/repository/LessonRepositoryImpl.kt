@@ -34,7 +34,7 @@ class LessonRepositoryImpl @Inject constructor(
 
     override fun queryLocal() = dao.observeActive()
 
-    override suspend fun fetchRemote() = firestore.getLessons()
+    override suspend fun fetchRemote() = firestore.getAllActiveLessons()
 
     override suspend fun saveRemote(remote: List<LessonDto>) {
         dao.upsertAll(remote.map(mapper::toEntity))
@@ -75,9 +75,8 @@ class LessonRepositoryImpl @Inject constructor(
                 ?: Result.Failure(NullPointerException("Lesson not found"))
         }
 
-    override suspend fun forceRefreshLessons(): Result<Unit> =
-        runCatching {
-            val remote = firestore.getLessons()
+    override suspend fun forceRefreshLessons(): Result<Unit> = runCatching {
+        val remote = firestore.getAllActiveLessons()
             dao.upsertAll(remote.map(mapper::toEntity))
         }.fold(
             onSuccess = { Result.Success(Unit) },
