@@ -4,160 +4,159 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.PopupMenu
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.core.view.isGone
 import androidx.fragment.app.activityViewModels
 import coil.load
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.BottomSheetEditProfileBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
 
 @AndroidEntryPoint
 class EditProfileSheet : BottomSheetDialogFragment() {
 
-    /* ---------------- binding ---------------- */
-    private var _binding: BottomSheetEditProfileBinding? = null
-    private val binding get() = _binding!!
+    /* ---------- binding ---------- */
+    private var _b: BottomSheetEditProfileBinding? = null
+    private val b get() = _b!!
 
-    /* ---------------- VM (shared עם   ProfileFragment) ---------------- */
+    /* ---------- Shared VM ---------- */
     private val vm by activityViewModels<ProfileViewModel>()
 
-    /* ---------------- Activity‑result launchers ---------------- */
-    private lateinit var cameraLauncher     : ActivityResultLauncher<Uri>
-    private lateinit var permissionLauncher : ActivityResultLauncher<String>
-    private var tmpPhotoUri: Uri? = null
+    /* ---------- Launchers ---------- */
+    private lateinit var cameraLauncher    : ActivityResultLauncher<Uri>
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private val galleryLauncher            =
+        registerForActivityResult(GetContent()) { uri -> uri?.let(vm::onNewAvatar) }
 
-    private val pickImage =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            uri?.let { vm.onNewAvatar(it) }
-        }
-
-    /* ----------------------------------------------------------------- */
-    /*  onCreate – יצירת ה‑launchers                                     */
-    /* ----------------------------------------------------------------- */
+    /* ---------- lifecycle ---------- */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /* ① בקשת CAMERA permission */
         permissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-                if (granted) openCamera()
+            registerForActivityResult(RequestPermission()) { granted ->
+                if (granted) launchCamera()
                 else Snackbar
                     .make(requireView(), R.string.err_camera_permission, Snackbar.LENGTH_LONG)
                     .show()
             }
 
-        /* ② הפעלת המצלמה */
         cameraLauncher =
-            registerForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
-                if (ok && tmpPhotoUri != null) {
-                    vm.onNewAvatar(tmpPhotoUri!!)
-                }
+            registerForActivityResult(TakePicture()) { ok ->
+                if (ok) vm.pendingCameraUri?.let(vm::onNewAvatar)
             }
     }
 
-    /* ----------------------------------------------------------------- */
-    /*  תצוגה                                                             */
-    /* ----------------------------------------------------------------- */
     override fun onCreateView(
         i: LayoutInflater, c: ViewGroup?, s: Bundle?
     ): View = BottomSheetEditProfileBinding.inflate(i, c, false)
-        .also { _binding = it }
+        .also { _b = it }
         .root
 
-    override fun onViewCreated(v: View, s: Bundle?) = with(binding) {
+    override fun onViewCreated(v: View, s: Bundle?) = with(b) {
+        /* Prefill */
+        /* Prefill */
+        vm.user.observe(viewLifecycleOwner) {
+            displayEt.setText(it?.displayName)
+            bioEt    .setText(it?.bio)
 
-        /* Prefill שדות */
-        vm.user.value?.let {
-            displayEt.setText(it.displayName)
-            bioEt.setText(it.bio)
+            // חדש: תמונת ברירת‑מחדל
+            vm.initPreview(it?.photoUrl)
         }
 
-        /* תמונת פרופיל | בחירה / צילום / מחיקה */
+
+        /* Avatar preview */
         avatarIv.setOnClickListener { showChooser() }
         removeAvatarBtn.setOnClickListener { vm.onDeleteAvatar() }
-
         vm.previewAvatar.observe(viewLifecycleOwner) { any ->
-            removeAvatarBtn.isGone = any == ""
-            avatarIv.load(any) { crossfade(true) }
+            /* התמונה */
+            avatarIv.load(
+                when (any) {
+                    is Uri    -> any
+                    is String -> if (any.isBlank()) R.drawable.ic_profile_placeholder else any
+                    else      -> R.drawable.ic_profile_placeholder
+                }
+            ) {
+                placeholder(R.drawable.ic_profile_placeholder)
+                error      (R.drawable.ic_profile_placeholder)
+                crossfade(true)
+            }
+
+            /* כיתוב מתחלף */
+            avatarHintTv.text = if (any is String && any.isBlank())
+                getString(R.string.choose_photo)   // אין תמונה
+            else
+                getString(R.string.change_photo)   // יש תמונה
+
+            /* כפתור “מחק” מופיע רק אם יש תמונה */
+            removeAvatarBtn.isGone = any is String && any.isBlank()
         }
+
+
 
         /* Save */
         saveBtn.setOnClickListener {
             vm.save(displayEt.text.toString(), bioEt.text.toString())
             dismiss()
         }
-    }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
 
-    /* ----------------------------------------------------------------- */
-    /*  צילום תמונה – Permission flow                                    */
-    /* ----------------------------------------------------------------- */
-    fun onTakePhotoClicked() {
-        when {
-            ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED ->
-                openCamera()
 
-            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ->
-                Snackbar
-                    .make(requireView(),
-                        R.string.err_camera_permission_rationale,
-                        Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok) {
-                        permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }
-                    .show()
-
-            else ->
-                permissionLauncher.launch(Manifest.permission.CAMERA)
+        deleteAccountBtn.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.delete_account)
+                .setMessage(R.string.delete_account_confirm)
+                .setPositiveButton(R.string.delete) { _, _ ->
+                    vm.deleteMyAccount()     // ← קריאה
+                    dismiss()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
+
     }
 
-    private fun openCamera() {
-        val uri = createTempImageUri()
-        tmpPhotoUri = uri
-        cameraLauncher.launch(uri)
-    }
+    override fun onDestroyView() { _b = null; super.onDestroyView() }
 
-    private fun createTempImageUri(): Uri {
-        val file = File.createTempFile("avatar_", ".jpg",
-            requireContext().cacheDir).apply { deleteOnExit() }
+    /* ---------- helpers ---------- */
 
-        return FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.fileprovider",
-            file
-        )
-    }
-
-    /* ----------------------------------------------------------------- */
-    /*  Popup‑menu לבחירה / צילום                                        */
-    /* ----------------------------------------------------------------- */
-    private fun showChooser() = PopupMenu(requireContext(), binding.avatarIv).run {
+    private fun showChooser() = PopupMenu(requireContext(), b.avatarIv).run {
         menuInflater.inflate(R.menu.menu_avatar, menu)
         setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_pick  -> { pickImage.launch("image/*"); true }
-                R.id.action_photo -> { onTakePhotoClicked();          true }
-                else              -> false
+                R.id.action_pick   -> { galleryLauncher.launch("image/*"); true }
+                R.id.action_photo  -> { requestCamera();                  true }
+                else               -> false
             }
+        }; show()
+    }
+
+    private fun requestCamera() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> launchCamera()
+
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ->
+                Snackbar.make(requireView(),
+                    R.string.err_camera_permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok) {
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }.show()
+
+            else -> permissionLauncher.launch(Manifest.permission.CAMERA)
         }
-        show()
+    }
+
+    private fun launchCamera() {
+        val uri = vm.createTempCameraUri(requireContext())
+        cameraLauncher.launch(uri)
     }
 }

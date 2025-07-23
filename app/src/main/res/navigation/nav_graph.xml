@@ -203,6 +203,11 @@
             app:destination="@id/editProfileSheet" />
     </fragment>
 
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/authFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
 
     <dialog
         android:id="@+id/editProfileSheet"

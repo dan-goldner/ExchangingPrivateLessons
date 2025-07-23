@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/inter_regular"/>
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="500"
-        android:font="@font/inter_medium"/>
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="600"
-        android:font="@font/inter_semibold"/>
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="700"
-        android:font="@font/inter_bold"/>
+    <!-- Regular / Medium / Semi‑Bold / Bold -->
+    <font android:font="@font/inter_regular"   android:fontWeight="400" android:fontStyle="normal"/>
+    <font android:font="@font/inter_medium"    android:fontWeight="500" android:fontStyle="normal"/>
+    <font android:font="@font/inter_semibold"  android:fontWeight="600" android:fontStyle="normal"/>
+    <font android:font="@font/inter_bold"      android:fontWeight="700" android:fontStyle="normal"/>
+    <font android:font="@font/inter_extrabold" android:fontWeight="800" android:fontStyle="normal"/>
 </font-family>

@@ -1,66 +1,73 @@
 package com.example.exchangingprivatelessons.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import coil.load
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.FragmentProfileBinding
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private var _b: FragmentProfileBinding? = null
+    private val b get() = _b!!
 
-    private val args: ProfileFragmentArgs by navArgs()
-    private val vm by viewModels<ProfileViewModel>()
+    private val args by navArgs<ProfileFragmentArgs>()
+    private val vm   by activityViewModels<ProfileViewModel>()   // ← activity scope
 
     override fun onCreateView(
         i: LayoutInflater, c: ViewGroup?, s: Bundle?
     ): View = FragmentProfileBinding.inflate(i, c, false)
-        .also { _binding = it }
+        .also { _b = it }
         .root
 
-    override fun onViewCreated(v: View, s: Bundle?) = with(binding) {
+    override fun onViewCreated(v: View, s: Bundle?) = with(b) {
 
-        /* צפייה בפרופיל */
         vm.setProfileUid(args.uid)
+
         editFab.isVisible = vm.isMine
+        editFab.setOnClickListener { EditProfileSheet().show(parentFragmentManager, null) }
 
-        /* עריכה */
-        editFab.setOnClickListener { EditProfileSheet().show(childFragmentManager, null) }
-
-        /* מחיקה (לחיצה ארוכה על האווטאר) */
-        avatarIv.setOnLongClickListener { vm.deleteMyAccount(); true }
-
-        /* Snackbars */
-        vm.snackbar.observe(viewLifecycleOwner) {
-            Snackbar.make(root, it, Snackbar.LENGTH_LONG).show()
-        }
-
-        /* User‑UI */
+        /* ----- User stream ----- */
         vm.user.observe(viewLifecycleOwner) { u ->
             progressBar.isVisible = u == null
-            content.isVisible     = u != null
+            content    .isVisible = u != null
             u ?: return@observe
 
-            avatarIv.load(u.photoUrl) { crossfade(true) }
+            avatarIv.load(
+                if (u.photoUrl.isBlank()) R.drawable.ic_profile_placeholder else u.photoUrl
+            ) {
+                placeholder(R.drawable.ic_profile_placeholder)
+                error      (R.drawable.ic_profile_placeholder)
+                crossfade(true)
+            }
             nameTv .text = u.displayName
             emailTv.text = u.email
-            bioTv  .text = if (u.bio.isBlank()) getString(R.string.no_bio) else u.bio
+            bioTv  .text = u.bio.ifBlank { getString(R.string.profile_no_bio) }
+        }
+
+        /* ----- Sign‑out event ----- */
+        vm.signOut.observe(viewLifecycleOwner) { event ->
+            event.getOrNull()?.let {
+                findNavController().navigate(
+                    R.id.authFragment,                    // יעד‑התחברות
+                    null,
+                    navOptions {
+                        popUpTo(findNavController().graph.startDestinationId) {
+                            inclusive = true             // נקה BackStack
+                        }
+                    }
+                )
+            }
         }
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
+    override fun onDestroyView() { _b = null; super.onDestroyView() }
 }

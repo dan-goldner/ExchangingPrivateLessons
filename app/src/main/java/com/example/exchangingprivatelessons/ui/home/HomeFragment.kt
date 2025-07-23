@@ -69,14 +69,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         /* ───────────── State ───────────── */
         vm.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is HomeUiState.Loading  -> showLoading(true)
-                is HomeUiState.Content  -> {
+                is HomeUiState.Loading -> showLoading(true)
+
+                is HomeUiState.Content -> {
                     showLoading(false)
-                    // דוגמה להצגת נתונים במסך הבית
-                    b.txtLessonsCount.text   = state.lessons.size.toString()
-                    b.txtRequestsCount.text  = state.incoming.size.toString()
+
+                    // ℹ️ ה‑Content מכיל כבר את הרשימות
+                    val lessonsCount   = state.lessons.size
+                    val requestsCount  = state.incoming.size
+
+                    // Chip texts (שמאל‑לימין: מספר ואז טקסט)
+                    b.txtLessonsCount.text  = "$lessonsCount שיעורים זמינים"
+                    b.txtRequestsCount.text = "$requestsCount בקשות נכנסות"
                 }
-                is HomeUiState.Error    -> {
+
+                is HomeUiState.Error -> {
                     showLoading(false)
                     Snackbar.make(b.root, state.message, Snackbar.LENGTH_LONG).show()
                 }
@@ -84,7 +91,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         b.swipeRefresh.setOnRefreshListener { vm.refresh() }
+
+
+        b.swipeRefresh.setOnRefreshListener { vm.refresh() }
     }
+
 
     private fun showLoading(loading: Boolean) {
         b.progressBar.isVisible   = loading

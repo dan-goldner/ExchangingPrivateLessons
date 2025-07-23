@@ -343,12 +343,36 @@ export const onUserDocDeleteChatCleanup = onDocumentDeleted(
 /* CALLABLE FUNCTIONS                            */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** 9️⃣ Delete-my-account */
+/** 9️⃣ Delete‑my‑account */
 export const deleteMyAccount = onCall(async ({ auth }) => {
   const uid = assertAuth(auth?.uid);
-  await usersCol.doc(uid).delete(); // Triggers onUserDocDelete and related cleanup
+
+  /* 1. Grab user‑doc */
+  const userSnap = await usersCol.doc(uid).get();
+  const photoUrl = userSnap.data()?.photoUrl ?? "";
+
+  /* 2. Delete avatar in Storage (if any) */
+  const extractPath = (url: string) =>
+    url.match(/\/o\/([^?]+)\?/i)?.[1]?.replace(/%2F/g, "/") ?? null;
+
+  const relPath = extractPath(photoUrl);
+
+  if (relPath) {
+    try {
+      await admin.storage().bucket().file(relPath).delete();
+      logger.info(`🗑️ avatar ${relPath} deleted`);
+    } catch (e) {
+      logger.error(`❌ failed to delete avatar ${relPath}`, e);
+    }
+  }
+
+  /*3. Delete Firestore document*/
+  await usersCol.doc(uid).delete();
+
   return { status: "ok" };
 });
+
+
 
 /** 🔟 Lesson requests life-cycle */
 type LessonRequestInput = { lessonId: string; ownerId: string };

@@ -24,7 +24,11 @@ interface UserDao {
 
     /* --- החלפה מלאה --- */
     @Query("DELETE FROM users")
-    suspend fun clear()
+    suspend fun clear(): Int
+
+    @Query("DELETE FROM users WHERE id = :id")
+    suspend fun deleteById(id: String): Int
+
 
     @Transaction
     suspend fun replaceAll(list: List<UserEntity>) {

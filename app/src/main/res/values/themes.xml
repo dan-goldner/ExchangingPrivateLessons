@@ -3,65 +3,148 @@
 
     <!-- The single source of truth -->
     <style name="Theme.SkillSwap" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- colour roles -->
+
+        <!-- Brand colours -->
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+
         <item name="colorSecondary">@color/md_theme_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+
         <item name="colorTertiary">@color/md_theme_tertiary</item>
         <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+
         <item name="colorError">@color/md_theme_error</item>
         <item name="colorOnError">@color/md_theme_onError</item>
+
+        <!-- Surfaces -->
         <item name="colorSurface">@color/md_theme_surface</item>
         <item name="colorOnSurface">@color/md_theme_onSurface</item>
+
         <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
 
         <item name="colorOutline">@color/md_theme_outline</item>
 
-        <!-- set the pastel illustration everywhere -->
+        <!-- Window background – הפסטל שלנו -->
         <item name="android:windowBackground">@drawable/app_background</item>
 
-        <!-- Material 3 shape defaults -->
+        <!-- Typography overrides -->
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.SkillSwap.DisplayMedium</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.SkillSwap.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.SkillSwap.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.SkillSwap.HeadlineSmall</item>
+
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.SkillSwap.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.SkillSwap.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.SkillSwap.TitleSmall</item>
+
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.SkillSwap.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.SkillSwap.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.SkillSwap.BodySmall</item>
+
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.SkillSwap.LabelSmall</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.SkillSwap.Caption</item>
+
+        <!-- Shapes -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SkillSwap.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SkillSwap.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SkillSwap.Large</item>
 
         <!-- Toolbar -->
         <item name="toolbarStyle">@style/AppToolbar</item>
-
-
-        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.SkillSwap.HeadlineLarge</item>
-        <item name="textAppearanceTitleMedium">@style/TextAppearance.SkillSwap.TitleMedium</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.SkillSwap.BodyLarge</item>
-        <item name="textAppearanceBodySmall">@style/TextAppearance.SkillSwap.BodySmall</item>
-        <item name="textAppearanceLabelSmall">@style/TextAppearance.SkillSwap.LabelSmall</item>
-        <item name="textAppearanceCaption">@style/TextAppearance.SkillSwap.Caption</item>
     </style>
 
+    <!-- Toolbar surface = Primary -->
     <style name="AppToolbar" parent="Widget.Material3.Toolbar">
         <item name="android:background">@color/md_theme_primary</item>
         <item name="titleTextColor">@color/md_theme_onPrimary</item>
         <item name="navigationIconTint">@color/md_theme_onPrimary</item>
     </style>
 
-    <!-- ─────  Shape appearances  ─────────────────────────────── -->
-    <!-- 8 dp for chips / small cards -->
+    <!-- ─── Shape Appearances ────────────────────────────────── -->
     <style name="ShapeAppearance.SkillSwap.Small" parent="@style/ShapeAppearance.Material3.SmallComponent">
         <item name="cornerSize">8dp</item>
     </style>
 
-    <!-- 12 dp for most containers -->
     <style name="ShapeAppearance.SkillSwap.Medium" parent="@style/ShapeAppearance.SkillSwap.Small">
         <item name="cornerSize">12dp</item>
     </style>
 
-    <!-- 24 dp for large sheets / dialogs -->
     <style name="ShapeAppearance.SkillSwap.Large" parent="@style/ShapeAppearance.SkillSwap.Small">
         <item name="cornerSize">24dp</item>
     </style>
 
+    <!-- Outlined button עם קונטרסט וטיפוגרפיה גדולים יותר -->
+    <style name="Widget.SkillSwap.Button.OutlinedPrimary"
+        parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/md_theme_primary</item>
+        <item name="strokeWidth">2dp</item>
 
+        <item name="android:textColor">@color/md_theme_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
 
+        <!-- Ripple רך -->
+        <item name="rippleColor">@color/md_theme_primaryContainer</item>
+    </style>
+
+    <!-- Outlined button עם קו וטקסט כהים + גודל טקסט 20 sp -->
+    <style name="Widget.SkillSwap.Button.OutlinedHC"
+        parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/md_theme_onSurfaceVariant</item>
+        <item name="strokeWidth">2dp</item>
+
+        <item name="android:textColor">@color/md_theme_onSurfaceVariant</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+
+        <!-- Ripple עדין -->
+        <item name="rippleColor">@color/md_theme_primaryContainer</item>
+    </style>
+
+    <!-- Filled error button – אדום מלא עם טקסט לבן -->
+    <style name="Widget.SkillSwap.Button.FilledError"
+        parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/md_theme_error</item>
+        <item name="android:textColor">@color/md_theme_onError</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+
+    <!-- Filled Primary (Blue) -->
+    <style name="Widget.SkillSwap.Button.FilledPrimary"
+        parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/md_theme_primary</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+
+    <!-- Tonal Secondary (Turquoise‑Pastel) -->
+    <style name="Widget.SkillSwap.Button.TonalSecondary"
+        parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/md_theme_secondary</item>
+        <item name="android:textColor">@color/md_theme_onSecondary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+
+    <!-- סטטיסטיקה Chip -->
+    <style name="Widget.SkillSwap.LabelStat" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/md_theme_primaryContainer</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SkillSwap.Small</item>
+        <item name="chipMinHeight">28dp</item>
+        <item name="iconPadding">0dp</item>
+    </style>
 
 </resources>

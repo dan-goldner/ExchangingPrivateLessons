@@ -1,51 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 32sp / Bold (700) -->
-    <style name="TextAppearance.SkillSwap.HeadlineLarge"
-        parent="TextAppearance.Material3.DisplaySmall">
+    <!-- Display / Headlines -->
+    <style name="TextAppearance.SkillSwap.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
+
+    <style name="TextAppearance.SkillSwap.HeadlineLarge" parent="TextAppearance.Material3.DisplaySmall">
         <item name="fontFamily">@font/font_family_inter</item>
         <item name="android:textSize">32sp</item>
         <item name="android:fontWeight">700</item>
     </style>
 
-    <!-- 20sp / SemiBold (600) -->
-    <style name="TextAppearance.SkillSwap.TitleMedium"
-        parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.SkillSwap.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+
+    <style name="TextAppearance.SkillSwap.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+
+    <!-- Titles -->
+    <style name="TextAppearance.SkillSwap.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+
+    <style name="TextAppearance.SkillSwap.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
         <item name="fontFamily">@font/font_family_inter</item>
         <item name="android:textSize">20sp</item>
         <item name="android:fontWeight">600</item>
     </style>
 
-    <!-- 16sp / Regular (400) -->
-    <style name="TextAppearance.SkillSwap.BodyLarge"
-        parent="TextAppearance.Material3.BodyLarge">
+    <style name="TextAppearance.SkillSwap.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontWeight">500</item>
+    </style>
+
+    <!-- Body -->
+    <style name="TextAppearance.SkillSwap.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
         <item name="fontFamily">@font/font_family_inter</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontWeight">400</item>
     </style>
 
-    <!-- 14sp / Regular (400) -->
-    <style name="TextAppearance.SkillSwap.BodySmall"
-        parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.SkillSwap.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">@font/font_family_inter</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontWeight">400</item>
     </style>
 
-    <!-- 12sp / SemiBold (600) -->
-    <style name="TextAppearance.SkillSwap.Caption"
-        parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.SkillSwap.BodySmall" parent="TextAppearance.Material3.BodySmall">
         <item name="fontFamily">@font/font_family_inter</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:fontWeight">400</item>
+    </style>
+
+    <!-- Caption / Labels -->
+    <style name="TextAppearance.SkillSwap.Caption" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:fontWeight">600</item>
     </style>
 
-    <!-- 11sp / Medium (500) -->
-    <style name="TextAppearance.SkillSwap.LabelSmall"
-        parent="TextAppearance.Material3.LabelSmall">
+    <style name="TextAppearance.SkillSwap.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
         <item name="fontFamily">@font/font_family_inter</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:fontWeight">500</item>
     </style>
 

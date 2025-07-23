@@ -1,5 +1,7 @@
 package com.example.exchangingprivatelessons.data.repository
 
+import android.net.Uri
+import android.util.Log
 import com.example.exchangingprivatelessons.common.di.IoDispatcher
 import com.example.exchangingprivatelessons.common.di.ApplicationScope
 import com.example.exchangingprivatelessons.common.util.Result
@@ -10,6 +12,7 @@ import com.example.exchangingprivatelessons.data.mapper.UserMapper
 import com.example.exchangingprivatelessons.data.remote.cloud.FunctionsDataSource
 import com.example.exchangingprivatelessons.data.remote.dto.UserDto
 import com.example.exchangingprivatelessons.data.remote.firestore.FirestoreDataSource
+import com.example.exchangingprivatelessons.data.remote.storage.StorageDataSource
 import com.example.exchangingprivatelessons.data.repository.base.LiveSyncRepository
 import com.example.exchangingprivatelessons.domain.model.User
 import com.example.exchangingprivatelessons.domain.repository.UserRepository
@@ -38,7 +41,7 @@ class UserRepositoryImpl @Inject constructor(
     @IoDispatcher           private val io       : CoroutineDispatcher,
     @ApplicationScope       private val appScope : CoroutineScope   // scope גלובלי
 ) : LiveSyncRepository<UserDto, UserEntity, User>(), UserRepository {
-
+    @Inject lateinit var storage: StorageDataSource
     private var liveSyncJob: Job? = null
     /* ───────────── Live‑sync (Firestore → Room) ───────────── */
     /* Live‑sync: מאזין למסמך של המשתמש בלבד */
@@ -54,6 +57,36 @@ class UserRepositoryImpl @Inject constructor(
                 }
             }
 
+
+    override suspend fun updateAvatar(localFile: Uri): Result<String> = withContext(io) {
+        val uid = currentUid() ?: return@withContext Result.Failure(
+            IllegalStateException("Not logged‑in")
+        )
+        val url = storage.uploadAvatar(uid, localFile)
+
+        /* 1.‑ Firestore (יעבוד כי הכלל ה‑Rules החדש מתיר write לעצמי) */
+        firestore.updateUserFields(uid, mapOf("photoUrl" to url))
+
+        /* 2.‑ Room – עדכון מהיר ל‑UI */
+        dao.upsert(
+            dao.get(uid)?.copy(photoUrl = url)
+                ?: mapper.toEntity(firestore.getMe()).copy(photoUrl = url)
+        )
+
+        Result.Success(url)
+
+    }
+
+    override suspend fun removeAvatar(): Result<Unit> = withContext(io) {
+        val uid = currentUid() ?: return@withContext Result.Failure(
+            IllegalStateException("Not logged‑in"))
+        storage.deleteAvatar(uid)
+        firestore.updateUserFields(uid, mapOf("photoUrl" to ""))
+
+        dao.upsert(dao.get(uid)?.copy(photoUrl = "")!!)
+        Result.Success(Unit)
+
+    }
     /** החלפה מלאה מגיעה רק מאזין‐הכל */
     override suspend fun replaceAllLocal(list: List<UserEntity>) =
         dao.replaceAll(list)
@@ -165,9 +198,11 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteMyAccount(): Result<Unit> = withContext(io) {
-        runCatching { functions.deleteMyAccount() }
-            .fold({ Result.Success(Unit) }, { Result.Failure(it) })
+        runCatching {
+            functions.deleteMyAccount()   // ← עכשיו לעולם לא זורק ClassCastException
+        }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
     }
+
 
     override suspend fun touchLogin(): Result<Unit> = withContext(io) {
         runCatching { functions.touchLogin() }
@@ -180,6 +215,21 @@ class UserRepositoryImpl @Inject constructor(
         repeat(times - 1) { try  { return block() } catch (_: Exception) { delay(delayMs) } }
         return block()
     }
+
+
+
+    override suspend fun clearLocalUser() = withContext(io) {
+        val uid = currentUid()              // יהיה != null כי עוד לא קראנו signOut()
+            ?: return@withContext           // בטיחות כפולה
+
+        Log.d("UserRepo", "delete local user $uid")
+        dao.deleteById(uid)                 // 🗑️ מחק את *החשבון שלי* בלבד
+        liveSyncJob?.cancel()               // מאזין למסמך‑Self כבר לא רלוונטי
+        liveSyncJob = null
+    }
+
+
+
 
 
     override fun toEntity(dto: UserDto)  = mapper.toEntity(dto)

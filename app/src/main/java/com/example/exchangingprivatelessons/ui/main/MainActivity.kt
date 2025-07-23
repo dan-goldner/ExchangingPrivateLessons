@@ -6,7 +6,9 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -31,6 +33,22 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        FirebaseAuth.getInstance().addAuthStateListener { auth ->
+            if (auth.currentUser == null) {
+                // לא מחובר → נווט ל‑Auth אם לא שם כבר
+                val nav = findNavController(R.id.nav_host_fragment)
+                if (nav.currentDestination?.id != R.id.authFragment) {
+                    nav.navigate(
+                        R.id.authFragment,
+                        null,
+                        navOptions {
+                            popUpTo(nav.graph.startDestinationId) { inclusive = true }
+                        }
+                    )
+                }
+            }
+        }
+
         /* Toolbar */
         setSupportActionBar(binding.toolbar)
 
@@ -51,6 +69,8 @@ class MainActivity : AppCompatActivity() {
                 dest.id == R.id.homeFragment
         }
     }
+
+
 
     /* Up‑button */
     override fun onSupportNavigateUp(): Boolean =

@@ -24,32 +24,28 @@ class FirestoreDataSource @Inject constructor(
 ) {
 
 
-    /** משלים את השדה uid (אם קיים) במסמך שהגיע מפיירסטור */
-    @PublishedApi   // <‑‑‑‑‑‑‑‑‑‑‑‑‑‑‑‑
+    /* ---------- helper: add id field ---------- */
+    @PublishedApi
     internal fun <T> T.withUid(id: String): T = apply {
-        when (this) {
-            is UserDto -> this.id = id
-        }
+        if (this is UserDto) this.id = id
     }
 
-    /* ─────────── One‑shot (suspend) ─────────── */
 
+    /* ---------- One‑shot ---------- */
     suspend inline fun <reified T> getDoc(ref: DocumentReference): Result<T> = try {
-        val snap = ref.get().await()
-        if (snap.exists())
-            Result.Success(snap.toObject(T::class.java)!!.withUid(snap.id))
-        else
-            Result.Failure(NoSuchElementException("Doc ${ref.path} not found"))
+        val s = ref.get().await()
+        if (s.exists()) Result.Success(s.toObject(T::class.java)!!.withUid(s.id))
+        else Result.Failure(NoSuchElementException("Doc ${ref.path} not found"))
     } catch (t: Throwable) { Result.Failure(t) }
 
-    suspend inline fun <reified T> getCollection(query: Query): Result<List<T>> = try {
-        val list = query.get().await().documents
-            .mapNotNull { it.toObject(T::class.java)?.withUid(it.id) }
-        Result.Success(list)
+    suspend inline fun <reified T> getCollection(q: Query): Result<List<T>> = try {
+        Result.Success(
+            q.get().await().documents.mapNotNull {
+                it.toObject(T::class.java)?.withUid(it.id)
+            })
     } catch (t: Throwable) { Result.Failure(t) }
 
-    /* ─────────── Realtime (Flow) ─────────── */
-
+    /* ---------- Realtime ---------- */
     inline fun <reified T> listenDoc(ref: DocumentReference): Flow<Result<T>> = callbackFlow {
         val reg = ref.addSnapshotListener { s, e ->
             when {
@@ -57,23 +53,26 @@ class FirestoreDataSource @Inject constructor(
                 s != null && s.exists() ->
                     trySend(Result.Success(s.toObject(T::class.java)!!.withUid(s.id)))
             }
-        }
-        awaitClose { reg.remove() }
+        }; awaitClose { reg.remove() }
     }
 
-    inline fun <reified T> listenCollection(query: Query): Flow<Result<List<T>>> = callbackFlow {
-        val reg = query.addSnapshotListener { s, e ->
+    inline fun <reified T> listenCollection(q: Query): Flow<Result<List<T>>> = callbackFlow {
+        val reg = q.addSnapshotListener { s, e ->
             when {
                 e != null -> trySend(Result.Failure(e))
                 s != null -> trySend(
                     Result.Success(
                         s.documents.mapNotNull { it.toObject(T::class.java)?.withUid(it.id) }
-                    )
-                )
+                    ))
             }
-        }
-        awaitClose { reg.remove() }
+        }; awaitClose { reg.remove() }
     }
+
+    /* ---------- users helpers ---------- */
+    fun listenUsers()               = listenCollection<UserDto>(db.collection("users"))
+    fun listenMyUserDoc(uid: String)= listenDoc<UserDto>(db.collection("users").document(uid))
+
+
 
     /* ─────────── Chats ─────────── */
 
@@ -103,7 +102,6 @@ class FirestoreDataSource @Inject constructor(
 
     /* ───────────── Lessons ───────────── */
 
-    /* ─────────── Lessons ─────────── */
 
     suspend fun getLessons(): List<LessonDto> {
         val uid = auth.currentUser?.uid ?: error("User not logged‑in")
@@ -186,11 +184,7 @@ class FirestoreDataSource @Inject constructor(
         db.collection("users").document(uid).get().await()
             .toObject(UserDto::class.java)!!.apply { this.id = uid }
 
-    fun listenUsers() =
-        listenCollection<UserDto>(db.collection("users"))
 
-    fun listenMyUserDoc(uid: String) =
-        listenDoc<UserDto>(db.collection("users").document(uid))
     fun listenChats() : Flow<Result<List<ChatDto>>> {
         val uid = auth.currentUser?.uid ?: error("User not logged‑in")
         return listenCollection(
@@ -205,6 +199,10 @@ class FirestoreDataSource @Inject constructor(
         return listenCollection(
             db.collection("lessonRequests").whereEqualTo("requesterId", uid)
         )
+    }
+
+    suspend fun updateUserFields(uid: String, map: Map<String, Any?>) {
+        db.collection("users").document(uid).update(map).await()
     }
     /* ------------------------------------------ */
 }

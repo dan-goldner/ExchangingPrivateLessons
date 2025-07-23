@@ -48,6 +48,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -146,5 +147,9 @@ dependencies {
     testImplementation(libs.androidx.core.testing)
 
     implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("com.google.firebase:firebase-appcheck-debug:17.1.2")
+
+
 
 }

@@ -60,7 +60,7 @@
     <string name="delete_account">Delete Account</string>
     <string name="empty_lessons">No lessons to show</string>
     <string name="empty_list">No items yet</string>
-    <string name="greeting">Hello, %1$s, welcome to SkillSwap</string>
+    <string name="greeting">Hello %1$s, welcome to SkillSwap</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lesson_taken">Lesson added to your list!</string>
     <string name="msg_no_score">Score: %1$d</string>
@@ -83,9 +83,9 @@
     <string name="title_add_lesson">New lesson</string>
     <string name="title_edit_lesson">Edit lesson</string>
     <string name="title_lessons">Lessons</string>
-    <string name="tab_available">Available</string>
-    <string name="tab_my">Mine</string>
-    <string name="tab_taken">Taken</string>
+    <string name="tab_available">Available Lessons</string>
+    <string name="tab_my">My Lessons</string>
+    <string name="tab_taken">Lessons I took</string>
     <string name="empty_available">No available lessons right now.</string>
     <string name="empty_mine">You haven’t offered any lessons yet.</string>
     <string name="empty_taken">You haven’t signed up for any lessons yet.</string>
@@ -117,8 +117,17 @@
 
 
     <string name="err_camera_permission">Camera permission is denied</string>
-    <string name="err_camera_permission_rationale">
-        Camera permission is required in order to take a photo
+    <string name="err_camera_permission_rationale">Camera permission is required in order to take a photo
     </string>
     <string name="ok">OK</string>
+    <string name="choose_photo">Chose Photo</string>
+    <string name="change_photo">Change Photo</string>
+
+    <string name="profile_no_bio">No bio yet…</string>
+    <string name="profile_avatar">Profile Avatar</string>
+
+    <string name="delete_account_confirm">Are you sure? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+
+
 </resources>

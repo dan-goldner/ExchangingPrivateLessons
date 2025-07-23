@@ -10,115 +10,118 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- קבוצה שמכילה את התוכן הרגיל -->
+        <!-- 📄 תוכן -->
         <ScrollView
             android:id="@+id/contentGroup"
+            android:fillViewport="true"
+            android:padding="@dimen/space_l"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:gravity="center"
+                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <!-- Greeting -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txtGreeting"
-                    style="@style/TextAppearance.SkillSwap.TitleMedium"
+                    style="@style/TextAppearance.SkillSwap.HeadlineMedium"
+                    android:textColor="@color/md_theme_onSurface"
+                    android:textAlignment="viewStart"
+                    android:layout_marginBottom="@dimen/space_l"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/greeting"
-                android:layout_marginBottom="@dimen/space_l"/>
+                    android:layout_height="wrap_content"/>
 
-
-                <!-- טקסט סטטיסטיקה -->
-                <TextView
+                <com.google.android.material.chip.Chip
                     android:id="@+id/txtLessonsCount"
+                    style="@style/Widget.SkillSwap.LabelStat"
+                    android:text="0 שיעורים זמינים"
+                    android:layout_marginBottom="@dimen/space_s"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="שיעורים זמינים: 0"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_height="wrap_content" />
 
-                <TextView
+                <com.google.android.material.chip.Chip
                     android:id="@+id/txtRequestsCount"
+                    style="@style/Widget.SkillSwap.LabelStat"
+                    android:text="0 בקשות נכנסות"
+                    android:layout_marginBottom="@dimen/space_l"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="בקשות נכנסות: 0"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_height="wrap_content" />
 
-                <!-- כפתורים -->
+
+                <!-- Primary Actions (Filled blue) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAvailableLessons"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="שיעורים זמינים"
+                    android:text="@string/tab_available"
                     android:icon="@drawable/ic_school"
-                    app:iconPadding="8dp" />
+                    app:iconPadding="8dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMyLessons"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="השיעורים שלי"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_taken"
                     android:icon="@drawable/ic_book"
-                    app:iconPadding="8dp" />
+                    app:iconPadding="8dp"/>
 
+                <!-- Secondary Actions (Tonal turquoise) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMyOfferedLessons"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="השיעורים שאני מציע"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_my"
                     android:icon="@drawable/ic_book"
-                    app:iconPadding="8dp" />
+                    app:iconPadding="8dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRequests"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="בקשות"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/nav_requests"
                     android:icon="@drawable/ic_swap_horizontal"
-                    app:iconPadding="8dp" />
+                    app:iconPadding="8dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnChats"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="שיחות"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/nav_chats"
                     android:icon="@drawable/ic_chat"
-                    app:iconPadding="8dp" />
+                    app:iconPadding="8dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnProfile"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="פרופיל"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/nav_profile"
                     android:icon="@drawable/ic_person"
-                    app:iconPadding="8dp" />
+                    app:iconPadding="8dp"/>
             </LinearLayout>
-        </ScrollView>
 
-        <!-- טוען בעומס -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-    </FrameLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </ScrollView>
+
+    <!-- ‎⏳ Loader -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.Material3.CircularProgressIndicator"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

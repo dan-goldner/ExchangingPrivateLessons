@@ -1,4 +1,5 @@
-package com.example.exchangingprivatelessons.data.remote.cloud
+/* data/remote/storage/StorageDataSource.kt */
+package com.example.exchangingprivatelessons.data.remote.storage
 
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
@@ -11,22 +12,15 @@ class StorageDataSource @Inject constructor(
     private val storage: FirebaseStorage
 ) {
 
-    /* ───────────  generic (private) ─────────── */
-
-    private suspend fun upload(path: String, local: Uri): String {
-        val ref = storage.reference.child(path)
-        ref.putFile(local).await()
+    /** מעלה את ה‑Avatar ומחזיר Download‑URL */
+    suspend fun uploadAvatar(uid: String, file: Uri): String {
+        val ref = storage.reference.child("avatars/$uid.jpg")
+        ref.putFile(file).await()               // upload
         return ref.downloadUrl.await().toString()
     }
 
-    /* ───────────  public helpers  ─────────── */
-
-    /** ‎`avatars/{uid}.jpg` – תמונה אחת מסודרת למשתמש */
-    suspend fun uploadUserAvatar(uid: String, local: Uri): String =
-        upload("avatars/$uid.jpg", local)
-
-    /** מחיקת קובץ (אם קיים) – אופציונלי */
-    suspend fun delete(path: String) = runCatching {
-        storage.reference.child(path).delete().await()
-    }.getOrNull()
+    /** מחיקת תמונה ישנה (לא חובה אך מומלץ) */
+    suspend fun deleteAvatar(uid: String) {
+        runCatching { storage.reference.child("avatars/$uid.jpg").delete().await() }
+    }
 }

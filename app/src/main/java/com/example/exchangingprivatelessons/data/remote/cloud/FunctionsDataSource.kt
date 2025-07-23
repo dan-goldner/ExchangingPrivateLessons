@@ -53,7 +53,10 @@ class FunctionsDataSource @Inject constructor(
     }
 
 
-    suspend fun deleteMyAccount() = invoke<Unit>("deleteMyAccount")
+    suspend fun deleteMyAccount() {
+        // הפונקציה מחזירה Map; אנחנו פשוט מתעלמים מה‑payload
+        invoke<Map<*, *>>("deleteMyAccount")
+    }
 
     suspend fun touchLogin()      = invoke<Unit>("touchLogin")
 

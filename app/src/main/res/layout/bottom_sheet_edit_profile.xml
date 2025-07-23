@@ -12,7 +12,21 @@
         android:layout_height="96dp"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile_placeholder"/>
+        android:src="@drawable/ic_profile_placeholder"
+        android:background="@drawable/profile_circle_bg"
+        android:clipToOutline="true"/>
+
+    <!-- הוסף מיד אחרי avatarIv -->
+    <TextView
+        android:id="@+id/avatarHintTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="@string/choose_photo"/>
+
 
     <Button
         android:id="@+id/removeAvatarBtn"
@@ -41,4 +55,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"/>
+
+
+    <!-- 🗑️ Delete account -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteAccountBtn"
+        style="@style/Widget.SkillSwap.Button.FilledError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_l"
+        android:text="@string/delete_account"/>
 </LinearLayout>

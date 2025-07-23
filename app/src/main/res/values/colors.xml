@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ─── Brand colours (light) ────────────────────────────── -->
+
+    <!-- ── Brand palette (Light‑theme) ───────────────────────── -->
     <color name="md_theme_primary">#47B1E3</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
 
-    <color name="md_theme_primaryContainer">#CDEBFF</color>   <!-- ★ -->
-    <color name="md_theme_onPrimaryContainer">#001E2C</color> <!-- ★ -->
+    <color name="md_theme_primaryContainer">#CDEBFF</color>
+    <color name="md_theme_onPrimaryContainer">#001E2C</color>
 
     <color name="md_theme_secondary">#67C6B4</color>
     <color name="md_theme_onSecondary">#FFFFFF</color>
@@ -16,18 +17,27 @@
     <color name="md_theme_error">#BA1A1A</color>
     <color name="md_theme_onError">#FFFFFF</color>
 
+    <!-- Surfaces -->
     <color name="md_theme_background">#EAF7FF</color>
     <color name="md_theme_onBackground">#202124</color>
 
     <color name="md_theme_surface">#FFFFFF</color>
     <color name="md_theme_onSurface">#202124</color>
 
-    <color name="md_theme_surfaceVariant">#CDEBFF</color><!-- same as primaryContainer -->
-    <color name="md_theme_onSurfaceVariant">#001E2C</color><!-- same as onPrimaryContainer -->
+    <!-- Variant for cards / sheets -->
+    <color name="md_theme_surfaceVariant">#CDEBFF</color>
+    <color name="md_theme_onSurfaceVariant">#001E2C</color>
 
+    <!-- Outline / Dividers -->
     <color name="md_theme_outline">#8CCDEB</color>
 
-    <!-- Semantic utilities -->
+    <!-- State / Utility -->
     <color name="colorSuccess">#45C07D</color>
+    <color name="colorWarning">#FFB300</color>
     <color name="colorError">#F17373</color>
+
+    <!-- Elevation overlays (Material 3) -->
+    <color name="surface_dim">#EEF7FF</color>
+    <color name="surface_bright">#FFFFFF</color>
+
 </resources>
