@@ -63,9 +63,23 @@ class LessonRepositoryImpl @Inject constructor(
                 Result.Failure(IllegalStateException("User not logged in"))
             )
             dao.observeMine(uid)
+                .onEach { lessons ->
+                    Log.d("LessonRepo", "observeMine returned ${lessons.size} lessons (before filtering)")
+                    lessons.forEach {
+                        Log.d("LessonRepo", "LessonEntity from DB: id=${it.id}, title=${it.title}, createdAt=${it.createdAt}")
+                    }
+                }
+                .map { lessons ->
+                    lessons.filter { it.id.isNotBlank() } // 👈 This is the fix
+                }
                 .map { Result.Success(it.map(mapper::toDomain)) }
         } else {
-            observe()
+            observe().map { result ->
+                if (result is Result.Success) {
+                    val filtered = result.data.filter { it.id.isNotBlank() }
+                    Result.Success(filtered)
+                } else result
+            }
         }
     }
 
@@ -125,30 +139,34 @@ class LessonRepositoryImpl @Inject constructor(
         description: String,
         imageUrl: String?
     ): Result<String> = runCatching {
+        Log.d("LessonRepo", "createLesson called with title=$title")
+
         val newId = functions.createLesson(title, description, imageUrl)
-
-        // Retry getting the lesson directly from Firestore by ID
-        var dto: LessonDto? = null
-        repeat(10) { attempt ->
-            dto = firestore.getLessonById(newId)
-            if (dto != null) return@repeat
-            kotlinx.coroutines.delay(500L)
-        }
-
-        dto ?: throw IllegalStateException("Created lesson not found in Firestore (getLessonById)")
+        val dto = firestore.getLessonById(newId)
+            ?: throw IllegalStateException("Created lesson not found in Firestore (getLessonById)")
 
         val currentUid = auth.currentUser?.uid ?: ""
-        val entity = mapper.toEntity(dto!!).copy(ownerId = currentUid)
+        val entity = mapper.toEntity(dto).copy(ownerId = currentUid)
 
-        Log.d("LessonRepo", "Creating lesson: id=${entity.id}, ownerId=${entity.ownerId}, status=${entity.status}, createdAt=${entity.createdAt}")
-        Log.d("Repo", "Lesson saved locally: $entity")
+        if (entity.id.isNullOrBlank()) {
+            Log.e("LessonRepo", "Skipping save: entity has blank ID!")
+            throw IllegalStateException("Lesson entity has no ID, cannot save.")
+        }
+
+        Log.d("LessonRepo", "Creating lesson: $entity")
         dao.upsert(entity)
 
-        Result.Success(newId)
-    }.getOrElse {
-        Log.e("Repo", "Failed to create lesson: ${it.localizedMessage}")
-        Result.Failure(it)
-    }
+
+        Log.d("Repo", "My lessons after insert: ${dao.observeMine(currentUid).first().map { it.id }}")
+
+        newId
+    }.fold(
+        onSuccess = { Result.Success(it) },
+        onFailure = {
+            Log.e("Repo", "Failed to create lesson: ${it.localizedMessage}")
+            Result.Failure(it)
+        }
+    )
 
     override suspend fun refreshMineLessons(userId: String) {
         val remote = firestore.getLessonsOfferedByUser(userId)
