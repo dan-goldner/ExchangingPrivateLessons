@@ -123,8 +123,9 @@ class LessonRepositoryImpl @Inject constructor(
         imageUrl: String?
     ): Result<Unit> = runCatching {
         functions.updateLesson(lessonId, title, description, imageUrl)
+        Unit  // explicitly return Unit instead of trying to cast result
     }.fold(
-        onSuccess = { Result.Success(Unit) },
+        onSuccess = { Result.Success(it) },
         onFailure = { Result.Failure(it) }
     )
 

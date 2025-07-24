@@ -17,12 +17,19 @@ class FunctionsDataSource @Inject constructor(
     private suspend inline fun <reified R> invoke(
         name: String,
         args: Any? = null
-    ): R = functions
-        .getHttpsCallable(name)
-        .let { if (args == null) it.call() else it.call(args) }
-        .await()
-        .data as R           // לא מצליח להמיר? ייזרק Exception → נתפס בריפו
+    ): R {
+        val result = if (args == null)
+            functions.getHttpsCallable(name).call()
+        else
+            functions.getHttpsCallable(name).call(args)
 
+        val data = result.await().data
+
+        return when (R::class) {
+            Unit::class -> Unit as R  // 🔒 Return Unit if requested
+            else        -> data as R  // ✅ Otherwise cast to R
+        }
+    }
 
     /* ───────────── Account / User ───────────── */
     suspend fun signInOrUp(
