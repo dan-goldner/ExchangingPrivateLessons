@@ -58,13 +58,14 @@ class LessonRepositoryImpl @Inject constructor(
     override fun map(local: LessonEntity) = mapper.toDomain(local)
 
     override fun observeLessons(onlyMine: Boolean): Flow<Result<List<Lesson>>> {
+        val currentUid = auth.currentUser?.uid.orEmpty()
+
         return if (onlyMine) {
-            val uid = auth.currentUser?.uid ?: return flowOf(
-                Result.Failure(IllegalStateException("User not logged in"))
-            )
-            dao.observeMine(uid)
+            if (currentUid.isBlank()) return flowOf(Result.Failure(IllegalStateException("User not logged in")))
+
+            dao.observeMine(currentUid)
                 .map { lessons ->
-                    lessons.filter { it.id.isNotBlank() } // 👈 FILTER HERE
+                    lessons.filter { it.id.isNotBlank() }
                 }
                 .onEach { lessons ->
                     Log.d("LessonRepo", "observeMine returned ${lessons.size} lessons (filtered)")
@@ -74,11 +75,13 @@ class LessonRepositoryImpl @Inject constructor(
                 }
                 .map { Result.Success(it.map(mapper::toDomain)) }
         } else {
-            observe().map { result ->
-                if (result is Result.Success) {
-                    Result.Success(result.data.filter { it.id.isNotBlank() })
-                } else result
-            }
+            observe()
+                .map { result ->
+                    if (result is Result.Success) {
+                        val filtered = result.data.filter { it.id.isNotBlank() && it.ownerId != currentUid }
+                        Result.Success(filtered)
+                    } else result
+                }
         }
     }
 
