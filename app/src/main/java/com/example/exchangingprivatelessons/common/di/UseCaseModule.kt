@@ -32,7 +32,9 @@ object UseCaseModule {
     /* ---------- lesson ---------- */
     @Provides fun createLesson    (l: LessonRepository)                       = CreateLesson(l)
     @Provides fun updateLesson    (l: LessonRepository)                       = UpdateLesson(l)
-    @Provides fun observeLessons  (l: LessonRepository)                       = ObserveLessons(l)
+    @Provides
+    fun observeLessons(l: LessonRepository, u: UserRepository): ObserveLessons = ObserveLessons(l, u)
+
     @Provides fun observeTaken    (t: TakenLessonRepository)                  = ObserveTakenLessons(t)
     @Provides fun refreshLessons  (l: LessonRepository, a: FirebaseAuth)      = RefreshLessons(l, a)
     @Provides fun archiveLesson   (l: LessonRepository)                       = ArchiveLesson(l)

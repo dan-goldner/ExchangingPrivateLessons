@@ -15,10 +15,11 @@
     <string name="nav_lesson_details">Lesson Details</string>
     <string name="nav_my_lessons">My Lessons</string>
     <string name="nav_profile">Profile</string>
-    <string name="nav_requests">Requests</string>
     <string name="nav_sign_up">Sign Up</string>
     <string name="nav_signup">Sign Up</string>
     <string name="nav_take_lessons">Take Lessons</string>
+    <string name="nav_requests_i_received">Requests I received</string>
+    <string name="nav_requests_i_sent">Requests I sent</string>
 
     <!-- Buttons -->
     <string name="approve">Approve</string>
@@ -128,6 +129,8 @@
 
     <string name="delete_account_confirm">Are you sure? This action cannot be undone.</string>
     <string name="delete">Delete</string>
+
+
 
 
 </resources>

@@ -14,6 +14,9 @@ interface UserRepository {
     suspend fun getMe(): Result<User>
     suspend fun getUser(uid: String): Result<User>
 
+    suspend fun getUsers(ids: List<String>): Result<List<User>>
+
+
     /* Auth */
     suspend fun signInOrUpWithEmail(
         email: String, password: String,

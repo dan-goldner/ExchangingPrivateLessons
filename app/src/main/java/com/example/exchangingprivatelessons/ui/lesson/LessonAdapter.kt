@@ -24,11 +24,18 @@ class LessonAdapter(
 
     inner class VH(private val row: RowLessonBinding) : RecyclerView.ViewHolder(row.root) {
         fun bind(item: LessonItem) = with(row) {
-            titleTv.text  = item.title
-            descPreviewTv.text  = item.description
-            dateTv.text   = "Listed at: ${item.date}"
-            ratingTv.text = "Lesson Rating: ${item.rating}"
-            lessonImg.load(item.imageUrl) { crossfade(true) }
+            titleTv.text       = item.title
+            descPreviewTv.text = item.description
+            dateTv.text        = "Listed at: ${item.date}"
+            ratingTv.text      = "Lesson Rating: ${item.rating}"
+
+            // ⬅️  הנה השורה/בלוק החדש
+            lessonImg.load(item.imageUrl?.takeIf { it.isNotBlank() }) {
+                crossfade(true)
+                placeholder(R.drawable.ic_profile_placeholder)
+                error      (R.drawable.ic_profile_placeholder)
+                fallback   (R.drawable.ic_profile_placeholder)
+            }
 
             archiveBtn.run {
                 setIconResource(
@@ -41,6 +48,8 @@ class LessonAdapter(
             root.setOnClickListener { click(item.id) }
         }
     }
+
+
 
     private class DiffCallback : DiffUtil.ItemCallback<LessonItem>() {
         override fun areItemsTheSame(o: LessonItem, n: LessonItem) = o.id == n.id

@@ -5,44 +5,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- קבוצה להחלפת מצב: אליי / ששלחתי -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/modeToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReceived"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nav_requests_i_received"
+            android:checked="true"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSent"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nav_requests_i_sent"/>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- סינון סטטוס (רק למצב SENT) -->
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/statusChips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="56dp"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_pending"
             style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Pending"
-            android:checked="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:checked="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_approved"
             style="@style/Widget.Material3.Chip.Filter"
-            android:text="Approved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Approved"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_declined"
             style="@style/Widget.Material3.Chip.Filter"
-            android:text="Declined"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Declined"/>
     </com.google.android.material.chip.ChipGroup>
 
+    <!-- רשימה -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/requestsRv"
-        android:clipToPadding="false"
-        android:paddingTop="56dp"
-        android:paddingBottom="16dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingTop="112dp"
+        android:clipToPadding="false"/>
 
+    <!-- Empty‑state -->
     <TextView
         android:id="@+id/emptyTv"
         style="@style/TextAppearance.Material3.BodyLarge"
@@ -51,4 +78,5 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

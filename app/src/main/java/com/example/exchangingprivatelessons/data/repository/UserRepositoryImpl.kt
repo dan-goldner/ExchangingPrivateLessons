@@ -77,6 +77,31 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
+    override suspend fun getUsers(ids: List<String>): Result<List<User>> = withContext(io) {
+        runCatching {
+            val users = ids.mapNotNull { uid ->
+                val cached = dao.get(uid)
+                if (cached != null) {
+                    mapper.toDomain(cached)
+                } else {
+                    try {
+                        val dto = firestore.getUser(uid)
+                        val entity = mapper.toEntity(dto)
+                        dao.upsert(entity)
+                        mapper.toDomain(entity)
+                    } catch (e: Exception) {
+                        null // אפשר גם ללוגג את זה
+                    }
+                }
+            }
+            users
+        }.fold(
+            onSuccess = { Result.Success(it) },
+            onFailure = { Result.Failure(it) }
+        )
+    }
+
+
     override suspend fun removeAvatar(): Result<Unit> = withContext(io) {
         val uid = currentUid() ?: return@withContext Result.Failure(
             IllegalStateException("Not logged‑in"))

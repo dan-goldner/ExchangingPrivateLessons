@@ -1,10 +1,8 @@
 package com.example.exchangingprivatelessons.ui.request
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.exchangingprivatelessons.common.util.Result
+import com.example.exchangingprivatelessons.common.util.toResultLiveData
 import com.example.exchangingprivatelessons.domain.model.LessonRequest
 import com.example.exchangingprivatelessons.domain.model.RequestStatus
 import com.example.exchangingprivatelessons.domain.usecase.request.*
@@ -14,51 +12,71 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RequestsViewModel @Inject constructor(
-    private val observeByStatus: ObserveRequestsByStatus,
-    private val approveRequest : ApproveRequest,
-    private val declineRequest : DeclineRequest,
-    private val cancelRequest  : CancelRequest
+    private val observeIncoming   : ObserveIncomingRequests,
+    private val observeByStatus   : ObserveRequestsByStatus,
+    private val approveRequestUse : ApproveRequest,
+    private val declineRequestUse : DeclineRequest,
+    private val cancelRequestUse  : CancelRequest
 ) : ViewModel() {
 
-    private val _status = MutableLiveData(RequestStatus.Pending)
-    val status: LiveData<RequestStatus> get() = _status
+    /* ───────────── UI‑state keys ───────────── */
+    enum class Mode { SENT , RECEIVED }
 
-    private val _requests = MutableLiveData<List<LessonRequest>>(emptyList())
-    val requests: LiveData<List<LessonRequest>> get() = _requests
+    private val _mode   = MutableLiveData(Mode.RECEIVED)
+    private val _status = MutableLiveData(RequestStatus.Pending)   // רלוונטי רק למצב SENT
+    private val _snack  = MutableLiveData<String>()
 
-    private val _snackbar = MutableLiveData<String>()
-    val snackbar: LiveData<String> get() = _snackbar
-
-    init {
-        observeRequests()
+    /** טריגר מאוחד → Pair<Mode,Status> */
+    private val trigger = MediatorLiveData<Pair<Mode,RequestStatus>>().apply {
+        value = _mode.value!! to _status.value!!                 // ערך התחלתי
+        addSource(_mode)   { value = it to (_status.value ?: RequestStatus.Pending) }
+        addSource(_status) { value = (_mode.value ?: Mode.RECEIVED) to it }
     }
 
-    fun setStatus(status: RequestStatus) {
-        _status.value = status
-        observeRequests()
-    }
+    /* ───────────── נתונים מה‑Use‑cases ───────────── */
 
-    private fun observeRequests() {
-        val currentStatus = _status.value ?: return
-        viewModelScope.launch {
-            observeByStatus(currentStatus).collect { res ->
-                val list = (res as? Result.Success)?.data ?: emptyList()
-                _requests.postValue(list)
+    /** Result<List<LessonRequest>> ע״פ mode+status  */
+    private val _requestsResult: LiveData<Result<List<LessonRequest>>> =
+        trigger.switchMap { (mode,status) ->
+            when (mode) {
+                Mode.RECEIVED -> observeIncoming()                 // Flow<Result<…>>
+                    .toResultLiveData()                            // ↙︎
+                Mode.SENT     -> observeByStatus(status)           // Flow<Result<…>>
+                    .toResultLiveData()
             }
         }
+
+    /** רשימת הבקשות לממשק‑המשתמש */
+    val requests: LiveData<List<LessonRequest>> =
+        _requestsResult.map { res ->
+            (res as? Result.Success)?.data ?: emptyList()
+        }
+
+    val mode    : LiveData<Mode>            = _mode
+    val status  : LiveData<RequestStatus>   = _status
+    val snackbar: LiveData<String>          = _snack
+
+    /* ───────────── מיתוג מצב / סטטוס ───────────── */
+
+    fun setMode(m: Mode) {
+        if (_mode.value != m) _mode.value = m
     }
 
-    fun approve(id: String) = doAction { approveRequest(id) }
-    fun decline(id: String) = doAction { declineRequest(id) }
-    fun cancel(id: String)  = doAction { cancelRequest(id)  }
+    fun setStatus(s: RequestStatus) {
+        if (_status.value != s) _status.value = s
+    }
+
+    /* ───────────── פעולות על בקשה ───────────── */
+
+    fun approve(id: String) = doAction { approveRequestUse(id) }
+    fun decline(id: String) = doAction { declineRequestUse(id) }
+    fun cancel (id: String) = doAction { cancelRequestUse(id)  }
 
     private fun doAction(block: suspend () -> Result<Unit>) = viewModelScope.launch {
         when (val r = block()) {
-            is Result.Failure -> _snackbar.postValue(
-                r.throwable.localizedMessage ?: "Operation failed"
-            )
-
-            is Result.Success -> _snackbar.postValue("Done")
+            is Result.Success -> _snack.postValue("Done")
+            is Result.Failure -> _snack.postValue(
+                r.throwable.localizedMessage ?: "Operation failed")
             else -> {}
         }
     }

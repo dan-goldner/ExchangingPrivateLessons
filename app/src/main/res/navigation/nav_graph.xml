@@ -13,7 +13,7 @@
             android:id="@+id/action_splash_to_auth"
             app:destination="@id/authFragment"
             app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splash_to_home"
             app:destination="@id/homeFragment"
@@ -30,7 +30,7 @@
             android:id="@+id/action_auth_to_home"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/authFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- 🏠 Home -->
@@ -39,10 +39,9 @@
         android:name="com.example.exchangingprivatelessons.ui.home.HomeFragment"
         android:label="Home">
 
-
-        <!-- 🔹 שיעורים שאני יכול לקחת (זמינים, לא שלי) -->
+        <!-- רשימות שיעורים -->
         <action
-            android:id="@+id/action_home_to_lessonListAvailable"
+            android:id="@+id/action_home_to_lessonList_available"
             app:destination="@id/lessonListFragment">
             <argument
                 android:name="mode"
@@ -50,9 +49,8 @@
                 android:defaultValue="AVAILABLE" />
         </action>
 
-        <!-- 🔹 שיעורים שאני נרשמתי אליהם -->
         <action
-            android:id="@+id/action_home_to_lessonListTaken"
+            android:id="@+id/action_home_to_lessonList_taken"
             app:destination="@id/lessonListFragment">
             <argument
                 android:name="mode"
@@ -60,7 +58,6 @@
                 android:defaultValue="TAKEN" />
         </action>
 
-        <!-- 🔹 השיעורים שאני מציע -->
         <action
             android:id="@+id/action_home_to_lessonList_mine"
             app:destination="@id/lessonListFragment">
@@ -70,20 +67,36 @@
                 android:defaultValue="MINE" />
         </action>
 
+        <!-- בקשות – אליי -->
         <action
-            android:id="@+id/action_homeFragment_to_requestsFragment"
-            app:destination="@id/requestsFragment" />
+            android:id="@+id/action_home_to_requests_received"
+            app:destination="@id/requestsFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="RECEIVED" />
+        </action>
 
+        <!-- בקשות – ששלחתי -->
+        <action
+            android:id="@+id/action_home_to_requests_sent"
+            app:destination="@id/requestsFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="SENT" />
+        </action>
+
+        <!-- צ’אטים / פרופיל -->
         <action
             android:id="@+id/action_homeFragment_to_allChatsFragment"
             app:destination="@id/allChatsFragment" />
-
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
 
-    <!-- 🧑‍🏫 Lessons -->
+    <!-- 🧑‍🏫 רשימת שיעורים -->
     <fragment
         android:id="@+id/lessonListFragment"
         android:name="com.example.exchangingprivatelessons.ui.lesson.LessonListFragment"
@@ -103,6 +116,7 @@
             app:destination="@id/lessonDetailsFragment" />
     </fragment>
 
+    <!-- 📝 עריכת / יצירת שיעור -->
     <fragment
         android:id="@+id/addEditLessonFragment"
         android:name="com.example.exchangingprivatelessons.ui.lesson.AddEditLessonFragment"
@@ -110,11 +124,11 @@
         <argument
             android:name="lessonId"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="" />
-
+            android:defaultValue=""
+            app:nullable="true" />
     </fragment>
 
+    <!-- 🔍 פרטי שיעור -->
     <fragment
         android:id="@+id/lessonDetailsFragment"
         android:name="com.example.exchangingprivatelessons.ui.lesson.LessonDetailsFragment"
@@ -130,7 +144,7 @@
             app:destination="@id/ratingBottomSheet" />
     </fragment>
 
-    <!-- ⭐ Rating (BottomSheet) -->
+    <!-- ⭐ דירוג -->
     <dialog
         android:id="@+id/ratingBottomSheet"
         android:name="com.example.exchangingprivatelessons.ui.lesson.RatingBottomSheet"
@@ -140,40 +154,15 @@
             app:argType="string" />
     </dialog>
 
-    <!-- 💬 Chat -->
-    <fragment
-        android:id="@+id/allChatsFragment"
-        android:name="com.example.exchangingprivatelessons.ui.chat.AllChatsFragment"
-        android:label="All Chats">
-        <action
-            android:id="@+id/actionAllChatsFragmentToChatFragment"
-            app:destination="@id/chatFragment">
-            <argument
-                android:name="chatId"
-                app:argType="string" />
-            <argument
-                android:name="peerName"
-                app:argType="string" />
-        </action>
-    </fragment>
-
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.example.exchangingprivatelessons.ui.chat.ChatFragment"
-        android:label="Chat">
-        <argument
-            android:name="chatId"
-            app:argType="string" />
-        <argument
-            android:name="peerName"
-            app:argType="string" />
-    </fragment>
-
-    <!-- 📄 Requests -->
+    <!-- 📄 בקשות -->
     <fragment
         android:id="@+id/requestsFragment"
         android:name="com.example.exchangingprivatelessons.ui.request.RequestsFragment"
         android:label="Requests">
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="RECEIVED" />
         <action
             android:id="@+id/action_requests_to_requestDetail"
             app:destination="@id/requestDetailSheet" />
@@ -188,31 +177,50 @@
             app:argType="string" />
     </dialog>
 
-    <!-- 👤 Profile -->
+    <!-- 💬 צ’אטים -->
+    <fragment
+        android:id="@+id/allChatsFragment"
+        android:name="com.example.exchangingprivatelessons.ui.chat.AllChatsFragment"
+        android:label="All Chats">
+        <action
+            android:id="@+id/actionAllChatsFragmentToChatFragment"
+            app:destination="@id/chatFragment">
+            <argument android:name="chatId"  app:argType="string" />
+            <argument android:name="peerName" app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.exchangingprivatelessons.ui.chat.ChatFragment"
+        android:label="Chat">
+        <argument android:name="chatId"   app:argType="string" />
+        <argument android:name="peerName" app:argType="string" />
+    </fragment>
+
+    <!-- 👤 פרופיל -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.exchangingprivatelessons.ui.profile.ProfileFragment"
         android:label="Profile">
-
-        <!-- NEW – מאפשר כניסה לפרופיל שלי (null) או של משתמש אחר -->
         <argument
             android:name="uid"
             app:argType="string"
             app:nullable="true" />
-
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/editProfileSheet" />
     </fragment>
 
+    <dialog
+        android:id="@+id/editProfileSheet"
+        android:name="com.example.exchangingprivatelessons.ui.profile.EditProfileSheet"
+        android:label="Edit Profile" />
+
+    <!-- ניווט גלובלי ל‑Auth בעת Logout -->
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/authFragment"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
-
-    <dialog
-        android:id="@+id/editProfileSheet"
-        android:name="com.example.exchangingprivatelessons.ui.profile.EditProfileSheet"
-        android:label="Edit Profile" />
 </navigation>

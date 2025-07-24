@@ -19,7 +19,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _b: FragmentHomeBinding? = null
     private val b get() = _b!!
 
-    private val vm: HomeViewModel by viewModels()
+    private val vm by viewModels<HomeViewModel>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,34 +35,55 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             b.txtGreeting.text = getString(R.string.greeting, finalName)
         }
 
-        /* ───────────── Navigation ───────────── */
-        b.btnAvailableLessons.setOnClickListener   {
-            val dir = HomeFragmentDirections.actionHomeToLessonListAvailable()
-            findNavController().navigate(dir)
+        /* ───── כפתורי ניווט ───── */
+
+        // שיעורים זמינים
+        b.btnAvailableLessons.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeToLessonListAvailable()
+            )
         }
 
-        b.btnMyLessons.setOnClickListener   {
-            val dir = HomeFragmentDirections.actionHomeToLessonListTaken()
-            findNavController().navigate(dir)
+        // שיעורים שנרשמתי אליהם
+        b.btnMyLessons.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeToLessonListTaken()
+            )
         }
 
-
+        // שיעורים שאני מציע
         b.btnMyOfferedLessons.setOnClickListener {
-            val dir = HomeFragmentDirections.actionHomeToLessonListMine("MINE")
-            findNavController().navigate(dir)
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeToLessonListMine()
+            )
         }
 
-        b.btnRequests.setOnClickListener  {
-            val dir = HomeFragmentDirections.actionHomeFragmentToRequestsFragment()
-            findNavController().navigate(dir)
+        // בקשות שקיבלתי
+        b.btnRequestsToMe.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeToRequestsReceived()
+            )
         }
-        b.btnChats.setOnClickListener     {
-            val dir = HomeFragmentDirections.actionHomeFragmentToAllChatsFragment()
-            findNavController().navigate(dir)
+
+        // בקשות ששלחתי
+        b.btnMyRequests.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeToRequestsSent()
+            )
         }
+
+        // צ'אטים
+        b.btnChats.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToAllChatsFragment()
+            )
+        }
+
+        // פרופיל
         b.btnProfile.setOnClickListener {
-            val dir = HomeFragmentDirections.actionHomeFragmentToProfileFragment(null)
-            findNavController().navigate(dir)
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToProfileFragment(null)
+            )
         }
 
 

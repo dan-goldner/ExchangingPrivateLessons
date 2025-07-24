@@ -83,12 +83,22 @@
                     app:iconPadding="8dp"/>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRequests"
+                    android:id="@+id/btnMyRequests"
                     style="@style/Widget.SkillSwap.Button.TonalSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_m"
-                    android:text="@string/nav_requests"
+                    android:text="@string/nav_requests_i_sent"
+                    android:icon="@drawable/ic_swap_horizontal"
+                    app:iconPadding="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRequestsToMe"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/nav_requests_i_received"
                     android:icon="@drawable/ic_swap_horizontal"
                     app:iconPadding="8dp"/>
 
