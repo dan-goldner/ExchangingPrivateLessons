@@ -63,9 +63,22 @@ class LessonRepositoryImpl @Inject constructor(
                 Result.Failure(IllegalStateException("User not logged in"))
             )
             dao.observeMine(uid)
+                .map { lessons ->
+                    lessons.filter { it.id.isNotBlank() } // 👈 FILTER HERE
+                }
+                .onEach { lessons ->
+                    Log.d("LessonRepo", "observeMine returned ${lessons.size} lessons (filtered)")
+                    lessons.forEach {
+                        Log.d("LessonRepo", "LessonEntity from DB: id=${it.id}, title=${it.title}, createdAt=${it.createdAt}")
+                    }
+                }
                 .map { Result.Success(it.map(mapper::toDomain)) }
         } else {
-            observe()
+            observe().map { result ->
+                if (result is Result.Success) {
+                    Result.Success(result.data.filter { it.id.isNotBlank() })
+                } else result
+            }
         }
     }
 
