@@ -18,8 +18,8 @@
     <string name="nav_sign_up">Sign Up</string>
     <string name="nav_signup">Sign Up</string>
     <string name="nav_take_lessons">Take Lessons</string>
-    <string name="nav_requests_i_received">Requests I Received</string>
-    <string name="nav_requests_i_sent">Requests I Sent</string>
+    <string name="nav_requests_i_received">Requests Received</string>
+    <string name="nav_requests_i_sent">Requests Sent</string>
 
     <!-- Buttons -->
     <string name="approve">Approve</string>
