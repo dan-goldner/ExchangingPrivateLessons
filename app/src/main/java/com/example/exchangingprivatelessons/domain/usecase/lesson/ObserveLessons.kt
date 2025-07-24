@@ -37,7 +37,7 @@ class ObserveLessons @Inject constructor(
         description     = l.description,
         ownerId         = l.ownerId,
         ownerName       = "",
-        imageUrl        = null,
+        ownerPhotoUrl   = "",
         createdAt       = l.createdAt,
         ratingAvg       = l.avgRating.toDouble(),
         ratingCount     = l.ratingCount,

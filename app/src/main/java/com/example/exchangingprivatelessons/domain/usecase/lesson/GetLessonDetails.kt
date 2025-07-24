@@ -57,15 +57,15 @@ class GetLessonDetails @Inject constructor(
             description     = lesson.description,
             ownerId         = lesson.ownerId,
             ownerName       = owner?.displayName ?: "Unknown",
-            imageUrl        = owner?.photoUrl,
-            createdAt       = lesson.createdAt,
+            ownerPhotoUrl   = owner?.photoUrl,
             ratingAvg       = average.toDouble(),
             ratingCount     = lesson.ratingCount,
             canEdit         = canEdit,
             canRequest      = canRequest,
             canRate         = canRate,
             archived        = lesson.status == LessonStatus.Archived,
-            canArchive      = isMine
+            canArchive      = isMine,
+            createdAt       = lesson.createdAt
         )
 
 

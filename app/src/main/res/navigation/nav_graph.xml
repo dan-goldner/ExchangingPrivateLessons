@@ -125,7 +125,9 @@
         <action
             android:id="@+id/action_lessonDetailsFragment_to_addEditLessonFragment"
             app:destination="@id/addEditLessonFragment" />
-
+        <action
+            android:id="@+id/action_lessonDetailsFragment_to_ratingBottomSheet"
+            app:destination="@id/ratingBottomSheet" />
     </fragment>
 
     <!-- ⭐ Rating (BottomSheet) -->

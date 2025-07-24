@@ -1,18 +1,16 @@
-/* ───────────────────────────────  User  ───────────────────────────── */
+/* data/remote/dto/UserDto.kt */
 package com.example.exchangingprivatelessons.data.remote.dto
 
-import kotlinx.serialization.Serializable
 import com.google.firebase.Timestamp
 
-
 data class UserDto(
-    var id          : String = "",
-    val displayName: String = "",
-    val email: String = "",
-    val photoUrl: String = "",
-    val bio: String = "",
-    val score: Int = 0,
-    val createdAt: Timestamp? = null,
-    val lastLoginAt: Timestamp? = null,
-    val lastUpdatedAt: Timestamp? = null
+    var id:           String     = "",
+    var displayName:  String     = "",
+    var email:        String     = "",
+    var photoUrl:     String     = "",
+    var bio:          String     = "",
+    var score:        Int        = 0,
+    var createdAt:    Timestamp? = null,
+    var lastLoginAt:  Timestamp? = null,
+    var lastUpdatedAt:  Timestamp? = null      // 👈 עכשיו ‎var‎, ולא ‎val‎
 )

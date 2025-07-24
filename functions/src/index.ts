@@ -679,7 +679,7 @@ export const archiveLesson = onCall<ArchiveLessonInput>(async ({ data, auth }) =
 
   await lessonRef.update({
     status: archived ? LessonStatus.Archived : LessonStatus.Active,
-    lastUpdated: FieldValue.serverTimestamp(),
+    lastUpdatedAt: FieldValue.serverTimestamp(),
   });
 
   if (archived) {
@@ -705,7 +705,7 @@ export const updateProfile = onCall<UpdateProfileInput>(async ({ data, auth }) =
   if ((bio?.length ?? 0) > 250)
     throw new HttpsError("invalid-argument", "bio too long");
 
-  const patch: Partial<User> = { lastUpdated: FieldValue.serverTimestamp() };
+  const patch: Partial<User> = { lastUpdatedAt: FieldValue.serverTimestamp() };
   if (displayName !== undefined) patch.displayName = displayName.trim();
   if (bio !== undefined) patch.bio = bio.trim();
   if (photoUrl !== undefined) patch.photoUrl = photoUrl.trim();

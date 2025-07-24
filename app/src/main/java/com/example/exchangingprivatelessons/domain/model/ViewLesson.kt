@@ -18,7 +18,7 @@ data class ViewLesson(
     val description:  String,
     val ownerId: String,
     val ownerName:    String,
-    val imageUrl:     String?,          // תמונת המורה
+    val ownerPhotoUrl: String?,          // תמונת המורה
     val createdAt:    Long,
     val ratingAvg:    Double,
     val ratingCount:  Int,

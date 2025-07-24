@@ -12,5 +12,5 @@ data class User(
     val score: Int,
     val createdAt: Long,
     val lastLoginAt: Long,
-    val lastUpdated: Long? = null,
+    val lastUpdatedAt: Long? = null,
 )

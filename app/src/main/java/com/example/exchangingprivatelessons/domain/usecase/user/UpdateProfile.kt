@@ -11,11 +11,8 @@ class UpdateProfile @Inject constructor(
 ) {
     suspend operator fun invoke(
         displayName: String? = null,
-        bio: String? = null,
-        photoUrl: String? = null
-    ): Result<Unit> = repo.updateProfile(
-        displayName = displayName,
-        bio = bio,
-        photoUrl = photoUrl
-    )
+        bio:         String? = null,
+        photoUrl:    String? = null
+    ): Result<Unit> =
+        repo.updateProfile(displayName, bio, photoUrl)
 }

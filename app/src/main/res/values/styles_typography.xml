@@ -77,4 +77,19 @@
         <item name="android:fontWeight">500</item>
     </style>
 
+    <!-- Meta line: “By • 4 hr ago • ★ 0.0 (0)” -->
+    <style name="TextAppearance.SkillSwap.MetaLine"
+        parent="TextAppearance.SkillSwap.BodyMedium">
+        <!-- מעט גדול יותר מה‑Body, SemiBold -->
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontWeight">500</item>
+
+        <!-- צבע רך יותר כדי לא להתחרות בכותרת/תיאור -->
+        <item name="android:textColor">@color/md_theme_onSurfaceVariant</item>
+
+        <!-- ריווח אותיות קל לקריאות -->
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+
 </resources>

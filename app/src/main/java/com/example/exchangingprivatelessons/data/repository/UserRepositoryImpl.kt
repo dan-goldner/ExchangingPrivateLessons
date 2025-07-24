@@ -193,9 +193,13 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updateProfile(
         displayName: String?, bio: String?, photoUrl: String?
     ): Result<Unit> = withContext(io) {
-        runCatching { functions.updateProfile(displayName, bio, photoUrl) }
-            .fold({ Result.Success(Unit) }, { Result.Failure(it) })
+        runCatching {
+            functions.updateProfile(displayName, bio, photoUrl)              // 1. Cloud
+            val dto = firestore.getMe()                                      // 2. Pull
+            dao.upsert(mapper.toEntity(dto))                                 // 3. Cache
+        }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
     }
+
 
     override suspend fun deleteMyAccount(): Result<Unit> = withContext(io) {
         runCatching {

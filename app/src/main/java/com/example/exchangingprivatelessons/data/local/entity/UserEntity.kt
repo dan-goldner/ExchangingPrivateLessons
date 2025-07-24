@@ -14,5 +14,5 @@ data class UserEntity(
     val score: Int,
     val createdAt: Date?,
     val lastLoginAt: Date?,
-    val lastUpdated: Date? = null
+    val lastUpdatedAt: Date?
 )

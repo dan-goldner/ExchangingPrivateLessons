@@ -50,12 +50,15 @@ class LessonDetailsViewModel @Inject constructor(
 
     /* ---------- UI‑state holder ---------- */
     data class DetailsState(
-        val lesson   : ViewLesson? = null,
-        val loading  : Boolean     = false,
-        val errorMsg : String?     = null
+        val lesson  : ViewLesson? = null,
+        val loading : Boolean = false,
+        val errorMsg: String? = null
     ) {
         val canEdit    get() = lesson?.canEdit    == true
         val canRequest get() = lesson?.canRequest == true
         val canRate    get() = lesson?.canRate    == true
+        /** נוח ל‑UI */
+        val ownerPhotoUrl get() = lesson?.ownerPhotoUrl
     }
+
 }
