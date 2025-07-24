@@ -91,18 +91,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
-                android:layout_marginTop="24dp" />
+                android:layout_marginTop="16dp" />
 
             <!-- Delete button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/deleteBtn"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.SkillSwap.Button.FilledError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/delete"
-                android:layout_marginTop="12dp"
-                android:textColor="?attr/colorError"
-                app:strokeColor="?attr/colorError"
+                android:text="@string/delete_lesson"
+                android:layout_marginTop="16dp"
                 android:visibility="gone" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

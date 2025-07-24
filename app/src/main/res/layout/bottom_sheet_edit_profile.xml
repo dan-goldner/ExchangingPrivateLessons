@@ -51,10 +51,11 @@
 
     <Button
         android:id="@+id/saveBtn"
+        style="@style/Widget.Material3.Button"
         android:text="@string/save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="16dp"/>
 
 
     <!-- 🗑️ Delete account -->
