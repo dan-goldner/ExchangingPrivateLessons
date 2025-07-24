@@ -128,6 +128,22 @@ class LessonRepositoryImpl @Inject constructor(
         onFailure = { Result.Failure(it) }
     )
 
+    override suspend fun deleteLesson(lessonId: String): Result<Unit> {
+        return runCatching {
+            dao.delete(lessonId)
+            Log.d("DeleteLesson", "Deleted from local DB: $lessonId")
+            firestore.deleteLesson(lessonId)
+            Log.d("DeleteLesson", "Deleted from Firestore: $lessonId")
+        }.fold(
+            onSuccess = { Result.Success(Unit) },
+            onFailure = {
+                Log.e("DeleteLesson", "Error deleting lesson", it)
+                Result.Failure(it)
+            }
+        )
+    }
+
+
     override suspend fun archiveLesson(lessonId: String, archived: Boolean): Result<Unit> =
         runCatching {
             functions.archiveLesson(lessonId, archived)

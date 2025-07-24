@@ -25,8 +25,8 @@ interface LessonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(lessons: List<LessonEntity>)
 
-    @Query("DELETE FROM lessons WHERE id = :id")
-    suspend fun delete(id: String)
+    @Query("DELETE FROM lessons WHERE id = :lessonId")
+    suspend fun delete(lessonId: String)
 
     @Query("SELECT * FROM lessons WHERE id = :id LIMIT 1")
     suspend fun get(id: String): LessonEntity?

@@ -90,7 +90,10 @@
     <string name="empty_available">No available lessons right now.</string>
     <string name="empty_mine">You haven’t offered any lessons yet.</string>
     <string name="empty_taken">You haven’t signed up for any lessons yet.</string>
+    <string name="lesson_saved_successfully">Lesson saved successfully</string>
+    <string name="delete_lesson">Delete Lesson</string>
     <string name="delete_lesson_confirm">Are you sure? This action cannot be undone.</string>
+    <string name="lesson_deleted_successfully">Lesson deleted successfully</string>
 
 
     <!-- Media -->

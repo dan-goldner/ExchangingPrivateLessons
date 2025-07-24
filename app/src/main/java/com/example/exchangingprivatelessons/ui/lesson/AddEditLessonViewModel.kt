@@ -72,6 +72,22 @@ class AddEditLessonViewModel @Inject constructor(
 
     }
 
+    fun deleteLesson() = viewModelScope.launch {
+        val id = _ui.value?.existingLesson?.id ?: return@launch
+
+        updateUi { copy(loading = true, errorMsg = null) }
+
+        val result = repo.deleteLesson(id)
+
+        if (result is Result.Failure) {
+            updateUi { copy(loading = false, errorMsg = "Failed to delete lesson") }
+        } else {
+            updateUi { copy(loading = false, savedLessonId = id, justDeleted = true) }
+        }
+    }
+
+
+
     /* ---------- private ---------- */
 
     private fun loadExisting(id: String) = viewModelScope.launch {

@@ -148,6 +148,10 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
+    suspend fun deleteLesson(lessonId: String) {
+        db.collection("lessons").document(lessonId).delete().await()
+    }
+
     suspend fun getTakenLessons(): List<TakenLessonDto> {
         val uid = auth.currentUser?.uid ?: throw IllegalStateException("Must be logged in")
         return db.collection("takenLessons")

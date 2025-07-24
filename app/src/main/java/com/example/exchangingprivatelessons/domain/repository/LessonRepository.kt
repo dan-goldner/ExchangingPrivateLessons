@@ -15,6 +15,8 @@ interface LessonRepository {
 
     suspend fun refreshMineLessons(userId: String)
 
+    suspend fun deleteLesson(lessonId: String): Result<Unit>
+
     /* refresh + mutations */
     suspend fun forceRefreshLessons(): Result<Unit>
     suspend fun updateLesson(

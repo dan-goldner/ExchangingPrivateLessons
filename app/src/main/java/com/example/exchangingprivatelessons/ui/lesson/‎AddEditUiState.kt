@@ -8,5 +8,6 @@ data class AddEditUiState(
     val imageUri: Uri?            = null,
     val existingLesson: Lesson?   = null,
     val savedLessonId: String?    = null,
-    val errorMsg: String?         = null
+    val errorMsg: String?         = null,
+    val justDeleted: Boolean = false
 )
