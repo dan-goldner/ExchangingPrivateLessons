@@ -18,8 +18,8 @@
     <string name="nav_sign_up">Sign Up</string>
     <string name="nav_signup">Sign Up</string>
     <string name="nav_take_lessons">Take Lessons</string>
-    <string name="tab_requests_i_received">Requests I Received</string>
-    <string name="tab_requests_i_sent">Requests I Sent</string>
+    <string name="tab_requests_i_received">Requests Received</string>
+    <string name="tab_requests_i_sent">Requests Sent</string>
 
     <!-- Buttons -->
     <string name="approve">Approve</string>
@@ -86,7 +86,7 @@
     <string name="title_lessons">Lessons</string>
     <string name="tab_available">Available Lessons</string>
     <string name="tab_my">Lessons I\'m Offering</string>
-    <string name="tab_took">Lessons I took</string>
+    <string name="tab_took">Lessons I\'m Taking</string>
     <string name="empty_available">No available lessons right now.</string>
     <string name="empty_mine">You haven’t offered any lessons yet.</string>
     <string name="empty_taken">You haven’t signed up for any lessons yet.</string>
@@ -136,7 +136,7 @@
     <string name="delete">Delete</string>
     <string name="take_a_picture">Take a picture</string>
     <string name="choose_from_the_galery">Choose from the galery</string>
-    <string name="tab_gave">Lessons I gave</string>
+    <string name="tab_gave">Lessons I\'m Giving</string>
 
 
 </resources>
