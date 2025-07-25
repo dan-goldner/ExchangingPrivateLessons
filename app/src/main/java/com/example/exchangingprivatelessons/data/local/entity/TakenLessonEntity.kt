@@ -10,5 +10,6 @@ data class TakenLessonEntity(
     val ownerName:     String,
     val ownerPhotoUrl: String?,
     val takenAt:       Date?,
-    val canRate:       Boolean
+    val canRate:       Boolean,
+    val status:        String
 )
