@@ -9,50 +9,51 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.RowLessonBinding
+import com.example.exchangingprivatelessons.domain.model.ViewLesson
 
 class LessonAdapter(
-    private val click   : (String) -> Unit,
-    private val archive : (String, Boolean) -> Unit
-) : ListAdapter<LessonItem, LessonAdapter.VH>(DiffCallback()) {
+    private val click:   (String) -> Unit,
+    private val archive: (String, Boolean) -> Unit
+) : ListAdapter<ViewLesson, LessonAdapter.VH>(Diff()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
-        RowLessonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(p: ViewGroup, t: Int) = VH(
+        RowLessonBinding.inflate(LayoutInflater.from(p.context), p, false)
     )
+    override fun onBindViewHolder(h: VH, pos: Int) = h.bind(getItem(pos))
 
-    override fun onBindViewHolder(holder: VH, position: Int) =
-        holder.bind(getItem(position))
-
+    /* -------- View‑Holder -------- */
     inner class VH(private val row: RowLessonBinding) : RecyclerView.ViewHolder(row.root) {
-        fun bind(item: LessonItem) = with(row) {
-            titleTv.text       = item.title
-            descPreviewTv.text = item.description
-            dateTv.text        = "Listed at: ${item.date}"
-            ratingTv.text      = "Lesson Rating: ${item.rating}"
+        fun bind(v: ViewLesson) = with(row) {
 
-            // ⬅️  הנה השורה/בלוק החדש
-            lessonImg.load(item.imageUrl?.takeIf { it.isNotBlank() }) {
+            /* טקסטים */
+            titleTv.text       = v.title
+            descPreviewTv.text = v.description
+            dateTv.text        = "Listed at: ${formatDate(v.createdAt)}"
+            ratingTv.text      = "Lesson Rating: %.1f".format(v.ratingAvg)
+
+            /* ⬇️ תמונת בעל‑השיעור */
+            lessonImg.load(v.ownerPhotoUrl?.takeIf { it.isNotBlank() }) {
                 crossfade(true)
                 placeholder(R.drawable.ic_profile_placeholder)
                 error      (R.drawable.ic_profile_placeholder)
                 fallback   (R.drawable.ic_profile_placeholder)
             }
 
+            /* ארכוב */
             archiveBtn.run {
                 setIconResource(
-                    if (item.archived) R.drawable.ic_unarchive else R.drawable.ic_archive
+                    if (v.archived) R.drawable.ic_unarchive else R.drawable.ic_archive
                 )
-                setOnClickListener { archive(item.id, !item.archived) }
-                isVisible = item.canArchive
+                setOnClickListener { archive(v.id, !v.archived) }
+                isVisible = v.canArchive
             }
 
-            root.setOnClickListener { click(item.id) }
+            root.setOnClickListener { click(v.id) }
         }
     }
 
-
-
-    private class DiffCallback : DiffUtil.ItemCallback<LessonItem>() {
-        override fun areItemsTheSame(o: LessonItem, n: LessonItem) = o.id == n.id
-        override fun areContentsTheSame(o: LessonItem, n: LessonItem) = o == n
+    private class Diff : DiffUtil.ItemCallback<ViewLesson>() {
+        override fun areItemsTheSame(a: ViewLesson, b: ViewLesson) = a.id == b.id
+        override fun areContentsTheSame(a: ViewLesson, b: ViewLesson) = a == b
     }
 }

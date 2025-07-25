@@ -2,6 +2,8 @@ package com.example.exchangingprivatelessons.ui.lesson
 
 import android.content.Context
 import androidx.lifecycle.*
+import com.example.exchangingprivatelessons.common.di.UseCaseModule.observeLessons
+import com.example.exchangingprivatelessons.common.di.UseCaseModule_ObserveLessonsFactory.observeLessons
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.common.util.toResultLiveData
 import com.example.exchangingprivatelessons.domain.model.ViewLesson
@@ -25,15 +27,24 @@ class LessonListViewModel @Inject constructor(
 
     private val mode = MutableLiveData(Mode.AVAILABLE)
 
+    /* snack‑bar חד‑פעמי */
+    private val _snackbar = MutableLiveData<String?>()
+    val snackbar: LiveData<String?> = _snackbar
     /**  זרם תוצאות (Flow) → LiveData<Result<…>>  */
+    /* LessonListViewModel.kt */
     private val lessonsRes: LiveData<Result<List<ViewLesson>>> =
         mode.switchMap { m ->
             when (m) {
-                Mode.AVAILABLE -> observeLessons()
-                Mode.MINE      -> observeLessons(true)
-                Mode.TAKEN     -> observeTaken()
+                Mode.AVAILABLE -> observeLessons()                    // רק Active
+                Mode.MINE      -> observeLessons(
+                    onlyMine = true,
+                )
+                Mode.TAKEN     -> observeTaken()                      // רק Active
             }.toResultLiveData()
         }
+
+
+
 
     /*  אינדיקציה ל‑Swipe‑to‑Refresh */
     private val _refreshing = MutableLiveData(false)
@@ -52,7 +63,7 @@ class LessonListViewModel @Inject constructor(
                     refreshing = _refreshing.value ?: false
                 )
                 is Result.Success -> UiState(
-                    lessons    = res.data.map { it.toItem(ctx) },
+                    lessons    = res.data,        // ← 그대로
                     refreshing = _refreshing.value ?: false
                 )
             }
@@ -72,8 +83,15 @@ class LessonListViewModel @Inject constructor(
         _refreshing.value = false
     }
 
-    fun onArchiveToggle(id: String, archived: Boolean) =
-        viewModelScope.launch { archiveLesson(id, archived) }
+    fun onArchiveToggle(id: String, archived: Boolean) = viewModelScope.launch {
+            _snackbar.value = if (archived) "הועבר לארכיון" else "הוחזר מהרשימה"
+            when (archiveLesson(id, archived)) {
+                    is Result.Failure -> _snackbar.value = "הפעולה נכשלה – נסה שוב"
+                    else              -> {}   // ה‑UI יתעדכן אוטומטית מה‑Flow
+            }
+    }
+
+    fun snackbarShown() { _snackbar.value = null }
 
     /** ה‑UI קרא את השגיאה – מאפסים אותה */
     fun errorShown() {
@@ -81,10 +99,12 @@ class LessonListViewModel @Inject constructor(
     }
 
     /* ───────────── מייצג מצב מסך ───────────── */
+    /* Ui‑state */
     data class UiState(
-        val lessons   : List<LessonItem> = emptyList(),
+        val lessons   : List<ViewLesson> = emptyList(),   // ← ViewLesson
         val loading   : Boolean          = false,
         val refreshing: Boolean          = false,
         val errorMsg  : String?          = null
     )
+
 }

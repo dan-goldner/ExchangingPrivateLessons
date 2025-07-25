@@ -6,7 +6,7 @@ import com.example.exchangingprivatelessons.domain.model.ViewLesson
 import java.text.SimpleDateFormat
 import java.util.*
 
-private fun formatDate(date: Long?): String {
+fun formatDate(date: Long?): String {
     if (date == null) return ""
     val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
     return sdf.format(date)
@@ -17,7 +17,6 @@ data class LessonItem(
     val title: String,
     val date: String,
     val rating: String,
-    val imageUrl: String?,
     val archived: Boolean,
     val canArchive: Boolean,
     val description: String,
@@ -28,7 +27,6 @@ fun ViewLesson.toItem(ctx: Context): LessonItem = LessonItem(
     title       = title,
     date        = formatDate(createdAt),  /*createdAt.toString()*/
     rating      = "%.1f".format(ratingAvg),
-    imageUrl    = ownerPhotoUrl,
     archived    = archived,
     canArchive  = canArchive,
     description = description

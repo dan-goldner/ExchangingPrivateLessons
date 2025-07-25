@@ -120,7 +120,7 @@
     <fragment
         android:id="@+id/addEditLessonFragment"
         android:name="com.example.exchangingprivatelessons.ui.lesson.AddEditLessonFragment"
-        android:label="Edit Lesson">
+        android:label="">
         <argument
             android:name="lessonId"
             app:argType="string"

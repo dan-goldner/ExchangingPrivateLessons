@@ -77,6 +77,13 @@ class LessonListFragment : Fragment() {
                 vm.errorShown()
             }
         }
+
+        vm.snackbar.observe(viewLifecycleOwner) { msg ->
+            msg?.let {
+                Snackbar.make(root, it, Snackbar.LENGTH_SHORT).show()
+                vm.snackbarShown()
+            }
+        }
     }
 
     private fun onLessonClicked(id: String) =

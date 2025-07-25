@@ -5,7 +5,7 @@ import com.example.exchangingprivatelessons.domain.model.RequestStatus
 import com.google.firebase.Timestamp   // ⬅️ חדש
 
 data class LessonRequestDto(
-    val id          : String          = "",
+    var id          : String          = "",
     val lessonId    : String          = "",
     val ownerId     : String          = "",
     val requesterId : String          = "",

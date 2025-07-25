@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.FragmentSplashBinding
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,6 +26,18 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("SplashFragment", "onViewCreated called")
         _binding = FragmentSplashBinding.bind(view)
+        // Kotlin – ב‑Splash / AppStartup
+        Firebase.functions
+            .getHttpsCallable("cleanupMyData")
+            .call()
+            .addOnSuccessListener { result ->
+                val n = (result.data as Map<*, *>)["deleted"] as Long
+                Log.i("Cleanup", "Removed $n orphan requests")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Cleanup", "cleanupMyData failed", e)
+            }
+
 
         viewModel.authState.observe(viewLifecycleOwner) { isLoggedIn ->
             Log.d("SplashFragment", "authState: $isLoggedIn")

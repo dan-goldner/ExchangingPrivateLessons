@@ -81,7 +81,7 @@ class FunctionsDataSource @Inject constructor(
     ) {
         invoke<Any?>(
             "updateProfile",
-            mapOf("displayName" to displayName, "bio" to bio, "photoUrl" to photoUrl)
+            mapOf("displayName" to displayName, "bio" to bio)
         )
     }
 
@@ -90,11 +90,10 @@ class FunctionsDataSource @Inject constructor(
     suspend fun createLesson(
         title: String,
         description: String,
-        imageUrl: String?
     ): String {
         val res: Map<*, *> = invoke(
             "createLesson",
-            mapOf("title" to title, "description" to description, "imageUrl" to imageUrl)
+            mapOf("title" to title, "description" to description)
         )
         return res["lessonId"] as String
     }
@@ -103,14 +102,12 @@ class FunctionsDataSource @Inject constructor(
         lessonId: String,
         title: String?,
         description: String?,
-        imageUrl: String?
     ) = invoke<Unit>(
         "updateLesson",
         mapOf(
             "lessonId"    to lessonId,
             "title"       to title,
             "description" to description,
-            "imageUrl"    to imageUrl
         )
     )
 

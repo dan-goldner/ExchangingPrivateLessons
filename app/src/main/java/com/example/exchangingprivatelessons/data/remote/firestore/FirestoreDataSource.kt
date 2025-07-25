@@ -14,6 +14,9 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.tasks.await
 
 
@@ -25,10 +28,17 @@ class FirestoreDataSource @Inject constructor(
 
 
     /* ---------- helper: add id field ---------- */
+
     @PublishedApi
     internal fun <T> T.withUid(id: String): T = apply {
-        if (this is UserDto) this.id = id
+        when (this) {
+            is UserDto          -> this.id = id
+            is LessonDto        -> this.id = id
+            is LessonRequestDto -> this.id = id
+            is ChatDto          -> this.id = id
+        }
     }
+
 
 
     /* ---------- One‑shot ---------- */
@@ -55,6 +65,15 @@ class FirestoreDataSource @Inject constructor(
             }
         }; awaitClose { reg.remove() }
     }
+    suspend fun getLessonRequest(id: String): LessonRequestDto =
+        db.collection("lessonRequests").document(id).get().await()
+            .toObject(LessonRequestDto::class.java)
+            ?.apply { this.id = id }                          // 🔧 הוספת ה-ID הידני
+            ?: error("Request $id not found")
+
+
+
+
 
     inline fun <reified T> listenCollection(q: Query): Flow<Result<List<T>>> = callbackFlow {
         val reg = q.addSnapshotListener { s, e ->
@@ -103,19 +122,17 @@ class FirestoreDataSource @Inject constructor(
     /* ───────────── Lessons ───────────── */
 
 
-    suspend fun getLessons(): List<LessonDto> =
-        db.collection("lessons")
-            // .whereEqualTo("status", "Active")  // ← השאר/הסר בהתאם למודל שלך
-            .get()
-            .await()
-            .documents
-            .mapNotNull { doc -> doc.toObject(LessonDto::class.java)?.copy(id = doc.id) }
-
-
-
-
-
-
+    // FirestoreDataSource.kt
+    suspend fun getLessons(): List<LessonDto> {
+        val snaps = db.collection("lessons").get().await()
+        Log.d("DBG/Remote", "Found ${snaps.size()} documents")
+        return snaps.documents.mapNotNull { doc ->
+            val dto = doc.toObject(LessonDto::class.java) ?: return@mapNotNull null
+            dto.copy(id = doc.id).also {
+                Log.d("DBG/Remote", "id=${it.id} owner=${it.ownerId} status=${it.status}")
+            }
+        }
+    }
 
 
     suspend fun getLessonsOfferedByUser(userId: String): List<LessonDto> =
@@ -123,13 +140,74 @@ class FirestoreDataSource @Inject constructor(
             .whereEqualTo("ownerId", userId)
             .get().await().documents.mapNotNull { it.toObject(LessonDto::class.java) }
 
+    /* ---------- Lesson Requests ---------- */
+
+    /** one‑shot –  כל הבקשות שקשורות אליי (owner *או* requester) */
     suspend fun getLessonRequests(): List<LessonRequestDto> {
         val uid = auth.currentUser?.uid ?: error("User not logged‑in")
-        return db.collection("lessonRequests")
+
+        val sent = db.collection("lessonRequests")
+            .whereEqualTo("requesterId", uid)
+            .get().await()
+            .documents
+            .mapNotNull { it.toObject(LessonRequestDto::class.java)?.withUid(it.id) }
+
+        val received = db.collection("lessonRequests")
+            .whereEqualTo("ownerId", uid)
+            .get().await()
+            .documents
+            .mapNotNull { it.toObject(LessonRequestDto::class.java)?.withUid(it.id) }
+
+        return (sent + received).distinctBy { it.id }
+    }
+
+
+
+    /*
+    fun listenLessonRequests(uid: String): Flow<Result<List<LessonRequestDto>>> {
+
+        val sentFlow = listenCollection<LessonRequestDto>(
+            db.collection("lessonRequests").whereEqualTo("requesterId", uid)
+        )
+
+        val receivedFlow = listenCollection<LessonRequestDto>(
+            db.collection("lessonRequests").whereEqualTo("ownerId", uid)
+        )
+
+        return combine(sentFlow, receivedFlow) { sent, received ->
+
+            // אם אחת הזרימות נכשלת – נחזיר מייד Failure
+            if (sent is Result.Failure)     return@combine sent
+            if (received is Result.Failure) return@combine received
+
+            // שלב מיזוג הרשימות והסרת כפילויות
+            val list = buildList {
+                if (sent is Result.Success)     addAll(sent.data)
+                if (received is Result.Success) addAll(received.data)
+            }.distinctBy { it.id }
+
+            Result.Success(list)
+        }
+    }
+    */
+
+
+    /* FirestoreDataSource.kt */
+
+    fun listenSentRequests(uid: String) = listenCollection<LessonRequestDto>(
+        db.collection("lessonRequests")
             .whereEqualTo("requesterId", uid)
             .orderBy("requestedAt", Query.Direction.DESCENDING)
-            .get().await().documents.mapNotNull { it.toObject(LessonRequestDto::class.java) }
-    }
+    )
+
+    fun listenIncomingRequests(uid: String) = listenCollection<LessonRequestDto>(
+        db.collection("lessonRequests")
+            .whereEqualTo("ownerId", uid)
+            .orderBy("requestedAt", Query.Direction.DESCENDING)
+    )
+
+
+
 
     suspend fun getLessonById(id: String): LessonDto? {
         return try {
@@ -206,12 +284,6 @@ class FirestoreDataSource @Inject constructor(
 
 
 
-    fun listenLessonRequests(): Flow<Result<List<LessonRequestDto>>> {
-        val uid = auth.currentUser?.uid ?: error("User not logged‑in")
-        return listenCollection(
-            db.collection("lessonRequests").whereEqualTo("requesterId", uid)
-        )
-    }
 
     suspend fun updateUserFields(uid: String, map: Map<String, Any?>) {
         db.collection("users").document(uid).update(map).await()

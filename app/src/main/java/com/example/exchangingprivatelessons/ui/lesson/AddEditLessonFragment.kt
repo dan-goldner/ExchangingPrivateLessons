@@ -35,10 +35,6 @@ class AddEditLessonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        /* back‑arrow */
-        b.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
 
         /* UI events */
         b.saveBtn.setOnClickListener {

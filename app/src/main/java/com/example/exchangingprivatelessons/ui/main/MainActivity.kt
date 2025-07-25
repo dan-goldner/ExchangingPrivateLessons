@@ -14,6 +14,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.ActivityMainBinding
+import com.example.exchangingprivatelessons.ui.lesson.AddEditLessonFragmentArgs
+import com.example.exchangingprivatelessons.ui.lesson.LessonListFragmentArgs
+import com.example.exchangingprivatelessons.ui.request.RequestsFragmentArgs
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,6 +71,47 @@ class MainActivity : AppCompatActivity() {
             binding.toolbar.menu.findItem(R.id.action_logout)?.isVisible =
                 dest.id == R.id.homeFragment
         }
+        // MainActivity.kt  – בתוך onCreate אחרי שהגדרת navController
+        navController.addOnDestinationChangedListener { _, dest, args ->
+
+            val title = when (dest.id) {
+
+                /* -------- Lessons list -------- */
+                R.id.lessonListFragment -> {
+                    val mode = LessonListFragmentArgs.fromBundle(args!!).mode
+                    when (mode) {
+                        "AVAILABLE" -> getString(R.string.tab_available)
+                        "TAKEN"     -> getString(R.string.tab_took)
+                        "MINE"      -> getString(R.string.tab_my)
+                        else        -> dest.label          // fallback
+                    }
+                }
+
+                /* -------- Requests -------- */
+                R.id.requestsFragment -> {
+                    val mode = RequestsFragmentArgs.fromBundle(args!!).mode
+                    if (mode == "RECEIVED")
+                        getString(R.string.tab_requests_i_received)
+                    else getString(R.string.tab_requests_i_sent)
+                }
+
+                /* -------- Add / Edit Lesson -------- */
+                R.id.addEditLessonFragment -> {
+                    val lessonId = AddEditLessonFragmentArgs
+                        .fromBundle(args!!)
+                        .lessonId
+                    if (lessonId.isNullOrBlank())
+                        getString(R.string.title_add_lesson)
+                    else  getString(R.string.title_edit_lesson)
+                }
+
+                /* -------- מסכים אחרים – השתמש בלייבל מה‑navGraph -------- */
+                else -> dest.label
+            }
+
+            binding.toolbar.title = title
+        }
+
     }
 
 

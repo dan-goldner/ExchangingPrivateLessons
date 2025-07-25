@@ -5,11 +5,10 @@ import com.example.exchangingprivatelessons.domain.model.LessonStatus
 import com.google.firebase.Timestamp
 
 data class LessonDto(
-    val id          : String          = "",
+    var id          : String          = "",
     val ownerId     : String          = "",
     val title       : String          = "",
     val description : String          = "",
-    val imageUrl    : String?          = null,
     val status      : LessonStatus    = LessonStatus.Active,
     val ratingSum   : Int             = 0,
     val ratingCount : Int             = 0,

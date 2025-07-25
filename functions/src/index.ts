@@ -1,38 +1,35 @@
-//import * as functionsV1 from "firebase-functions/v1";
-
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Imports                                                                   */
+/* ────────────────────────────────────────────────────────────────────────── */
 import { setGlobalOptions } from "firebase-functions/v2";
-import { HttpsError, onCall } from "firebase-functions/v2/https";
+import {
+  HttpsError,
+  onCall,
+} from "firebase-functions/v2/https";
 import {
   onDocumentCreated,
   onDocumentDeleted,
   onDocumentUpdated,
 } from "firebase-functions/v2/firestore";
 
-import * as admin from "firebase-admin";
+import * as admin  from "firebase-admin";
 import * as logger from "firebase-functions/logger";
 
-import { User } from "./models/User";
-import { Lesson, LessonStatus } from "./models/Lesson";
-import { LessonRequest, RequestStatus } from "./models/LessonRequest";
-import { TakenLesson } from "./models/TakenLesson";
-import { Rating } from "./models/Rating";
-import { Chat } from "./models/Chat";
-import { Message, messageConverter } from "./models/Message";
-
-
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Global config & singletons                                                */
+/* ────────────────────────────────────────────────────────────────────────── */
 setGlobalOptions({ region: "me-west1", maxInstances: 10 });
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Init                                    */
-/* ────────────────────────────────────────────────────────────────────────── */
-admin.initializeApp();
-const db = admin.firestore();
+admin.initializeApp();                        // ← once!
+
+export const db = admin.firestore();          // shared instance
 const FieldValue = admin.firestore.FieldValue;
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Utils                                   */
+/* Utils                                                                     */
 /* ────────────────────────────────────────────────────────────────────────── */
 type FBError = Error & { code?: string };
+
 export const clampScore = (s: number) => Math.max(s, -3);
 
 export const assertAuth = (uid?: string): string => {
@@ -40,42 +37,97 @@ export const assertAuth = (uid?: string): string => {
   return uid;
 };
 
-export const chatIdFor = (a: string, b: string) => [a, b].sort().join("_");
+export const chatIdFor = (a: string, b: string) =>
+  [a, b].sort().join("_");                   // deterministic  ♻︎
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Firestore Typed Converters                         */
+/* Firestore generic converter                                               */
 /* ────────────────────────────────────────────────────────────────────────── */
 function conv<T>() {
   return {
-    toFirestore: (data: T) => data as FirebaseFirestore.DocumentData,
-    fromFirestore: (snap: FirebaseFirestore.QueryDocumentSnapshot) =>
-      snap.data() as T,
+    toFirestore: (data: T) =>
+      data as FirebaseFirestore.DocumentData,
+    fromFirestore: (
+      snap: FirebaseFirestore.QueryDocumentSnapshot
+    ) => snap.data() as T,
   };
 }
 
-// Top-level collections
-const usersCol   = db.collection("users").withConverter(conv<User>());
-const lessonsCol = db.collection("lessons").withConverter(conv<Lesson>());
-const lessonReqCol = db.collection("lessonRequests").withConverter(
-  conv<LessonRequest>()
-);
-const chatsCol   = db.collection("chats").withConverter(conv<Chat>());
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Typed collection references                                               */
+/* ────────────────────────────────────────────────────────────────────────── */
+import { User }   from "./models/User";
+import { Lesson, LessonStatus }     from "./models/Lesson";
+import { LessonRequest, RequestStatus } from "./models/LessonRequest";
+import { TakenLesson }  from "./models/TakenLesson";
+import { Rating }       from "./models/Rating";
+import { Chat }         from "./models/Chat";
+import { Message, messageConverter } from "./models/Message";
 
-// Sub-collections
-const takenLessonsCol = (uid: string) =>
-  usersCol.doc(uid).collection("takenLessons").withConverter(conv<TakenLesson>());
+// top‑level collections
+export const usersCol       = db.collection("users")
+                                .withConverter(conv<User>());
+export const lessonsCol     = db.collection("lessons")
+                                .withConverter(conv<Lesson>());
+export const lessonReqCol   = db.collection("lessonRequests")
+                                .withConverter(conv<LessonRequest>());
+export const chatsCol       = db.collection("chats")
+                                .withConverter(conv<Chat>());
 
-const ratingsCol = (lessonId: string) =>
-  lessonsCol.doc(lessonId).collection("ratings").withConverter(conv<Rating>());
+// sub‑collections/helpers
+export const takenLessonsCol = (uid: string) =>
+  usersCol.doc(uid)
+          .collection("takenLessons")
+          .withConverter(conv<TakenLesson>());
+
+export const ratingsCol = (lessonId: string) =>
+  lessonsCol.doc(lessonId)
+            .collection("ratings")
+            .withConverter(conv<Rating>());
+
+export const messagesCol = (chatId: string) =>
+  chatsCol.doc(chatId)
+          .collection("messages")
+          .withConverter(messageConverter);
 
 
-const messagesCol = (chatId: string) =>
-   chatsCol.doc(chatId).collection("messages").withConverter(messageConverter);
+
 
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* TRIGGERS                                  */
+/* cleanupMyData – Callable “on‑demand” orphan‑requests cleaner              */
+/* (נמצא כאן כי משתמש בתשתיות הגלובליות)                                    */
 /* ────────────────────────────────────────────────────────────────────────── */
+export const cleanupMyData = onCall(async ({ auth }) => {
+  const uid = assertAuth(auth?.uid);
+
+  // ① requests שאני owner שלהם
+  const ownerQs     = await lessonReqCol.where("ownerId",     "==", uid).get();
+  // ② requests שאני requester שלהם
+  const requesterQs = await lessonReqCol.where("requesterId", "==", uid).get();
+  const allDocs     = [...ownerQs.docs, ...requesterQs.docs];
+
+  if (allDocs.length === 0) return { deleted: 0 };
+
+  const bw      = db.bulkWriter();
+  let   deleted = 0;
+
+  for (const d of allDocs) {
+    const r = d.data() as LessonRequest;
+    const [o, q, l] = await Promise.all([
+      usersCol.doc(r.ownerId).get(),
+      usersCol.doc(r.requesterId).get(),
+      lessonsCol.doc(r.lessonId).get(),
+    ]);
+
+    const orphan = !o.exists || !q.exists || !l.exists;
+    if (orphan) { bw.delete(d.ref); ++deleted; }
+  }
+  await bw.close();
+  logger.info(`🧹 cleanupMyData(${uid}): removed ${deleted} orphan requests`);
+  return { deleted };
+});
+
 
 
 /*1️⃣----signInOrUp------*/
@@ -264,8 +316,7 @@ export const onMessageCreated = onDocumentCreated(
 /** 6️⃣ Firestore cleanup when a lesson is deleted */
 export const onLessonDeleted = onDocumentDeleted(
   { document: "lessons/{lessonId}" },
-  async ({ params: { lessonId }, data }) => {
-    const lesson = data?.data() as Lesson | undefined;
+  async ({ params: { lessonId }}) => {
     const bw = db.bulkWriter();
 
     const deleteCollection = async (snap: FirebaseFirestore.QuerySnapshot) => {
@@ -275,19 +326,6 @@ export const onLessonDeleted = onDocumentDeleted(
       }
       await bw.flush(); // flush tail
     };
-
-    // 🔥 Delete image from Storage
-    if (lesson?.imageUrl) {
-      const match = lesson.imageUrl.match(/\/([^/]+\/[^/]+\.(png|jpe?g|webp))$/i);
-      if (match) {
-        try {
-          await admin.storage().bucket().file(match[1]).delete();
-          logger.info(`🗑️ Lesson image ${match[1]} deleted`);
-        } catch {
-          logger.warn(`Lesson image ${match[1]} not found`);
-        }
-      }
-    }
 
     // 🧹 Delete related sub-collections and docs
     const ratings = await ratingsCol(lessonId).get();
@@ -407,29 +445,33 @@ export const createLessonRequest = onCall<LessonRequestInput>(
     if (!lessonId?.trim() || !ownerId?.trim())
       throw new HttpsError("invalid-argument", "Invalid lessonId or ownerId");
 
-    const existing = await lessonReqCol
-      .where("requesterId", "==", requesterId)
-      .where("lessonId", "==", lessonId)
-      .where("status", "==", RequestStatus.Pending)
-      .limit(1)
-      .get();
+    const docId = `${requesterId}_${lessonId}`;
+    const reqRef = lessonReqCol.doc(docId);
 
-    if (!existing.empty)
-      throw new HttpsError("already-exists", "Request already pending");
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(reqRef);
 
-    const ref = lessonReqCol.doc();
-    await ref.set({
-      lessonId,
-      ownerId,
-      requesterId,
-      status: RequestStatus.Pending,
-      requestedAt: FieldValue.serverTimestamp(),
-      respondedAt: null,
+      if (snap.exists) {
+        const data = snap.data() as LessonRequest;
+        if (data.status === RequestStatus.Pending) {
+          throw new HttpsError("already-exists", "Request already pending");
+        }
+      }
+
+      tx.set(reqRef, {
+        lessonId,
+        ownerId,
+        requesterId,
+        status: RequestStatus.Pending,
+        requestedAt: FieldValue.serverTimestamp(),
+        respondedAt: null,
+      });
     });
 
-    return { success: true, id: ref.id };
+    return { success: true, id: docId };
   }
 );
+
 
 type ApprovalInput = { requestId: string };
 export const approveLessonRequest = onCall<ApprovalInput>(async ({ data, auth }) => {
@@ -441,40 +483,40 @@ export const approveLessonRequest = onCall<ApprovalInput>(async ({ data, auth })
 
   const reqRef = lessonReqCol.doc(requestId);
 
-  await db.runTransaction(async (tx) => {
-    const reqSnap = await tx.get(reqRef);
-    if (!reqSnap.exists)
-      throw new HttpsError("not-found", "Request not found");
+await db.runTransaction(async (tx) => {
 
-    const req = reqSnap.data() as LessonRequest;
-    if (req.ownerId !== ownerId)
-      throw new HttpsError("permission-denied", "Not your request");
-    if (req.status !== RequestStatus.Pending)
-      throw new HttpsError("failed-precondition", "Request already handled");
+  const reqSnap  = await tx.get(reqRef);
+  if (!reqSnap.exists) throw new HttpsError('not-found', 'Request not found');
 
-    // Update request status
-    tx.update(reqRef, { status: RequestStatus.Approved, respondedAt: FieldValue.serverTimestamp() });
+  const req      = reqSnap.data() as LessonRequest;
+  if (req.ownerId !== ownerId)          throw new HttpsError('permission-denied','Not your request');
+  if (req.status !== RequestStatus.Pending)
+      throw new HttpsError('failed-precondition','Request already handled');
 
-    // Create takenLessons entry for the requester
-    const takenLessonRef = takenLessonsCol(req.requesterId).doc(req.lessonId);
-    tx.set(takenLessonRef, {
-        lessonId: req.lessonId,
-        ownerId: ownerId,
-        takenAt: FieldValue.serverTimestamp(),
-    });
+  const chatId   = chatIdFor(ownerId, req.requesterId);
+  const chatRef  = chatsCol.doc(chatId);
+  const chatSnap = await tx.get(chatRef);
 
-    // Create chat between users if it doesn't exist
-    const chatId = chatIdFor(ownerId, req.requesterId);
-    const chatRef = chatsCol.doc(chatId);
-    const chatSnap = await tx.get(chatRef);
-    if (!chatSnap.exists) {
-      tx.set(chatRef, {
-        participantIds: [ownerId, req.requesterId],
-        lastMessage: "",
-        lastMessageAt: FieldValue.serverTimestamp(),
-      });
-    }
+  tx.update(reqRef, {
+    status      : RequestStatus.Approved,
+    respondedAt : FieldValue.serverTimestamp(),
   });
+
+  tx.set(takenLessonsCol(req.requesterId).doc(req.lessonId), {
+    lessonId : req.lessonId,
+    ownerId  : ownerId,
+    takenAt  : FieldValue.serverTimestamp(),
+  });
+
+  if (!chatSnap.exists) {
+    tx.set(chatRef, {
+      participantIds : [ownerId, req.requesterId],
+      lastMessage    : '',
+      lastMessageAt  : FieldValue.serverTimestamp(),
+    });
+  }
+});
+
 
   return { success: true };
 });
@@ -591,12 +633,11 @@ type UpdLessonInput = {
   lessonId: string;
   title?: string;
   description?: string;
-  imageUrl?: string;
 };
 
 export const updateLesson = onCall<UpdLessonInput>(async ({ data, auth }) => {
   const uid = assertAuth(auth?.uid);
-  const { lessonId, title, description, imageUrl } = data;
+  const { lessonId, title, description } = data;
 
   const lessonRef = lessonsCol.doc(lessonId);
   const lessonSnap = await lessonRef.get();
@@ -608,7 +649,7 @@ export const updateLesson = onCall<UpdLessonInput>(async ({ data, auth }) => {
     throw new HttpsError("permission-denied", "Not your lesson");
 
   const patch: Partial<Lesson> = {
-    lastUpdated: FieldValue.serverTimestamp(),
+    lastUpdatedAt: FieldValue.serverTimestamp(),
   };
 
   if (title !== undefined) {
@@ -624,73 +665,53 @@ export const updateLesson = onCall<UpdLessonInput>(async ({ data, auth }) => {
     patch.description = d;
   }
 
-  if (imageUrl !== undefined) {
-    patch.imageUrl = imageUrl;
-  }
 
-  const keys = Object.keys(patch).filter((k) => k !== "lastUpdated");
+  const keys = Object.keys(patch).filter((k) => k !== "lastUpdatedAt");
   if (!keys.length)
     throw new HttpsError("invalid-argument", "Nothing to update");
-
   await lessonRef.update(patch);
   return { success: true };
 });
 
 
 /** 1️⃣3️⃣ Create / archive lesson */
-type CreateLessonInput = { title: string; description: string; imageUrl?: string; };
-export const createLesson = onCall<CreateLessonInput>(async ({ data, auth }) => {
-  const ownerId = assertAuth(auth?.uid);
-  const { title, description, imageUrl = "" } = data;
-
-  const trimmedTitle = title.trim();
-  const trimmedDesc = description.trim();
-  if (!trimmedTitle || !trimmedDesc)
-    throw new HttpsError("invalid-argument", "Title and description are required");
-
-  const newLessonRef = lessonsCol.doc();
-  await newLessonRef.set({
-    ownerId,
-    title: trimmedTitle,
-    description: trimmedDesc,
-    imageUrl,
-    status: LessonStatus.Active,
-    ratingSum: 0,
-    ratingCount: 0,
-    createdAt: FieldValue.serverTimestamp(),
-    lastUpdated: FieldValue.serverTimestamp(),
-  });
-
-  return { success: true, lessonId: newLessonRef.id };
-});
-
 type ArchiveLessonInput = { lessonId: string; archived: boolean };
-export const archiveLesson = onCall<ArchiveLessonInput>(async ({ data, auth }) => {
-  const uid = assertAuth(auth?.uid);
-  const { lessonId, archived } = data;
-  const lessonRef = lessonsCol.doc(lessonId);
-  const lessonSnap = await lessonRef.get();
+export const archiveLesson = onCall<ArchiveLessonInput>(
+  async ({ data, auth }) => {
+    const uid = assertAuth(auth?.uid);
+    const { lessonId, archived } = data;
 
-  if (!lessonSnap.exists)
-    throw new HttpsError("not-found", "Lesson not found");
-    const lessonData = lessonSnap.data() as Lesson;   // assert once
-    if (lessonData.ownerId !== uid)
-    throw new HttpsError("permission-denied", "Not your lesson");
+    try {
+      const lessonRef = lessonsCol.doc(lessonId);
+      const snap = await lessonRef.get();
 
-  await lessonRef.update({
-    status: archived ? LessonStatus.Archived : LessonStatus.Active,
-    lastUpdatedAt: FieldValue.serverTimestamp(),
-  });
+      if (!snap.exists) throw new HttpsError("not-found", "Lesson not found");
+      if (snap.data()!.ownerId !== uid)
+        throw new HttpsError("permission-denied", "Not your lesson");
 
-  if (archived) {
-    const takenSnaps = await db.collectionGroup("takenLessons").where("lessonId", "==", lessonId).get();
-    const bw = db.bulkWriter();
-    takenSnaps.docs.forEach((d) => bw.delete(d.ref));
-    await bw.close();
+      await lessonRef.update({
+        status: archived ? LessonStatus.Archived : LessonStatus.Active,
+        lastUpdatedAt: FieldValue.serverTimestamp(),
+      });
+
+      // clean takenLessons if archived
+      if (archived) {
+        const qs = await db
+          .collectionGroup("takenLessons")
+          .where("lessonId", "==", lessonId)
+          .get();
+        const bw = db.bulkWriter();
+        qs.docs.forEach((d) => bw.delete(d.ref));
+        await bw.close();
+      }
+
+      return { success: true };
+    } catch (e) {
+      logger.error("archiveLesson failed", e);
+      throw new HttpsError("internal", (e as Error).message);
+    }
   }
-
-  return { success: true };
-});
+);
 
 /** 1️⃣4️⃣ Update profile */
 type UpdateProfileInput = { displayName?: string; bio?: string; photoUrl?: string; };
@@ -795,4 +816,3 @@ export const getRequestsByStatus = onCall<{ status: string }>(
     return { requests: results };
   }
 );
-

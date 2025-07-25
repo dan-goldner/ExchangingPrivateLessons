@@ -23,7 +23,6 @@ interface LessonRepository {
         lessonId: String,
         title: String? = null,
         description: String? = null,
-        imageUrl: String? = null
     ): Result<Unit>
 
 
@@ -35,6 +34,5 @@ interface LessonRepository {
     suspend fun createLesson(
         title: String,
         description: String,
-        imageUrl: String? = null
     ): Result<String>
 }

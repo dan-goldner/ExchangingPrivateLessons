@@ -12,10 +12,9 @@ class CreateLesson @Inject constructor(
     suspend operator fun invoke(
         title: String,
         description: String,
-        imageUrl: String? = null
     ): Result<String> {
         if (title.isBlank() || description.isBlank())
             return Result.Failure(IllegalArgumentException("Title and description are required"))
-        return repo.createLesson(title.trim(), description.trim(), imageUrl?.trim())
+        return repo.createLesson(title.trim(), description.trim())
     }
 }

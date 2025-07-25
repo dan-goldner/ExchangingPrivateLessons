@@ -73,12 +73,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         // צ'אטים
-        b.btnChats.setOnClickListener {
+    /*    b.btnChats.setOnClickListener {
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToAllChatsFragment()
             )
         }
-
+    */
         // פרופיל
         b.btnProfile.setOnClickListener {
             findNavController().navigate(

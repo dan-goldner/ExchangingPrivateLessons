@@ -5,25 +5,16 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "ownerId", "order": "ASCENDING" },
-        { "fieldPath": "status", "order": "ASCENDING" }
+        { "fieldPath": "requestedAt", "order": "DESCENDING" }
       ]
-    }
-  ],
-  "fieldOverrides": [
-    {
-      "collectionGroup": "lessons",
-      "fieldPath": "description",
-      "indexes": []
     },
     {
-      "collectionGroup": "lessons",
-      "fieldPath": "imageUrl",
-      "indexes": []
-    },
-    {
-      "collectionGroup": "users",
-      "fieldPath": "bio",
-      "indexes": []
+      "collectionGroup": "lessonRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "requesterId", "order": "ASCENDING" },
+        { "fieldPath": "requestedAt", "order": "DESCENDING" }
+      ]
     }
   ]
 }

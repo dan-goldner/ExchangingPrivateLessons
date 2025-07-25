@@ -11,7 +11,6 @@ data class Lesson(
 
     val title: String,
     val description: String,
-    val imageUrl: String?,
 
     val status: LessonStatus,
     val ratingSum: Int,

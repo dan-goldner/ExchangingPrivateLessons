@@ -7,13 +7,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LessonRequestDao {
 
-    @Query("""
-    SELECT * FROM lesson_requests
-    WHERE (ownerId = :uid OR requesterId = :uid)
-    AND status = :status
-    ORDER BY CASE WHEN requestedAt IS NULL THEN 1 ELSE 0 END, requestedAt DESC""")
-    fun observeByStatus(uid: String, status: String): Flow<List<LessonRequestEntity>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(request: LessonRequestEntity)
 
@@ -23,11 +16,9 @@ interface LessonRequestDao {
     @Query("SELECT * FROM lesson_requests ORDER BY requestedAt DESC")
     fun observeAll(): Flow<List<LessonRequestEntity>>
 
-    @Query("SELECT * FROM lesson_requests WHERE ownerId = :ownerUid ORDER BY requestedAt DESC")
-    fun observeIncoming(ownerUid: String): Flow<List<LessonRequestEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAll(requests: List<LessonRequestEntity>)
+    @Query("DELETE FROM lesson_requests WHERE id NOT IN (:ids)")
+    suspend fun deleteMissing(ids: List<String>)
 
     @Query("""
     SELECT * FROM lesson_requests
@@ -41,4 +32,32 @@ interface LessonRequestDao {
         WHERE requesterId = :userId AND status = 'approved'
     """)
     fun observeTakenByUser(userId: String): Flow<List<String>>
+
+    @Query("""
+        SELECT * FROM lesson_requests
+        WHERE ownerId = :ownerUid         -- בקשות אליי
+        ORDER BY requestedAt DESC
+    """)
+    fun observeIncoming(ownerUid: String): Flow<List<LessonRequestEntity>>
+
+    @Query("""
+        SELECT * FROM lesson_requests
+        WHERE requesterId = :uid          -- בקשות שאני שלחתי
+          AND status     = :status
+        ORDER BY requestedAt DESC
+    """)
+    fun observeByStatus(uid: String, status: String): Flow<List<LessonRequestEntity>>
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(list: List<LessonRequestEntity>)
+
+    /* ----- ניקוי רשומות שאינן קיימות יותר בענן ----- */
+    @Query("DELETE FROM lesson_requests WHERE requesterId = :uid  AND id NOT IN (:ids)")
+    suspend fun deleteMissingSent(uid: String, ids: List<String>)
+
+    @Query("DELETE FROM lesson_requests WHERE ownerId     = :uid  AND id NOT IN (:ids)")
+    suspend fun deleteMissingIncoming(uid: String, ids: List<String>)
+
+
 }

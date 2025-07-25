@@ -44,7 +44,7 @@ class AddEditLessonViewModel @Inject constructor(
         ) }
 
         val savedId: String? = if (lessonId.isNullOrBlank()) {
-            val res = createLesson(title, description, _ui.value?.imageUri?.toString())
+            val res = createLesson(title, description)
             if (res is Result.Success) {
                 refreshLessons() // ✅ Refresh after creating lesson
                 res.data
@@ -58,8 +58,7 @@ class AddEditLessonViewModel @Inject constructor(
             val res = updateLesson(
                 lessonId,
                 title,
-                description,
-                _ui.value?.imageUri?.toString()
+                description
             )
             if (res is Result.Failure) return@launch updateUi {
                 copy(loading = false, errorMsg = res.throwable.localizedMessage)

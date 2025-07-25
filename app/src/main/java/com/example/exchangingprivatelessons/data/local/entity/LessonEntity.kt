@@ -10,8 +10,7 @@ data class LessonEntity(
     val ownerId: String,
     val title: String,
     val description: String,
-    val imageUrl: String?,
-    val status: String,               // "Active" | "Archived"
+    val status: String,        // "Active" | "Archived"
     val ratingSum: Int,
     val ratingCount: Int,
     val createdAt: Date?,

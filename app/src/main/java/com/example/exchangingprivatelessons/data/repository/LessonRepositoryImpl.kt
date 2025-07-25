@@ -12,6 +12,7 @@ import com.example.exchangingprivatelessons.data.remote.dto.LessonDto
 import com.example.exchangingprivatelessons.data.remote.firestore.FirestoreDataSource
 import com.example.exchangingprivatelessons.data.repository.base.NetworkCacheRepository
 import com.example.exchangingprivatelessons.domain.model.Lesson
+import com.example.exchangingprivatelessons.domain.model.LessonStatus
 import com.example.exchangingprivatelessons.domain.repository.LessonRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,9 +37,14 @@ class LessonRepositoryImpl @Inject constructor(
 
     override suspend fun fetchRemote() = firestore.getLessons()
 
+    // LessonRepositoryImpl.saveRemote(...)
     override suspend fun saveRemote(remote: List<LessonDto>) {
+        remote.forEach {
+            Log.d("DBG/SaveRemote", "→ upsert ${it.id} owner=${it.ownerId} status=${it.status}")
+        }
         dao.upsertAll(remote.map(mapper::toEntity))
     }
+
 
     override suspend fun getLesson(lessonId: String): Result<Lesson> = withContext(io) {
         dao.get(lessonId)?.let { return@withContext Result.Success(mapper.toDomain(it)) }
@@ -57,33 +63,28 @@ class LessonRepositoryImpl @Inject constructor(
 
     override fun map(local: LessonEntity) = mapper.toDomain(local)
 
+    // LessonRepositoryImpl.observeLessons(...)
     override fun observeLessons(onlyMine: Boolean): Flow<Result<List<Lesson>>> {
-        val currentUid = auth.currentUser?.uid.orEmpty()
-
+        val uid = auth.currentUser?.uid.orEmpty()
         return if (onlyMine) {
-            if (currentUid.isBlank()) return flowOf(Result.Failure(IllegalStateException("User not logged in")))
-
-            dao.observeMine(currentUid)
-                .map { lessons ->
-                    lessons.filter { it.id.isNotBlank() }
-                }
-                .onEach { lessons ->
-                    Log.d("LessonRepo", "observeMine returned ${lessons.size} lessons (filtered)")
-                    lessons.forEach {
-                        Log.d("LessonRepo", "LessonEntity from DB: id=${it.id}, title=${it.title}, createdAt=${it.createdAt}")
-                    }
-                }
+            dao.observeMine(uid)           // ללא סינון נוסף
                 .map { Result.Success(it.map(mapper::toDomain)) }
         } else {
-            observe()
-                .map { result ->
-                    if (result is Result.Success) {
-                        val filtered = result.data.filter { it.id.isNotBlank() && it.ownerId != currentUid }
+            observe()                      // observeActive()
+                .onEach { res ->
+                    if (res is Result.Success)
+                        Log.d("DBG/RepoRaw", "before filter size=${res.data.size}")
+                }
+                .map { res ->
+                    if (res is Result.Success) {
+                        val filtered = res.data.filter { it.ownerId != uid }
+                        Log.d("DBG/RepoRaw", "after filter size=${filtered.size}")
                         Result.Success(filtered)
-                    } else result
+                    } else res
                 }
         }
     }
+
 
     override fun observeLesson(lessonId: String): Flow<Result<Lesson>> =
         dao.observe(lessonId).map { entity ->
@@ -120,9 +121,8 @@ class LessonRepositoryImpl @Inject constructor(
         lessonId: String,
         title: String?,
         description: String?,
-        imageUrl: String?
     ): Result<Unit> = runCatching {
-        functions.updateLesson(lessonId, title, description, imageUrl)
+        functions.updateLesson(lessonId, title, description)
         Unit  // explicitly return Unit instead of trying to cast result
     }.fold(
         onSuccess = { Result.Success(it) },
@@ -145,20 +145,37 @@ class LessonRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun archiveLesson(lessonId: String, archived: Boolean): Result<Unit> =
+    override suspend fun archiveLesson(
+        lessonId: String,
+        archived: Boolean
+    ): Result<Unit> = withContext(io) {
+        val localStatus = if (archived) LessonStatus.Archived.name
+        else           LessonStatus.Active.name
+
+        /* ① עדכון מקומי מידי */
+        dao.setStatus(lessonId, localStatus)
+
+        /* ② ניסיון עדכון בשרת */
         runCatching {
             functions.archiveLesson(lessonId, archived)
         }.fold(
             onSuccess = { Result.Success(Unit) },
-            onFailure = { Result.Failure(it) }
+            onFailure = { e ->
+                Log.e("ArchiveLesson", "Cloud Function failed", e)
+                val rollbackStatus = if (archived) LessonStatus.Active.name
+                else           LessonStatus.Archived.name
+                dao.setStatus(lessonId, rollbackStatus)
+                Result.Failure(e)
+            }
         )
+    }
+
 
     override suspend fun createLesson(
         title: String,
         description: String,
-        imageUrl: String?
     ): Result<String> = runCatching {
-        val newId = functions.createLesson(title, description, imageUrl)
+        val newId = functions.createLesson(title, description)
 
         // Retry getting the lesson directly from Firestore by ID
         var dto: LessonDto? = null

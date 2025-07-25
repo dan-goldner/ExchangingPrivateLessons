@@ -63,15 +63,20 @@ abstract class LessonRequestMapper {
 
 
     /* ---------- DTO ⇢ Entity ---------- */
-    fun toEntity(dto: LessonRequestDto): LessonRequestEntity = LessonRequestEntity(
-        id          = dto.id,
-        lessonId    = dto.lessonId,
-        ownerId     = dto.ownerId,
-        requesterId = dto.requesterId,
-        status      = dto.status.name,   // 🔑 enum → String
-        requestedAt = TimestampConverter.tsToDateNullable(dto.requestedAt),
-        respondedAt = TimestampConverter.tsToDateNullable(dto.respondedAt)
-    )
+    fun toEntity(dto: LessonRequestDto): LessonRequestEntity {
+        require(dto.id.isNotBlank()) { "LessonRequestDto.id is blank – cannot insert into Room" }
+
+        return LessonRequestEntity(
+            id          = dto.id,
+            lessonId    = dto.lessonId,
+            ownerId     = dto.ownerId,
+            requesterId = dto.requesterId,
+            status      = dto.status.name,
+            requestedAt = TimestampConverter.tsToDateNullable(dto.requestedAt),
+            respondedAt = TimestampConverter.tsToDateNullable(dto.respondedAt)
+        )
+    }
+
 
     /* ---------- Entity ⇢ DTO ---------- */
     fun toDto(entity: LessonRequestEntity): LessonRequestDto = LessonRequestDto(
