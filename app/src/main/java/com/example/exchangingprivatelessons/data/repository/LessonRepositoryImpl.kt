@@ -149,21 +149,30 @@ class LessonRepositoryImpl @Inject constructor(
         lessonId: String,
         archived: Boolean
     ): Result<Unit> = withContext(io) {
-        val localStatus = if (archived) LessonStatus.Archived.name
-        else           LessonStatus.Active.name
 
-        /* ① עדכון מקומי מידי */
+        val meUid  = auth.currentUser?.uid
+        val lesson = dao.get(lessonId)
+
+        // 🔎 לוג ראשוני
+        Log.d("ArchiveDebug",
+            "uid=$meUid  lessonId=$lessonId  ownerId=${lesson?.ownerId}  archived=$archived")
+
+        val localStatus = if (archived) LessonStatus.Archived.name
+        else          LessonStatus.Active.name
         dao.setStatus(lessonId, localStatus)
 
-        /* ② ניסיון עדכון בשרת */
+        // ---------- קריאת ה‑Cloud Function ----------
         runCatching {
             functions.archiveLesson(lessonId, archived)
         }.fold(
             onSuccess = { Result.Success(Unit) },
             onFailure = { e ->
-                Log.e("ArchiveLesson", "Cloud Function failed", e)
+                // ⬇️ לוג מפורט במקרה כשל
+                Log.e("ArchiveDebug", "archiveLesson FAILED_PRECONDITION?", e)
+
+                // Roll‑back לסטטוס הקודם
                 val rollbackStatus = if (archived) LessonStatus.Active.name
-                else           LessonStatus.Archived.name
+                else          LessonStatus.Archived.name
                 dao.setStatus(lessonId, rollbackStatus)
                 Result.Failure(e)
             }

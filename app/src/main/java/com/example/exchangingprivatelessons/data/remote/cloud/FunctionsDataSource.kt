@@ -61,7 +61,7 @@ class FunctionsDataSource @Inject constructor(
             score       = (res["score"]       as? Number)?.toInt() ?: 0,
             createdAt   = res["createdAt"]    as? Timestamp,
             lastLoginAt = res["lastLoginAt"]  as? Timestamp,
-            lastUpdatedAt = res["lastUpdated"]  as? Timestamp      // ⬅︎ חדש
+            lastUpdatedAt = res["lastUpdatedAt"]  as? Timestamp      // ⬅︎ חדש
         )
     }
 

@@ -674,44 +674,37 @@ export const updateLesson = onCall<UpdLessonInput>(async ({ data, auth }) => {
 });
 
 
-/** 1️⃣3️⃣ Create / archive lesson */
+/** 1️⃣3️⃣  Archive / un‑archive lesson */
 type ArchiveLessonInput = { lessonId: string; archived: boolean };
-export const archiveLesson = onCall<ArchiveLessonInput>(
-  async ({ data, auth }) => {
-    const uid = assertAuth(auth?.uid);
-    const { lessonId, archived } = data;
 
-    try {
-      const lessonRef = lessonsCol.doc(lessonId);
-      const snap = await lessonRef.get();
+export const archiveLesson = onCall<ArchiveLessonInput>(async ({ data, auth }) => {
+  const uid = assertAuth(auth?.uid);
+  const { lessonId, archived } = data;
 
-      if (!snap.exists) throw new HttpsError("not-found", "Lesson not found");
-      if (snap.data()!.ownerId !== uid)
-        throw new HttpsError("permission-denied", "Not your lesson");
+  logger.debug('[archiveLesson] uid=%s lessonId=%s archived=%s',
+               uid, lessonId, archived);
 
-      await lessonRef.update({
-        status: archived ? LessonStatus.Archived : LessonStatus.Active,
-        lastUpdatedAt: FieldValue.serverTimestamp(),
-      });
 
-      // clean takenLessons if archived
-      if (archived) {
-        const qs = await db
-          .collectionGroup("takenLessons")
-          .where("lessonId", "==", lessonId)
-          .get();
-        const bw = db.bulkWriter();
-        qs.docs.forEach((d) => bw.delete(d.ref));
-        await bw.close();
-      }
+  const lessonRef = lessonsCol.doc(lessonId);
+  const snap      = await lessonRef.get();
 
-      return { success: true };
-    } catch (e) {
-      logger.error("archiveLesson failed", e);
-      throw new HttpsError("internal", (e as Error).message);
-    }
+  if (!snap.exists) {
+    throw new HttpsError('not-found', 'Lesson not found');
   }
-);
+  const lesson = snap.data() as Lesson;
+  if (lesson.ownerId !== uid) {
+    throw new HttpsError('permission-denied', 'Not your lesson');
+  }
+
+  /* ── שלב 2: עדכון סטטוס ───────────────────────────── */
+  await lessonRef.update({
+    status        : archived ? LessonStatus.Archived : LessonStatus.Active,
+    lastUpdatedAt : FieldValue.serverTimestamp(),
+  });
+
+  return { success: true };
+});
+
 
 /** 1️⃣4️⃣ Update profile */
 type UpdateProfileInput = { displayName?: string; bio?: string; photoUrl?: string; };

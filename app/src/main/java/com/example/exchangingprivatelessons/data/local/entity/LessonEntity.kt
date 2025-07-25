@@ -14,5 +14,5 @@ data class LessonEntity(
     val ratingSum: Int,
     val ratingCount: Int,
     val createdAt: Date?,
-    val lastUpdated: Date?
+    val lastUpdatedAt: Date?
 )

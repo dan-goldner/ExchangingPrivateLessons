@@ -18,7 +18,7 @@ data class Lesson(
 
     @get:ServerTimestamp
     val createdAt: Long,
-    val lastUpdated: Long,
+    val lastUpdatedAt: Long,
 ) {
     val avgRating: Float
         get() = if (ratingCount == 0) 0f else ratingSum.toFloat() / ratingCount

@@ -138,7 +138,12 @@ class FirestoreDataSource @Inject constructor(
     suspend fun getLessonsOfferedByUser(userId: String): List<LessonDto> =
         db.collection("lessons")
             .whereEqualTo("ownerId", userId)
-            .get().await().documents.mapNotNull { it.toObject(LessonDto::class.java) }
+            .get().await()
+            .documents
+            .mapNotNull { doc ->
+                doc.toObject(LessonDto::class.java)?.copy(id = doc.id)
+            }
+
 
     /* ---------- Lesson Requests ---------- */
 
