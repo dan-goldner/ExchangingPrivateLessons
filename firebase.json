@@ -1,0 +1,28 @@
+{
+  "functions": {
+    "source": "functions",
+    "codebase": "default",
+    "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"],
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint -- --fix",
+      "npm --prefix \"$RESOURCE_DIR\" run build"
+    ]
+  },
+  "emulators": {
+    "functions": { "port": 5005 },
+    "firestore": { "port": 8081 },
+    "auth": { "port": 9098 },
+    "ui": {
+      "enabled": true,
+      "port": 4010
+    },
+    "logging": { "port": 4510 },
+    "hub": { "port": 4410 }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}
