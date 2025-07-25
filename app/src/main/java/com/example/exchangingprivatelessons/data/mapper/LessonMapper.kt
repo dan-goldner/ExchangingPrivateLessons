@@ -33,8 +33,6 @@ abstract class LessonMapper {
             qualifiedByName = ["toEpochNullable"]),
         Mapping(source = "lastUpdatedAt", target = "lastUpdatedAt",
             qualifiedByName = ["toEpochNullable"]),
-        Mapping(source = "status",        target = "status",
-            qualifiedByName = ["stringToLessonStatus"])
     )
     abstract fun toDomain(entity: LessonEntity): Lesson
 
@@ -54,7 +52,9 @@ abstract class LessonMapper {
         Mapping(source = "createdAt",     target = "createdAt",
             qualifiedByName = ["tsToEpochNonNull"]),
         Mapping(source = "lastUpdatedAt", target = "lastUpdatedAt",
-            qualifiedByName = ["tsToEpochNonNull"])
+            qualifiedByName = ["tsToEpochNonNull"]),
+        Mapping(source = "status",        target = "status",
+            qualifiedByName = ["stringToLessonStatus"])
     )
     abstract fun toDomain(dto: LessonDto): Lesson
 

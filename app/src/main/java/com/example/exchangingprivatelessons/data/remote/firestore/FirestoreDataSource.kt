@@ -235,7 +235,7 @@ class FirestoreDataSource @Inject constructor(
         db.collection("lessons").document(lessonId).delete().await()
     }
 
-    suspend fun getTakenLessons(): List<TakenLessonDto> {
+    /*suspend fun getTakenLessons(): List<TakenLessonDto> {
         val uid = auth.currentUser?.uid ?: throw IllegalStateException("Must be logged in")
         return db.collection("takenLessons")
             .whereEqualTo("userId", uid)
@@ -243,7 +243,32 @@ class FirestoreDataSource @Inject constructor(
             .await()
             .documents
             .mapNotNull { it.toObject(TakenLessonDto::class.java) }
+    }*/
+
+    suspend fun getTakenLessons(): List<LessonDto> {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("Must be logged in")
+
+        // Step 1: Get all approved lesson requests where current user is the requester
+        val approvedRequests = db.collection("lessonRequests")
+            .whereEqualTo("requesterId", uid)
+            .whereEqualTo("status", "Approved")
+            .get()
+            .await()
+            .documents
+
+        // Step 2: For each approved request, fetch the corresponding lesson
+        val lessons = approvedRequests.mapNotNull { requestSnap ->
+            val request = requestSnap.toObject(LessonRequestDto::class.java)
+            val lessonId = request?.lessonId ?: return@mapNotNull null
+
+            val lessonSnap = db.collection("lessons").document(lessonId).get().await()
+            lessonSnap.toObject(LessonDto::class.java)?.copy(id = lessonId)
+        }
+
+        return lessons
     }
+
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
 
     suspend fun getRatings(lessonId: String): List<RatingDto> =
         db.collection("lessons")

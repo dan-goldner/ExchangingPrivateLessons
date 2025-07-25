@@ -20,7 +20,7 @@ import com.example.exchangingprivatelessons.data.local.entity.*
         TakenLessonEntity::class,
         UserEntity::class
     ],
-    version = 8,                // ⬅︎  bump
+    version = 9,                // ⬅︎  bump
     exportSchema = false
 )
 @TypeConverters(TimestampConverter::class)

@@ -75,7 +75,9 @@ abstract class TakenLessonMapper {
             qualifiedByName = ["lessonDtoToJson"]),
         Mapping(source = "takenAt",
             target = "takenAt",
-            qualifiedByName = ["tsToEpochNullable"])
+            qualifiedByName = ["tsToEpochNullable"]),
+        Mapping(source = "lesson.status",
+        target = "status")
     )
     abstract fun dtoToEntity(dto: TakenLessonDto): TakenLessonEntity
 
