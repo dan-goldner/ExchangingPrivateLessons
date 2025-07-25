@@ -740,8 +740,6 @@ export const rateLesson = onCall<{ lessonId: string; numericValue: number; comme
       const lessonSnap = await lessonsCol.doc(lessonId).get();
       if (!lessonSnap.exists)
         throw new HttpsError("not-found", "Lesson not found");
-      if (!lessonSnap.exists)
-        throw new HttpsError("not-found", "Lesson not found");
 
       const lessonData = lessonSnap.data() as Lesson;   // assert once
       if (lessonData.ownerId === uid)
@@ -809,3 +807,29 @@ export const getRequestsByStatus = onCall<{ status: string }>(
     return { requests: results };
   }
 );
+
+/** 1️⃣8️⃣ Create lesson  */
+type CreateLessonInput = { title: string; description: string; };
+export const createLesson = onCall<CreateLessonInput>(async ({ data, auth }) => {
+  const ownerId = assertAuth(auth?.uid);
+  const { title, description = "" } = data;
+
+  const trimmedTitle = title.trim();
+  const trimmedDesc = description.trim();
+  if (!trimmedTitle || !trimmedDesc)
+    throw new HttpsError("invalid-argument", "Title and description are required");
+
+  const newLessonRef = lessonsCol.doc();
+  await newLessonRef.set({
+    ownerId,
+    title: trimmedTitle,
+    description: trimmedDesc,
+    status: LessonStatus.Active,
+    ratingSum: 0,
+    ratingCount: 0,
+    createdAt: FieldValue.serverTimestamp(),
+    lastUpdatedAt: FieldValue.serverTimestamp(),
+  });
+
+  return { success: true, lessonId: newLessonRef.id };
+});

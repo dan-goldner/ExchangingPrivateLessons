@@ -18,6 +18,7 @@ service cloud.firestore {
     /* -------- lessons -------- */
     match /lessons/{lessonId} {
       allow read : if true;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.ownerId;
       allow write: if false;
 
       match /ratings/{raterId} {
