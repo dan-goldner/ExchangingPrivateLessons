@@ -1,0 +1,78 @@
+[
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/item_message_right.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_message_right.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/bottom_sheet_rating.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/bottom_sheet_rating.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_profile.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_splash.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_splash.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_chat.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_chat.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/bottom_sheet_edit_profile.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/bottom_sheet_edit_profile.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_add_edit_lesson.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_add_edit_lesson.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_all_chats.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_all_chats.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/item_message_left.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_message_left.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_all_my_chats.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_all_my_chats.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/activity_main.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_auth.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_auth.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/row_lesson.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/row_lesson.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/item_request_card.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_request_card.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/item_chat_preview.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_chat_preview.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_lesson_list.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_lesson_list.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_home.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_lesson_details.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_lesson_details.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-mergeDebugResources-99:/layout/fragment_requests.xml",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_requests.xml"
+    }
+]

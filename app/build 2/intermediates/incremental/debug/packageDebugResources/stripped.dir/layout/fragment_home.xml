@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 📄 תוכן -->
+        <ScrollView
+            android:id="@+id/contentGroup"
+            android:fillViewport="true"
+            android:padding="@dimen/space_l"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Greeting -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txtGreeting"
+                    style="@style/TextAppearance.SkillSwap.HeadlineMedium"
+                    android:textColor="@color/md_theme_onSurface"
+                    android:textAlignment="viewStart"
+                    android:layout_marginBottom="@dimen/space_l"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/txtLessonsCount"
+                    style="@style/Widget.SkillSwap.LabelStat"
+                    android:text="0 שיעורים זמינים"
+                    android:layout_marginBottom="@dimen/space_s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/txtRequestsCount"
+                    style="@style/Widget.SkillSwap.LabelStat"
+                    android:text="0 בקשות נכנסות"
+                    android:layout_marginBottom="@dimen/space_l"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <!-- Primary Actions (Filled blue) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAvailableLessons"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_available"
+                    android:icon="@drawable/ic_school"
+                    app:iconPadding="8dp"/>
+
+                <!-- Secondary Actions (Tonal turquoise) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMyOfferedLessons"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_my"
+                    android:icon="@drawable/ic_book"
+                    app:iconPadding="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMyLessons"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_took"
+                    android:icon="@drawable/ic_book"
+                    app:iconPadding="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGave"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_gave"
+                    android:icon="@drawable/ic_person"
+                    app:iconPadding="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMyRequests"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_requests_i_sent"
+                    android:icon="@drawable/ic_swap_horizontal"
+                    app:iconPadding="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRequestsToMe"
+                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/tab_requests_i_received"
+                    android:icon="@drawable/ic_swap_horizontal"
+                    app:iconPadding="8dp"/>
+
+
+
+        <!--        <com.google.android.material.button.MaterialButton
+                     android:id="@+id/btnChats"
+                     style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="@dimen/space_m"
+                     android:text="@string/nav_chats"
+                     android:icon="@drawable/ic_chat"
+                     app:iconPadding="8dp"/>    -->
+
+                 <com.google.android.material.button.MaterialButton
+                     android:id="@+id/btnProfile"
+                     style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="@dimen/space_m"
+                     android:text="@string/nav_profile"
+                     android:icon="@drawable/ic_person"
+                     app:iconPadding="8dp"/>
+
+
+             </LinearLayout>
+
+     </ScrollView>
+
+     <!-- ‎⏳ Loader -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.Material3.CircularProgressIndicator"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -1,0 +1,302 @@
+[
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_lesson_list.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_lesson_list.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_spinner_rotate.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/spinner_rotate.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-anydpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_requests.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_requests.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_splash.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_splash.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_school.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_school.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_item_request_card.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_request_card.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_profile.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/animator_spinner_rotate_anim.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/animator/spinner_rotate_anim.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/menu_menu_avatar.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/menu/menu_avatar.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/xml_backup_rules.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_profile_placeholder.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_profile_placeholder.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_item_chat_preview.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_chat_preview.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/font_font_family_inter.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/font/font_family_inter.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_close.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_close.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_bottom_sheet_rating.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/bottom_sheet_rating.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_spinner_vector.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/spinner_vector.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_logout_icon.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/logout_icon.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_archive.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_archive.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_all_chats.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_all_chats.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_all_my_chats.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_all_my_chats.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_item_message_left.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_message_left.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_app_background.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/app_background.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_add.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_add.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_person.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_person.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_edit.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_edit.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_bg_chat_bubble_right.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/bg_chat_bubble_right.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_background.png.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/background.png"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_unarchive.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_unarchive.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/font_inter_bold.ttf.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/font/inter_bold.ttf"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_chat.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_chat.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_chat_bubble_left.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/chat_bubble_left.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_bottom_sheet_edit_profile.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/bottom_sheet_edit_profile.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/xml_file_paths.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_edit_person.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_edit_person.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_lesson_details.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_lesson_details.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_auth.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_auth.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/menu_menu_lesson_details.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/menu/menu_lesson_details.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/menu_menu_lesson_row.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/menu/menu_lesson_row.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_swap_horizontal.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_swap_horizontal.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_bg_skills_light.png.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/bg_skills_light.png"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_chat.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_chat.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/font_inter_medium.ttf.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/font/inter_medium.ttf"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/navigation_nav_graph.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/navigation/nav_graph.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_baseline_arrow_back.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/baseline_arrow_back.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/menu_menu_main.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/menu/menu_main.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-anydpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/font_inter_regular.ttf.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/font/inter_regular.ttf"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_bg_chat_bubble_left.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/bg_chat_bubble_left.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_book.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_book.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_back.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_back.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_row_lesson.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/row_lesson.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_activity_main.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_item_message_right.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/item_message_right.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_profile_circle_bg.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/profile_circle_bg.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/font_inter_extrabold.ttf.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/font/inter_extrabold.ttf"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_star.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_star.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_home.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/font_inter_semibold.ttf.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/font/inter_semibold.ttf"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_chat_bubble_right.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/chat_bubble_right.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/drawable_ic_send.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/drawable/ic_send.xml"
+    },
+    {
+        "merged": "com.example.exchangingprivatelessons.app-debug-100:/layout_fragment_add_edit_lesson.xml.flat",
+        "source": "com.example.exchangingprivatelessons.app-main-102:/layout/fragment_add_edit_lesson.xml"
+    }
+]

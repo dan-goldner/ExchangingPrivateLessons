@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorError">#F17373</color>
+    <color name="colorSuccess">#45C07D</color>
+    <color name="colorWarning">#FFB300</color>
+    <color name="md_theme_background">#EAF7FF</color>
+    <color name="md_theme_error">#BA1A1A</color>
+    <color name="md_theme_onBackground">#202124</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_onPrimaryContainer">#001E2C</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+    <color name="md_theme_onSurface">#202124</color>
+    <color name="md_theme_onSurfaceVariant">#001E2C</color>
+    <color name="md_theme_onTertiary">#4A3800</color>
+    <color name="md_theme_outline">#8CCDEB</color>
+    <color name="md_theme_primary">#47B1E3</color>
+    <color name="md_theme_primaryContainer">#CDEBFF</color>
+    <color name="md_theme_secondary">#67C6B4</color>
+    <color name="md_theme_surface">#FFFFFF</color>
+    <color name="md_theme_surfaceVariant">#CDEBFF</color>
+    <color name="md_theme_tertiary">#FFC85D</color>
+    <color name="surface_bright">#FFFFFF</color>
+    <color name="surface_dim">#EEF7FF</color>
+    <dimen name="avatar_size_large">120dp</dimen>
+    <dimen name="avatar_size_medium">72dp</dimen>
+    <dimen name="avatar_size_small">40dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_m">8dp</dimen>
+    <dimen name="space_s">4dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xs">2dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+    <dimen name="space_xxs">1dp</dimen>
+    <dimen name="space_xxxl">40dp</dimen>
+    <string name="already_taken">Already taken ✓</string>
+    <string name="app_name">SkillSwap</string>
+    <string name="approve">Approve</string>
+    <string name="bio">Bio</string>
+    <string name="btn_add_lesson">Add Lesson</string>
+    <string name="btn_change_photo">Change Photo</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_my">Lessons I offer</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_save_profile">Save</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_start_chat">Start Chat</string>
+    <string name="btn_take">Lessons I want to take</string>
+    <string name="btn_take_lesson">Take this lesson</string>
+    <string name="camera_required">Camera permission is required to take a photo</string>
+    <string name="cancel">Cancel</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="choose_camera">Camera</string>
+    <string name="choose_from_the_galery">Choose from the galery</string>
+    <string name="choose_gallery">Gallery</string>
+    <string name="choose_image">Choose image</string>
+    <string name="choose_photo">Chose Photo</string>
+    <string name="choose_photo_title">Choose Photo Source</string>
+    <string name="comment_optional">Comment (optional)</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="decline">Decline</string>
+    <string name="delete">Delete</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_confirm">Are you sure? This action cannot be undone.</string>
+    <string name="delete_lesson">Delete Lesson</string>
+    <string name="delete_lesson_confirm">Are you sure? This action cannot be undone.</string>
+    <string name="display_name">Display name</string>
+    <string name="edit">Edit</string>
+    <string name="email">Email</string>
+    <string name="empty_available">No available lessons right now.</string>
+    <string name="empty_lessons">No lessons to show</string>
+    <string name="empty_list">No items yet</string>
+    <string name="empty_mine">You haven’t offered any lessons yet.</string>
+    <string name="empty_taken">You haven’t signed up for any lessons yet.</string>
+    <string name="err_camera_permission">Camera permission is denied</string>
+    <string name="err_camera_permission_rationale">Camera permission is required in order to take a photo
+    </string>
+    <string name="error_fill_fields">Fill in all fields</string>
+    <string name="gcm_defaultSenderId" translatable="false">339205255610</string>
+    <string name="go_to_login">Already have an account? Log In →</string>
+    <string name="go_to_signup">No account? Sign Up →</string>
+    <string name="google_api_key" translatable="false">AIzaSyDOHOXWpf0kfpAQ1kSnwPKyYqfsvInuCXQ</string>
+    <string name="google_app_id" translatable="false">1:339205255610:android:8a9bef5ecf44f9174ead83</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDOHOXWpf0kfpAQ1kSnwPKyYqfsvInuCXQ</string>
+    <string name="google_storage_bucket" translatable="false">exchanging-private-lessons.firebasestorage.app</string>
+    <string name="greeting">Hello %1$s, welcome to SkillSwap</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_bio">Bio</string>
+    <string name="hint_display_name">Display Name</string>
+    <string name="img_profile">Profile Photo</string>
+    <string name="lesson_deleted_successfully">Lesson deleted successfully</string>
+    <string name="lesson_description">Description</string>
+    <string name="lesson_image">Lesson image</string>
+    <string name="lesson_meta">Created • %1$s • %2$d ratings</string>
+    <string name="lesson_meta_full">By %1$s • %2$s • ★ %3$.1f (%4$d)</string>
+    <string name="lesson_saved_successfully">Lesson saved successfully</string>
+    <string name="lesson_taken">Lesson added to your list!</string>
+    <string name="lesson_title">Title</string>
+    <string name="login">Log In</string>
+    <string name="msg_no_score">Score: %1$d</string>
+    <string name="nav_add_edit_lesson">Add/Edit Lesson</string>
+    <string name="nav_chat">Chat</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_details">Lesson Details</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_lesson_details">Lesson Details</string>
+    <string name="nav_lessons">Lessons</string>
+    <string name="nav_login">Login</string>
+    <string name="nav_my_lessons">My Lessons</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_sign_up">Sign Up</string>
+    <string name="nav_signup">Sign Up</string>
+    <string name="nav_take_lessons">Take Lessons</string>
+    <string name="no_bio">No bio yet</string>
+    <string name="no_chats_yet">No chats yet</string>
+    <string name="no_score">Score: %1$d</string>
+    <string name="ok">OK</string>
+    <string name="password">Password</string>
+    <string name="photo_url">Photo URL</string>
+    <string name="profile_avatar">Profile Avatar</string>
+    <string name="profile_no_bio">No bio yet…</string>
+    <string name="profile_saved">Profile updated successfully</string>
+    <string name="project_id" translatable="false">exchanging-private-lessons</string>
+    <string name="rate">Rate</string>
+    <string name="rating_saved">Rating saved</string>
+    <string name="remove_photo">Remove Photo</string>
+    <string name="request">Request</string>
+    <string name="request_sent">Request sent ✔</string>
+    <string name="save">Save</string>
+    <string name="score_placeholder">Score: %1$d</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="tab_available">Available Lessons</string>
+    <string name="tab_gave">Lessons I gave</string>
+    <string name="tab_my">Lessons I\'m Offering</string>
+    <string name="tab_requests_i_received">Requests I Received</string>
+    <string name="tab_requests_i_sent">Requests I Sent</string>
+    <string name="tab_took">Lessons I took</string>
+    <string name="take_a_picture">Take a picture</string>
+    <string name="title_add_lesson">New lesson</string>
+    <string name="title_edit_lesson">Edit lesson</string>
+    <string name="title_lessons">Lessons</string>
+    <string name="upload_failed">Changes failed: %1$s</string>
+    <string name="upload_success">Profile saved successfully</string>
+    <string name="user_not_logged_in">User not logged in</string>
+    <string name="waiting_for_approval">Waiting for approval</string>
+    <string name="write_message">Write a message…</string>
+    <style name="AppToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/md_theme_primary</item>
+        <item name="titleTextColor">@color/md_theme_onPrimary</item>
+        <item name="navigationIconTint">@color/md_theme_onPrimary</item>
+    </style>
+    <style name="ShapeAppearance.SkillSwap.Large" parent="@style/ShapeAppearance.SkillSwap.Small">
+        <item name="cornerSize">24dp</item>
+    </style>
+    <style name="ShapeAppearance.SkillSwap.Medium" parent="@style/ShapeAppearance.SkillSwap.Small">
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="ShapeAppearance.SkillSwap.Small" parent="@style/ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontWeight">400</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontWeight">400</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontWeight">400</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.Caption" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.HeadlineLarge" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontWeight">500</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.MetaLine" parent="TextAppearance.SkillSwap.BodyMedium">
+        
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontWeight">500</item>
+
+        
+        <item name="android:textColor">@color/md_theme_onSurfaceVariant</item>
+
+        
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="TextAppearance.SkillSwap.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/font_family_inter</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontWeight">500</item>
+    </style>
+    <style name="Theme.SkillSwap" parent="Theme.Material3.DayNight.NoActionBar">
+
+        
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+
+        
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+
+        <item name="colorOutline">@color/md_theme_outline</item>
+
+        
+        <item name="android:windowBackground">@drawable/app_background</item>
+
+        
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.SkillSwap.DisplayMedium</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.SkillSwap.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.SkillSwap.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.SkillSwap.HeadlineSmall</item>
+
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.SkillSwap.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.SkillSwap.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.SkillSwap.TitleSmall</item>
+
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.SkillSwap.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.SkillSwap.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.SkillSwap.BodySmall</item>
+
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.SkillSwap.LabelSmall</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.SkillSwap.Caption</item>
+
+        
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SkillSwap.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SkillSwap.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SkillSwap.Large</item>
+
+        
+        <item name="toolbarStyle">@style/AppToolbar</item>
+    </style>
+    <style name="Widget.SkillSwap.Button.FilledError" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/md_theme_error</item>
+        <item name="android:textColor">@color/md_theme_onError</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="Widget.SkillSwap.Button.FilledPrimary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/md_theme_primary</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="Widget.SkillSwap.Button.OutlinedHC" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/md_theme_onSurfaceVariant</item>
+        <item name="strokeWidth">2dp</item>
+
+        <item name="android:textColor">@color/md_theme_onSurfaceVariant</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+
+        
+        <item name="rippleColor">@color/md_theme_primaryContainer</item>
+    </style>
+    <style name="Widget.SkillSwap.Button.OutlinedPrimary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/md_theme_primary</item>
+        <item name="strokeWidth">2dp</item>
+
+        <item name="android:textColor">@color/md_theme_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+
+        
+        <item name="rippleColor">@color/md_theme_primaryContainer</item>
+    </style>
+    <style name="Widget.SkillSwap.Button.TonalSecondary" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/md_theme_secondary</item>
+        <item name="android:textColor">@color/md_theme_onSecondary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+    </style>
+    <style name="Widget.SkillSwap.LabelStat" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/md_theme_primaryContainer</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/font_family_inter</item>
+        <item name="android:fontWeight">600</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SkillSwap.Small</item>
+        <item name="chipMinHeight">28dp</item>
+        <item name="iconPadding">0dp</item>
+    </style>
+</resources>

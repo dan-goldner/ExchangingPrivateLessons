@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/titleTv"
+        style="@style/TextAppearance.Material3.TitleLarge" />
+
+    <TextView
+        android:id="@+id/subtitleTv"
+        android:layout_marginTop="4dp"
+        style="@style/TextAppearance.Material3.BodyMedium" />
+
+    <TextView
+        android:id="@+id/dateTv"
+        android:layout_marginTop="4dp"
+        style="@style/TextAppearance.Material3.BodySmall" />
+
+    <LinearLayout
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/declineBtn"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/decline" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelBtn"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/cancel"
+            android:layout_marginStart="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/approveBtn"
+            style="@style/Widget.Material3.Button"
+            android:text="@string/approve"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+</LinearLayout>

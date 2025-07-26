@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:theme="@style/Theme.SkillSwap"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Loader -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.Material3.CircularProgressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:id="@+id/content"
+        android:visibility="gone"
+        android:fillViewport="true"
+        android:padding="@dimen/space_xl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Profile card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+            android:layout_marginBottom="@dimen/space_xl"
+            app:cardElevation="3dp"
+            app:cardBackgroundColor="@color/md_theme_surfaceVariant"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.SkillSwap.Medium">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/space_xl"
+                android:paddingHorizontal="@dimen/space_l">
+
+                <!-- Avatar -->
+                <ImageView
+                    android:id="@+id/avatarIv"
+                    android:layout_width="@dimen/avatar_size_large"
+                    android:layout_height="@dimen/avatar_size_large"
+                    android:layout_marginBottom="@dimen/space_l"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile_placeholder"
+                    android:background="@drawable/profile_circle_bg"
+                    android:clipToOutline="true"
+                    android:contentDescription="@string/profile_avatar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Name -->
+                <TextView
+                    android:id="@+id/nameTv"
+                    style="@style/TextAppearance.SkillSwap.HeadlineLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_s"
+                    android:textColor="@color/md_theme_onSurface"
+                    app:layout_constraintTop_toBottomOf="@id/avatarIv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Email -->
+                <TextView
+                    android:id="@+id/emailTv"
+                    style="@style/TextAppearance.SkillSwap.TitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_m"
+                    android:autoLink="email"
+                    android:textColor="@color/md_theme_onSurfaceVariant"
+                    app:layout_constraintTop_toBottomOf="@id/nameTv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="56dp"
+                    android:layout_height="1dp"
+                    android:background="@color/md_theme_outline"
+                    app:layout_constraintTop_toBottomOf="@id/emailTv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Bio (גדול יותר) -->
+                <TextView
+                    android:id="@+id/bioTv"
+                    style="@style/TextAppearance.SkillSwap.TitleMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/md_theme_onSurface"
+                android:layout_marginTop="@dimen/space_l"
+                app:layout_constraintTop_toBottomOf="@id/emailTv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
+
+
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+android:id="@+id/editFab"
+app:fabSize="normal"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_margin="@dimen/space_l"
+app:srcCompat="@drawable/ic_edit_person"
+app:backgroundTint="@color/md_theme_primary"
+app:tint="@color/md_theme_onPrimary"
+android:contentDescription="@string/edit"
+android:layout_gravity="bottom|end"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

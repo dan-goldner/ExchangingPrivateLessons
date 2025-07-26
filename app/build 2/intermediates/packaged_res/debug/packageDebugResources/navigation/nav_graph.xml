@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <!-- 🔵 Splash → Auth -->
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.exchangingprivatelessons.ui.splash.SplashFragment"
+        android:label="Splash">
+        <action
+            android:id="@+id/action_splash_to_auth"
+            app:destination="@id/authFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splash_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- 🔐 Auth → Home -->
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.exchangingprivatelessons.ui.auth.AuthFragment"
+        android:label="Auth">
+        <action
+            android:id="@+id/action_auth_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- 🏠 Home -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.exchangingprivatelessons.ui.home.HomeFragment"
+        android:label="Home">
+
+        <!-- רשימות שיעורים -->
+        <action
+            android:id="@+id/action_home_to_lessonList_available"
+            app:destination="@id/lessonListFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="AVAILABLE" />
+        </action>
+
+        <action
+            android:id="@+id/action_home_to_lessonList_taken"
+            app:destination="@id/lessonListFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="TAKEN" />
+        </action>
+
+        <action
+            android:id="@+id/action_home_to_lessonList_mine"
+            app:destination="@id/lessonListFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="MINE" />
+        </action>
+
+        <!-- בקשות – אליי -->
+        <action
+            android:id="@+id/action_home_to_requests_received"
+            app:destination="@id/requestsFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="RECEIVED" />
+        </action>
+
+        <!-- בקשות – ששלחתי -->
+        <action
+            android:id="@+id/action_home_to_requests_sent"
+            app:destination="@id/requestsFragment">
+            <argument
+                android:name="mode"
+                app:argType="string"
+                android:defaultValue="SENT" />
+        </action>
+
+        <!-- צ’אטים / פרופיל -->
+        <action
+            android:id="@+id/action_homeFragment_to_allChatsFragment"
+            app:destination="@id/allChatsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <!-- 🧑‍🏫 רשימת שיעורים -->
+    <fragment
+        android:id="@+id/lessonListFragment"
+        android:name="com.example.exchangingprivatelessons.ui.lesson.LessonListFragment"
+        android:label="Lessons">
+
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="AVAILABLE" />
+
+        <action
+            android:id="@+id/action_lessonList_to_addEditLesson"
+            app:destination="@id/addEditLessonFragment" />
+
+        <action
+            android:id="@+id/action_lessonList_to_lessonDetails"
+            app:destination="@id/lessonDetailsFragment" />
+    </fragment>
+
+    <!-- 📝 עריכת / יצירת שיעור -->
+    <fragment
+        android:id="@+id/addEditLessonFragment"
+        android:name="com.example.exchangingprivatelessons.ui.lesson.AddEditLessonFragment"
+        android:label="">
+        <argument
+            android:name="lessonId"
+            app:argType="string"
+            android:defaultValue=""
+            app:nullable="true" />
+    </fragment>
+
+    <!-- 🔍 פרטי שיעור -->
+    <fragment
+        android:id="@+id/lessonDetailsFragment"
+        android:name="com.example.exchangingprivatelessons.ui.lesson.LessonDetailsFragment"
+        android:label="Lesson Details">
+        <argument
+            android:name="lessonId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_lessonDetailsFragment_to_addEditLessonFragment"
+            app:destination="@id/addEditLessonFragment" />
+        <action
+            android:id="@+id/action_lessonDetailsFragment_to_ratingBottomSheet"
+            app:destination="@id/ratingBottomSheet" />
+    </fragment>
+
+    <!-- ⭐ דירוג -->
+    <dialog
+        android:id="@+id/ratingBottomSheet"
+        android:name="com.example.exchangingprivatelessons.ui.lesson.RatingBottomSheet"
+        android:label="Rating">
+        <argument
+            android:name="lessonId"
+            app:argType="string" />
+    </dialog>
+
+    <!-- 📄 בקשות -->
+    <fragment
+        android:id="@+id/requestsFragment"
+        android:name="com.example.exchangingprivatelessons.ui.request.RequestsFragment"
+        android:label="Requests">
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="RECEIVED" />
+        <action
+            android:id="@+id/action_requests_to_requestDetail"
+            app:destination="@id/requestDetailSheet" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/requestDetailSheet"
+        android:name="com.example.exchangingprivatelessons.ui.request.RequestDetailSheet"
+        android:label="Request Detail">
+        <argument
+            android:name="requestId"
+            app:argType="string" />
+    </dialog>
+
+    <!-- 💬 צ’אטים -->
+    <fragment
+        android:id="@+id/allChatsFragment"
+        android:name="com.example.exchangingprivatelessons.ui.chat.AllChatsFragment"
+        android:label="All Chats">
+        <action
+            android:id="@+id/actionAllChatsFragmentToChatFragment"
+            app:destination="@id/chatFragment">
+            <argument android:name="chatId"  app:argType="string" />
+            <argument android:name="peerName" app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.exchangingprivatelessons.ui.chat.ChatFragment"
+        android:label="Chat">
+        <argument android:name="chatId"   app:argType="string" />
+        <argument android:name="peerName" app:argType="string" />
+    </fragment>
+
+    <!-- 👤 פרופיל -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.exchangingprivatelessons.ui.profile.ProfileFragment"
+        android:label="Profile">
+        <argument
+            android:name="uid"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_profile_to_edit"
+            app:destination="@id/editProfileSheet" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/editProfileSheet"
+        android:name="com.example.exchangingprivatelessons.ui.profile.EditProfileSheet"
+        android:label="Edit Profile" />
+
+    <!-- ניווט גלובלי ל‑Auth בעת Logout -->
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/authFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+</navigation>

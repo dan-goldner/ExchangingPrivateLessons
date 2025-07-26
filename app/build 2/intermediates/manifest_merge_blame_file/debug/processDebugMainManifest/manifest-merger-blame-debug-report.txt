@@ -1,0 +1,549 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.exchangingprivatelessons"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="29"
+9        android:targetSdkVersion="36" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:5:5-66
+11-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:6:5-78
+12-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:6:22-76
+13    <uses-permission android:name="android.permission.WAKE_LOCK" />
+13-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:7:5-67
+13-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:7:22-65
+14    <uses-permission android:name="android.permission.CAMERA" />
+14-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:8:5-64
+14-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:8:22-62
+15    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+15-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:9:5-75
+15-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:9:22-73
+16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+16-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:10:5-79
+16-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:10:22-77
+17
+18    <uses-feature
+18-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:11:5-84
+19        android:name="android.hardware.camera"
+19-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:11:19-57
+20        android:required="false" />
+20-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:11:58-82
+21
+22    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+22-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:12:5-78
+22-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:12:22-76
+23    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+23-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:13:5-81
+23-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:13:22-79
+24
+25    <permission
+26        android:name="com.example.exchangingprivatelessons.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+26-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:16:9-81
+27        android:protectionLevel="signature" />
+27-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:17:9-44
+28
+29    <uses-permission android:name="com.example.exchangingprivatelessons.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+29-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:18:22-94
+30    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
+30-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:26:5-88
+30-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:26:22-85
+31    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" />
+31-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:27:5-82
+31-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:27:22-79
+32    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+32-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:26:5-110
+32-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:26:22-107
+33    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+33-->[com.google.android.recaptcha:recaptcha:18.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d8bab43d70ba0a16ba4c886fafd70dde/transformed/recaptcha-18.4.0/AndroidManifest.xml:9:5-98
+33-->[com.google.android.recaptcha:recaptcha:18.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d8bab43d70ba0a16ba4c886fafd70dde/transformed/recaptcha-18.4.0/AndroidManifest.xml:9:22-95
+34
+35    <application
+35-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:20:5-61:19
+36        android:name="com.example.exchangingprivatelessons.MyApp"
+36-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:21:9-30
+37        android:allowBackup="true"
+37-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:22:9-35
+38        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+38-->[androidx.core:core:1.16.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/8e33b18a82080f46abe1bf0fc4d98caa/transformed/core-1.16.0/AndroidManifest.xml:28:18-86
+39        android:dataExtractionRules="@xml/data_extraction_rules"
+39-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:23:9-65
+40        android:debuggable="true"
+41        android:extractNativeLibs="false"
+42        android:fullBackupContent="@xml/backup_rules"
+42-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:24:9-54
+43        android:icon="@mipmap/ic_launcher"
+43-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:25:9-43
+44        android:label="@string/app_name"
+44-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:27:9-41
+45        android:roundIcon="@mipmap/ic_launcher_round"
+45-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:26:9-54
+46        android:testOnly="true"
+47        android:theme="@style/Theme.SkillSwap" >
+47-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:28:9-47
+48        <provider
+49            android:name="androidx.core.content.FileProvider"
+49-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:31:13-62
+50            android:authorities="com.example.exchangingprivatelessons.fileprovider"
+50-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:32:13-64
+51            android:exported="false"
+51-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:33:13-37
+52            android:grantUriPermissions="true" >
+52-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:34:13-47
+53            <meta-data
+53-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:35:13-37:54
+54                android:name="android.support.FILE_PROVIDER_PATHS"
+54-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:36:17-67
+55                android:resource="@xml/file_paths" />
+55-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:37:17-51
+56        </provider>
+57
+58        <activity
+58-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:40:9-49:20
+59            android:name="com.example.exchangingprivatelessons.ui.main.MainActivity"
+59-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:41:13-49
+60            android:configChanges="orientation|screenSize|uiMode|layoutDirection"
+60-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:44:13-82
+61            android:exported="true"
+61-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:42:13-36
+62            android:label="@string/app_name" >
+62-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:43:13-45
+63            <intent-filter>
+63-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:45:13-48:29
+64                <action android:name="android.intent.action.MAIN" />
+64-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:46:17-68
+64-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:46:25-66
+65
+66                <category android:name="android.intent.category.LAUNCHER" />
+66-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:47:17-76
+66-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:47:27-74
+67            </intent-filter>
+68        </activity>
+69
+70        <!-- רכיבי Firebase / Google Play services ימוזגו אוטומטית -->
+71        <meta-data
+71-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:58:9-60:68
+72            android:name="com.google.android.gms.version"
+72-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:59:13-58
+73            android:value="@integer/google_play_services_version" />
+73-->/Users/boruchlerner/Documents/University Studies/2025 Academic Year/Android Studio/ExchangingPrivateLessons/app/src/main/AndroidManifest.xml:60:13-66
+74
+75        <service
+75-->[com.google.firebase:firebase-auth-ktx:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb0a1e147ca8bf83deda37b379b10960/transformed/firebase-auth-ktx-23.0.0/AndroidManifest.xml:8:9-14:19
+76            android:name="com.google.firebase.components.ComponentDiscoveryService"
+76-->[com.google.firebase:firebase-auth-ktx:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb0a1e147ca8bf83deda37b379b10960/transformed/firebase-auth-ktx-23.0.0/AndroidManifest.xml:9:13-84
+77            android:directBootAware="true"
+77-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:32:13-43
+78            android:exported="false" >
+78-->[com.google.firebase:firebase-auth-ktx:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb0a1e147ca8bf83deda37b379b10960/transformed/firebase-auth-ktx-23.0.0/AndroidManifest.xml:10:13-37
+79            <meta-data
+79-->[com.google.firebase:firebase-auth-ktx:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb0a1e147ca8bf83deda37b379b10960/transformed/firebase-auth-ktx-23.0.0/AndroidManifest.xml:11:13-13:85
+80                android:name="com.google.firebase.components:com.google.firebase.auth.ktx.FirebaseAuthLegacyRegistrar"
+80-->[com.google.firebase:firebase-auth-ktx:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb0a1e147ca8bf83deda37b379b10960/transformed/firebase-auth-ktx-23.0.0/AndroidManifest.xml:12:17-119
+81                android:value="com.google.firebase.components.ComponentRegistrar" />
+81-->[com.google.firebase:firebase-auth-ktx:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb0a1e147ca8bf83deda37b379b10960/transformed/firebase-auth-ktx-23.0.0/AndroidManifest.xml:13:17-82
+82            <meta-data
+82-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:69:13-71:85
+83                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+83-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:70:17-109
+84                android:value="com.google.firebase.components.ComponentRegistrar" />
+84-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:71:17-82
+85            <meta-data
+85-->[com.google.firebase:firebase-appcheck-debug:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/8ae6e0144a845e0b8c523ce9d5914492/transformed/firebase-appcheck-debug-18.0.0/AndroidManifest.xml:25:13-27:85
+86                android:name="com.google.firebase.components:com.google.firebase.appcheck.debug.FirebaseAppCheckDebugRegistrar"
+86-->[com.google.firebase:firebase-appcheck-debug:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/8ae6e0144a845e0b8c523ce9d5914492/transformed/firebase-appcheck-debug-18.0.0/AndroidManifest.xml:26:17-128
+87                android:value="com.google.firebase.components.ComponentRegistrar" />
+87-->[com.google.firebase:firebase-appcheck-debug:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/8ae6e0144a845e0b8c523ce9d5914492/transformed/firebase-appcheck-debug-18.0.0/AndroidManifest.xml:27:17-82
+88            <meta-data
+88-->[com.google.firebase:firebase-firestore-ktx:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/eb1fd569906d2f22ae096418e7e1fc67/transformed/firebase-firestore-ktx-25.1.4/AndroidManifest.xml:12:13-14:85
+89                android:name="com.google.firebase.components:com.google.firebase.firestore.ktx.FirebaseFirestoreLegacyRegistrar"
+89-->[com.google.firebase:firebase-firestore-ktx:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/eb1fd569906d2f22ae096418e7e1fc67/transformed/firebase-firestore-ktx-25.1.4/AndroidManifest.xml:13:17-129
+90                android:value="com.google.firebase.components.ComponentRegistrar" />
+90-->[com.google.firebase:firebase-firestore-ktx:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/eb1fd569906d2f22ae096418e7e1fc67/transformed/firebase-firestore-ktx-25.1.4/AndroidManifest.xml:14:17-82
+91            <meta-data
+91-->[com.google.firebase:firebase-firestore:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/c02d9d8daaa8d0bd1b84ee3264ff3394/transformed/firebase-firestore-25.1.4/AndroidManifest.xml:17:13-19:85
+92                android:name="com.google.firebase.components:com.google.firebase.firestore.FirebaseFirestoreKtxRegistrar"
+92-->[com.google.firebase:firebase-firestore:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/c02d9d8daaa8d0bd1b84ee3264ff3394/transformed/firebase-firestore-25.1.4/AndroidManifest.xml:18:17-122
+93                android:value="com.google.firebase.components.ComponentRegistrar" />
+93-->[com.google.firebase:firebase-firestore:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/c02d9d8daaa8d0bd1b84ee3264ff3394/transformed/firebase-firestore-25.1.4/AndroidManifest.xml:19:17-82
+94            <meta-data
+94-->[com.google.firebase:firebase-firestore:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/c02d9d8daaa8d0bd1b84ee3264ff3394/transformed/firebase-firestore-25.1.4/AndroidManifest.xml:20:13-22:85
+95                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+95-->[com.google.firebase:firebase-firestore:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/c02d9d8daaa8d0bd1b84ee3264ff3394/transformed/firebase-firestore-25.1.4/AndroidManifest.xml:21:17-111
+96                android:value="com.google.firebase.components.ComponentRegistrar" />
+96-->[com.google.firebase:firebase-firestore:25.1.4] /Users/boruchlerner/.gradle/caches/8.13/transforms/c02d9d8daaa8d0bd1b84ee3264ff3394/transformed/firebase-firestore-25.1.4/AndroidManifest.xml:22:17-82
+97            <meta-data
+97-->[com.google.firebase:firebase-functions-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/b759349b6b5a4b127d2adc2d7fbca9b4/transformed/firebase-functions-ktx-21.0.0/AndroidManifest.xml:12:13-14:85
+98                android:name="com.google.firebase.components:com.google.firebase.functions.ktx.FirebaseFunctionsLegacyRegistrar"
+98-->[com.google.firebase:firebase-functions-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/b759349b6b5a4b127d2adc2d7fbca9b4/transformed/firebase-functions-ktx-21.0.0/AndroidManifest.xml:13:17-129
+99                android:value="com.google.firebase.components.ComponentRegistrar" />
+99-->[com.google.firebase:firebase-functions-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/b759349b6b5a4b127d2adc2d7fbca9b4/transformed/firebase-functions-ktx-21.0.0/AndroidManifest.xml:14:17-82
+100            <meta-data
+100-->[com.google.firebase:firebase-functions:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c4769cc3e8ef95dd7595921a82b30b1f/transformed/firebase-functions-21.0.0/AndroidManifest.xml:15:13-17:85
+101                android:name="com.google.firebase.components:com.google.firebase.functions.FirebaseFunctionsKtxRegistrar"
+101-->[com.google.firebase:firebase-functions:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c4769cc3e8ef95dd7595921a82b30b1f/transformed/firebase-functions-21.0.0/AndroidManifest.xml:16:17-122
+102                android:value="com.google.firebase.components.ComponentRegistrar" />
+102-->[com.google.firebase:firebase-functions:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c4769cc3e8ef95dd7595921a82b30b1f/transformed/firebase-functions-21.0.0/AndroidManifest.xml:17:17-82
+103            <meta-data
+103-->[com.google.firebase:firebase-functions:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c4769cc3e8ef95dd7595921a82b30b1f/transformed/firebase-functions-21.0.0/AndroidManifest.xml:18:13-20:85
+104                android:name="com.google.firebase.components:com.google.firebase.functions.FunctionsRegistrar"
+104-->[com.google.firebase:firebase-functions:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c4769cc3e8ef95dd7595921a82b30b1f/transformed/firebase-functions-21.0.0/AndroidManifest.xml:19:17-111
+105                android:value="com.google.firebase.components.ComponentRegistrar" />
+105-->[com.google.firebase:firebase-functions:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c4769cc3e8ef95dd7595921a82b30b1f/transformed/firebase-functions-21.0.0/AndroidManifest.xml:20:17-82
+106            <meta-data
+106-->[com.google.firebase:firebase-storage-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/74f07b7eb4b6e71db0ea3b2b612d490f/transformed/firebase-storage-ktx-21.0.0/AndroidManifest.xml:12:13-14:85
+107                android:name="com.google.firebase.components:com.google.firebase.storage.ktx.FirebaseStorageLegacyRegistrar"
+107-->[com.google.firebase:firebase-storage-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/74f07b7eb4b6e71db0ea3b2b612d490f/transformed/firebase-storage-ktx-21.0.0/AndroidManifest.xml:13:17-125
+108                android:value="com.google.firebase.components.ComponentRegistrar" />
+108-->[com.google.firebase:firebase-storage-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/74f07b7eb4b6e71db0ea3b2b612d490f/transformed/firebase-storage-ktx-21.0.0/AndroidManifest.xml:14:17-82
+109            <meta-data
+109-->[com.google.firebase:firebase-storage:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/1197d9587da370ada95242e6c64851f0/transformed/firebase-storage-21.0.0/AndroidManifest.xml:30:13-32:85
+110                android:name="com.google.firebase.components:com.google.firebase.storage.FirebaseStorageKtxRegistrar"
+110-->[com.google.firebase:firebase-storage:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/1197d9587da370ada95242e6c64851f0/transformed/firebase-storage-21.0.0/AndroidManifest.xml:31:17-118
+111                android:value="com.google.firebase.components.ComponentRegistrar" />
+111-->[com.google.firebase:firebase-storage:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/1197d9587da370ada95242e6c64851f0/transformed/firebase-storage-21.0.0/AndroidManifest.xml:32:17-82
+112            <meta-data
+112-->[com.google.firebase:firebase-storage:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/1197d9587da370ada95242e6c64851f0/transformed/firebase-storage-21.0.0/AndroidManifest.xml:33:13-35:85
+113                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
+113-->[com.google.firebase:firebase-storage:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/1197d9587da370ada95242e6c64851f0/transformed/firebase-storage-21.0.0/AndroidManifest.xml:34:17-107
+114                android:value="com.google.firebase.components.ComponentRegistrar" />
+114-->[com.google.firebase:firebase-storage:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/1197d9587da370ada95242e6c64851f0/transformed/firebase-storage-21.0.0/AndroidManifest.xml:35:17-82
+115            <meta-data
+115-->[com.google.firebase:firebase-appcheck:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/fc1dbb1cfedaa54c0369117c33c58dd7/transformed/firebase-appcheck-18.0.0/AndroidManifest.xml:25:13-27:85
+116                android:name="com.google.firebase.components:com.google.firebase.appcheck.FirebaseAppCheckKtxRegistrar"
+116-->[com.google.firebase:firebase-appcheck:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/fc1dbb1cfedaa54c0369117c33c58dd7/transformed/firebase-appcheck-18.0.0/AndroidManifest.xml:26:17-120
+117                android:value="com.google.firebase.components.ComponentRegistrar" />
+117-->[com.google.firebase:firebase-appcheck:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/fc1dbb1cfedaa54c0369117c33c58dd7/transformed/firebase-appcheck-18.0.0/AndroidManifest.xml:27:17-82
+118            <meta-data
+118-->[com.google.firebase:firebase-appcheck:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/fc1dbb1cfedaa54c0369117c33c58dd7/transformed/firebase-appcheck-18.0.0/AndroidManifest.xml:28:13-30:85
+119                android:name="com.google.firebase.components:com.google.firebase.appcheck.FirebaseAppCheckRegistrar"
+119-->[com.google.firebase:firebase-appcheck:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/fc1dbb1cfedaa54c0369117c33c58dd7/transformed/firebase-appcheck-18.0.0/AndroidManifest.xml:29:17-117
+120                android:value="com.google.firebase.components.ComponentRegistrar" />
+120-->[com.google.firebase:firebase-appcheck:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/fc1dbb1cfedaa54c0369117c33c58dd7/transformed/firebase-appcheck-18.0.0/AndroidManifest.xml:30:17-82
+121            <meta-data
+121-->[com.google.firebase:firebase-analytics-ktx:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c78932a5dd1a9894f042c2d3006a57d5/transformed/firebase-analytics-ktx-22.0.0/AndroidManifest.xml:11:13-13:85
+122                android:name="com.google.firebase.components:com.google.firebase.analytics.ktx.FirebaseAnalyticsLegacyRegistrar"
+122-->[com.google.firebase:firebase-analytics-ktx:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c78932a5dd1a9894f042c2d3006a57d5/transformed/firebase-analytics-ktx-22.0.0/AndroidManifest.xml:12:17-129
+123                android:value="com.google.firebase.components.ComponentRegistrar" />
+123-->[com.google.firebase:firebase-analytics-ktx:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/c78932a5dd1a9894f042c2d3006a57d5/transformed/firebase-analytics-ktx-22.0.0/AndroidManifest.xml:13:17-82
+124            <meta-data
+124-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:37:13-39:85
+125                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+125-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:38:17-139
+126                android:value="com.google.firebase.components.ComponentRegistrar" />
+126-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:39:17-82
+127            <meta-data
+127-->[com.google.firebase:firebase-iid:21.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb6f333ea3e9972f6aa2474fe2ce3162/transformed/firebase-iid-21.1.0/AndroidManifest.xml:32:13-34:85
+128                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+128-->[com.google.firebase:firebase-iid:21.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb6f333ea3e9972f6aa2474fe2ce3162/transformed/firebase-iid-21.1.0/AndroidManifest.xml:33:17-96
+129                android:value="com.google.firebase.components.ComponentRegistrar" />
+129-->[com.google.firebase:firebase-iid:21.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/bb6f333ea3e9972f6aa2474fe2ce3162/transformed/firebase-iid-21.1.0/AndroidManifest.xml:34:17-82
+130            <meta-data
+130-->[com.google.firebase:firebase-installations:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/16ed75813abfe46a5040adb13944b301/transformed/firebase-installations-18.0.0/AndroidManifest.xml:15:13-17:85
+131                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+131-->[com.google.firebase:firebase-installations:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/16ed75813abfe46a5040adb13944b301/transformed/firebase-installations-18.0.0/AndroidManifest.xml:16:17-130
+132                android:value="com.google.firebase.components.ComponentRegistrar" />
+132-->[com.google.firebase:firebase-installations:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/16ed75813abfe46a5040adb13944b301/transformed/firebase-installations-18.0.0/AndroidManifest.xml:17:17-82
+133            <meta-data
+133-->[com.google.firebase:firebase-installations:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/16ed75813abfe46a5040adb13944b301/transformed/firebase-installations-18.0.0/AndroidManifest.xml:18:13-20:85
+134                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+134-->[com.google.firebase:firebase-installations:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/16ed75813abfe46a5040adb13944b301/transformed/firebase-installations-18.0.0/AndroidManifest.xml:19:17-127
+135                android:value="com.google.firebase.components.ComponentRegistrar" />
+135-->[com.google.firebase:firebase-installations:18.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/16ed75813abfe46a5040adb13944b301/transformed/firebase-installations-18.0.0/AndroidManifest.xml:20:17-82
+136            <meta-data
+136-->[com.google.firebase:firebase-common-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7b7a680414d71807acb49d3b1a70039e/transformed/firebase-common-ktx-21.0.0/AndroidManifest.xml:12:13-14:85
+137                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+137-->[com.google.firebase:firebase-common-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7b7a680414d71807acb49d3b1a70039e/transformed/firebase-common-ktx-21.0.0/AndroidManifest.xml:13:17-116
+138                android:value="com.google.firebase.components.ComponentRegistrar" />
+138-->[com.google.firebase:firebase-common-ktx:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7b7a680414d71807acb49d3b1a70039e/transformed/firebase-common-ktx-21.0.0/AndroidManifest.xml:14:17-82
+139            <meta-data
+139-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:35:13-37:85
+140                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+140-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:36:17-109
+141                android:value="com.google.firebase.components.ComponentRegistrar" />
+141-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:37:17-82
+142        </service>
+143
+144        <activity
+144-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:29:9-46:20
+145            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
+145-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:30:13-80
+146            android:excludeFromRecents="true"
+146-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:31:13-46
+147            android:exported="true"
+147-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:32:13-36
+148            android:launchMode="singleTask"
+148-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:33:13-44
+149            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+149-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:34:13-72
+150            <intent-filter>
+150-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:35:13-45:29
+151                <action android:name="android.intent.action.VIEW" />
+151-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:36:17-69
+151-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:36:25-66
+152
+153                <category android:name="android.intent.category.DEFAULT" />
+153-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:38:17-76
+153-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:38:27-73
+154                <category android:name="android.intent.category.BROWSABLE" />
+154-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:39:17-78
+154-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:39:27-75
+155
+156                <data
+156-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:41:17-44:51
+157                    android:host="firebase.auth"
+157-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:42:21-49
+158                    android:path="/"
+158-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:43:21-37
+159                    android:scheme="genericidp" />
+159-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:44:21-48
+160            </intent-filter>
+161        </activity>
+162        <activity
+162-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:47:9-64:20
+163            android:name="com.google.firebase.auth.internal.RecaptchaActivity"
+163-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:48:13-79
+164            android:excludeFromRecents="true"
+164-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:49:13-46
+165            android:exported="true"
+165-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:50:13-36
+166            android:launchMode="singleTask"
+166-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:51:13-44
+167            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+167-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:52:13-72
+168            <intent-filter>
+168-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:53:13-63:29
+169                <action android:name="android.intent.action.VIEW" />
+169-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:36:17-69
+169-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:36:25-66
+170
+171                <category android:name="android.intent.category.DEFAULT" />
+171-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:38:17-76
+171-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:38:27-73
+172                <category android:name="android.intent.category.BROWSABLE" />
+172-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:39:17-78
+172-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:39:27-75
+173
+174                <data
+174-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:41:17-44:51
+175                    android:host="firebase.auth"
+175-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:42:21-49
+176                    android:path="/"
+176-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:43:21-37
+177                    android:scheme="recaptcha" />
+177-->[com.google.firebase:firebase-auth:23.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/60d25a7c8beb7aa3732a171908f8f6cd/transformed/firebase-auth-23.0.0/AndroidManifest.xml:44:21-48
+178            </intent-filter>
+179        </activity>
+180
+181        <service
+181-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:24:9-32:19
+182            android:name="androidx.credentials.playservices.CredentialProviderMetadataHolder"
+182-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:25:13-94
+183            android:enabled="true"
+183-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:26:13-35
+184            android:exported="false" >
+184-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:27:13-37
+185            <meta-data
+185-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:29:13-31:104
+186                android:name="androidx.credentials.CREDENTIAL_PROVIDER_KEY"
+186-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:30:17-76
+187                android:value="androidx.credentials.playservices.CredentialProviderPlayServicesImpl" />
+187-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:31:17-101
+188        </service>
+189
+190        <activity
+190-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:34:9-41:20
+191            android:name="androidx.credentials.playservices.HiddenActivity"
+191-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:35:13-76
+192            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+192-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:36:13-87
+193            android:enabled="true"
+193-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:37:13-35
+194            android:exported="false"
+194-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:38:13-37
+195            android:fitsSystemWindows="true"
+195-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:39:13-45
+196            android:theme="@style/Theme.Hidden" >
+196-->[androidx.credentials:credentials-play-services-auth:1.2.0-rc01] /Users/boruchlerner/.gradle/caches/8.13/transforms/231a4bfa3df23d7aa3c1c67e63a481af/transformed/credentials-play-services-auth-1.2.0-rc01/AndroidManifest.xml:40:13-48
+197        </activity>
+198        <activity
+198-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:23:9-27:75
+199            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+199-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:24:13-93
+200            android:excludeFromRecents="true"
+200-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:25:13-46
+201            android:exported="false"
+201-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:26:13-37
+202            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+202-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:27:13-72
+203        <!--
+204            Service handling Google Sign-In user revocation. For apps that do not integrate with
+205            Google Sign-In, this service will never be started.
+206        -->
+207        <service
+207-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:33:9-37:51
+208            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+208-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:34:13-89
+209            android:exported="true"
+209-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:35:13-36
+210            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+210-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:36:13-107
+211            android:visibleToInstantApps="true" />
+211-->[com.google.android.gms:play-services-auth:20.7.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7c97881da26f7e13703ca66e67b2436b/transformed/play-services-auth-20.7.0/AndroidManifest.xml:37:13-48
+212
+213        <activity
+213-->[com.google.android.gms:play-services-base:18.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/11527036a911a679d579c1eed8a888b9/transformed/play-services-base-18.1.0/AndroidManifest.xml:20:9-22:45
+214            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+214-->[com.google.android.gms:play-services-base:18.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/11527036a911a679d579c1eed8a888b9/transformed/play-services-base-18.1.0/AndroidManifest.xml:20:19-85
+215            android:exported="false"
+215-->[com.google.android.gms:play-services-base:18.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/11527036a911a679d579c1eed8a888b9/transformed/play-services-base-18.1.0/AndroidManifest.xml:22:19-43
+216            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+216-->[com.google.android.gms:play-services-base:18.1.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/11527036a911a679d579c1eed8a888b9/transformed/play-services-base-18.1.0/AndroidManifest.xml:21:19-78
+217
+218        <property
+218-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:30:9-32:61
+219            android:name="android.adservices.AD_SERVICES_CONFIG"
+219-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:31:13-65
+220            android:resource="@xml/ga_ad_services_config" />
+220-->[com.google.android.gms:play-services-measurement-api:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/d1c16d61f5d1bd9c952d946ebd66f383/transformed/play-services-measurement-api-22.0.0/AndroidManifest.xml:32:13-58
+221
+222        <provider
+222-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:23:9-28:39
+223            android:name="com.google.firebase.provider.FirebaseInitProvider"
+223-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:24:13-77
+224            android:authorities="com.example.exchangingprivatelessons.firebaseinitprovider"
+224-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:25:13-72
+225            android:directBootAware="true"
+225-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:26:13-43
+226            android:exported="false"
+226-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:27:13-37
+227            android:initOrder="100" />
+227-->[com.google.firebase:firebase-common:21.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/a3f7aeca731326d7663a046e432d91c5/transformed/firebase-common-21.0.0/AndroidManifest.xml:28:13-36
+228        <provider
+228-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:24:9-32:20
+229            android:name="androidx.startup.InitializationProvider"
+229-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:25:13-67
+230            android:authorities="com.example.exchangingprivatelessons.androidx-startup"
+230-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:26:13-68
+231            android:exported="false" >
+231-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:27:13-37
+232            <meta-data
+232-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:29:13-31:52
+233                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+233-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:30:17-75
+234                android:value="androidx.startup" />
+234-->[androidx.emoji2:emoji2:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/590a292fe1395d8520928e79b93ea826/transformed/emoji2-1.4.0/AndroidManifest.xml:31:17-49
+235            <meta-data
+235-->[androidx.lifecycle:lifecycle-process:2.9.1] /Users/boruchlerner/.gradle/caches/8.13/transforms/090834651e0c570c8481700c8cc08d6c/transformed/lifecycle-process-2.9.1/AndroidManifest.xml:29:13-31:52
+236                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+236-->[androidx.lifecycle:lifecycle-process:2.9.1] /Users/boruchlerner/.gradle/caches/8.13/transforms/090834651e0c570c8481700c8cc08d6c/transformed/lifecycle-process-2.9.1/AndroidManifest.xml:30:17-78
+237                android:value="androidx.startup" />
+237-->[androidx.lifecycle:lifecycle-process:2.9.1] /Users/boruchlerner/.gradle/caches/8.13/transforms/090834651e0c570c8481700c8cc08d6c/transformed/lifecycle-process-2.9.1/AndroidManifest.xml:31:17-49
+238            <meta-data
+238-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+239                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+239-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+240                android:value="androidx.startup" />
+240-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+241        </provider>
+242
+243        <receiver
+243-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:29:9-33:20
+244            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+244-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:30:13-85
+245            android:enabled="true"
+245-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:31:13-35
+246            android:exported="false" >
+246-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:32:13-37
+247        </receiver>
+248
+249        <service
+249-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:35:9-38:40
+250            android:name="com.google.android.gms.measurement.AppMeasurementService"
+250-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:36:13-84
+251            android:enabled="true"
+251-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:37:13-35
+252            android:exported="false" />
+252-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:38:13-37
+253        <service
+253-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:39:9-43:72
+254            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+254-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:40:13-87
+255            android:enabled="true"
+255-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:41:13-35
+256            android:exported="false"
+256-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:42:13-37
+257            android:permission="android.permission.BIND_JOB_SERVICE" />
+257-->[com.google.android.gms:play-services-measurement:22.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/7440a097b03d83e8203517fdef40d59e/transformed/play-services-measurement-22.0.0/AndroidManifest.xml:43:13-69
+258        <service
+258-->[androidx.room:room-runtime-android:2.7.2] /Users/boruchlerner/.gradle/caches/8.13/transforms/f4c7c072c7e20f57d41a118ef73d06ca/transformed/room-runtime-release/AndroidManifest.xml:24:9-28:63
+259            android:name="androidx.room.MultiInstanceInvalidationService"
+259-->[androidx.room:room-runtime-android:2.7.2] /Users/boruchlerner/.gradle/caches/8.13/transforms/f4c7c072c7e20f57d41a118ef73d06ca/transformed/room-runtime-release/AndroidManifest.xml:25:13-74
+260            android:directBootAware="true"
+260-->[androidx.room:room-runtime-android:2.7.2] /Users/boruchlerner/.gradle/caches/8.13/transforms/f4c7c072c7e20f57d41a118ef73d06ca/transformed/room-runtime-release/AndroidManifest.xml:26:13-43
+261            android:exported="false" />
+261-->[androidx.room:room-runtime-android:2.7.2] /Users/boruchlerner/.gradle/caches/8.13/transforms/f4c7c072c7e20f57d41a118ef73d06ca/transformed/room-runtime-release/AndroidManifest.xml:27:13-37
+262
+263        <uses-library
+263-->[androidx.window:window:1.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/f749c13d1843b7bdba35d80973a97452/transformed/window-1.0.0/AndroidManifest.xml:25:9-27:40
+264            android:name="androidx.window.extensions"
+264-->[androidx.window:window:1.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/f749c13d1843b7bdba35d80973a97452/transformed/window-1.0.0/AndroidManifest.xml:26:13-54
+265            android:required="false" />
+265-->[androidx.window:window:1.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/f749c13d1843b7bdba35d80973a97452/transformed/window-1.0.0/AndroidManifest.xml:27:13-37
+266        <uses-library
+266-->[androidx.window:window:1.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/f749c13d1843b7bdba35d80973a97452/transformed/window-1.0.0/AndroidManifest.xml:28:9-30:40
+267            android:name="androidx.window.sidecar"
+267-->[androidx.window:window:1.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/f749c13d1843b7bdba35d80973a97452/transformed/window-1.0.0/AndroidManifest.xml:29:13-51
+268            android:required="false" />
+268-->[androidx.window:window:1.0.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/f749c13d1843b7bdba35d80973a97452/transformed/window-1.0.0/AndroidManifest.xml:30:13-37
+269        <uses-library
+269-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/boruchlerner/.gradle/caches/8.13/transforms/44c9097dc4935d4b9ea24b1b1d13b7cf/transformed/ads-adservices-1.0.0-beta05/AndroidManifest.xml:23:9-25:40
+270            android:name="android.ext.adservices"
+270-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/boruchlerner/.gradle/caches/8.13/transforms/44c9097dc4935d4b9ea24b1b1d13b7cf/transformed/ads-adservices-1.0.0-beta05/AndroidManifest.xml:24:13-50
+271            android:required="false" />
+271-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/boruchlerner/.gradle/caches/8.13/transforms/44c9097dc4935d4b9ea24b1b1d13b7cf/transformed/ads-adservices-1.0.0-beta05/AndroidManifest.xml:25:13-37
+272
+273        <receiver
+273-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+274            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+274-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+275            android:directBootAware="false"
+275-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+276            android:enabled="true"
+276-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+277            android:exported="true"
+277-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+278            android:permission="android.permission.DUMP" >
+278-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+279            <intent-filter>
+279-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+280                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+280-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+280-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+281            </intent-filter>
+282            <intent-filter>
+282-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+283                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+283-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+283-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+284            </intent-filter>
+285            <intent-filter>
+285-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+286                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+286-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+286-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+287            </intent-filter>
+288            <intent-filter>
+288-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+289                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+289-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+289-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/boruchlerner/.gradle/caches/8.13/transforms/0c45e0901c8f23217dadff5b77ecb147/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+290            </intent-filter>
+291        </receiver>
+292    </application>
+293
+294</manifest>

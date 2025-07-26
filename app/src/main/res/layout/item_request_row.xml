@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/titleTv"
+            style="@style/TextAppearance.Material3.TitleMedium" />
+
+        <TextView
+            android:id="@+id/subtitleTv"
+            style="@style/TextAppearance.Material3.BodyMedium" />
+
+        <TextView
+            android:id="@+id/statusTv"
+            style="@style/TextAppearance.Material3.LabelMedium"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- ראש -->
+    <path
+        android:fillColor="#FFBDBDBD"
+        android:pathData="M12,12a4,4 0 1,0 -0.01,0"/>
+
+    <!-- גוף/כתפיים -->
+    <path
+        android:fillColor="#FFBDBDBD"
+        android:pathData="M4,20c0,-3.31 3.13,-6 8,-6s8,2.69 8,6v1H4z"/>
+</vector>
