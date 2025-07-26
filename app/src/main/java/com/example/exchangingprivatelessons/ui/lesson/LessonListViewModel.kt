@@ -3,7 +3,6 @@ package com.example.exchangingprivatelessons.ui.lesson
 import android.content.Context
 import androidx.lifecycle.*
 import com.example.exchangingprivatelessons.common.di.UseCaseModule.observeLessons
-import com.example.exchangingprivatelessons.common.di.UseCaseModule_ObserveLessonsFactory.observeLessons
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.common.util.toResultLiveData
 import com.example.exchangingprivatelessons.domain.model.ViewLesson
@@ -18,6 +17,7 @@ class LessonListViewModel @Inject constructor(
     private val observeLessons : ObserveLessons,
     private val observeTaken   : ObserveTakenLessons,
     private val refreshLessons : RefreshLessons,
+    private val refreshTakenLessons: RefreshTakenLessons,
     private val archiveLesson  : ArchiveLesson,
     @ApplicationContext private val ctx: Context
 ) : ViewModel() {
@@ -79,10 +79,14 @@ class LessonListViewModel @Inject constructor(
 
     fun onRefresh() = viewModelScope.launch {
         _refreshing.value = true
-        refreshLessons()
+
+        when (mode.value) {
+            Mode.TAKEN     -> refreshTakenLessons()
+            else           -> refreshLessons()
+        }
+
         _refreshing.value = false
     }
-
     fun onArchiveToggle(id: String, archived: Boolean) = viewModelScope.launch {
             _snackbar.value = if (archived) "הועבר לארכיון" else "הוחזר מהרשימה"
             when (archiveLesson(id, archived)) {

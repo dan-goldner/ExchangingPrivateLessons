@@ -17,35 +17,49 @@ class ObserveTakenLessons @Inject constructor(
 
     operator fun invoke(): Flow<Result<List<ViewLesson>>> =
         repo.observeTakenLessons().map { res ->
-            res.mapList { tk ->
-                val l = tk.lesson
-                ViewLesson(
-                    lesson          = l,
-                    average         = l.avgRating,
-                    myRequestStatus = null,
-                    isTaken         = true,
-                    isMine          = false,
+            when (res) {
+                is Result.Success -> {
+                    val mapped = res.data.mapNotNull { tk ->
+                        val l = tk.lesson
 
-                    /* ---------- flattened ---------- */
-                    id           = l.id,
-                    title        = l.title,
-                    description  = l.description,
-                    ownerId      = l.ownerId,
-                    ownerName    = tk.ownerName,
-                    ownerPhotoUrl     = tk.ownerPhotoUrl,
-                    createdAt    = l.createdAt,
-                    ratingAvg    = l.avgRating.toDouble(),
-                    ratingCount  = l.ratingCount,
+                        // ❌ Skip archived lessons
+                        if (l.status == LessonStatus.Archived) return@mapNotNull null
 
-                    /* ---------- permissions ---------- */
-                    canEdit      = false,
-                    canRequest   = false,
-                    canRate      = tk.canRate,
+                        ViewLesson(
+                            lesson          = l,
+                            average         = l.avgRating,
+                            myRequestStatus = null,
+                            isTaken         = true,
+                            isMine          = false,
 
-                    /* ---------- archive ---------- */
-                    archived     = l.status == LessonStatus.Archived,
-                    canArchive   = false
-                )
+                            /* ---------- flattened ---------- */
+                            id              = l.id,
+                            title           = l.title,
+                            description     = l.description,
+                            ownerId         = l.ownerId,
+                            ownerName       = tk.ownerName,
+                            ownerPhotoUrl   = tk.ownerPhotoUrl,
+                            createdAt       = l.createdAt,
+                            ratingAvg       = l.avgRating.toDouble(),
+                            ratingCount     = l.ratingCount,
+
+                            /* ---------- permissions ---------- */
+                            canEdit         = false,
+                            canRequest      = false,
+                            canRate         = tk.canRate,
+
+                            /* ---------- archive ---------- */
+                            archived        = false,
+                            canArchive      = false
+                        )
+                    }
+
+                    Result.Success(mapped)
+                }
+
+                is Result.Failure -> res
+
+                is Result.Loading -> Result.Loading
             }
         }
 }

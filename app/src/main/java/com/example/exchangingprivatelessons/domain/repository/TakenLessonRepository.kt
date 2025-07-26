@@ -8,4 +8,6 @@ interface TakenLessonRepository {
 
     /** Stream lessons that the current user is approved to take. */
     fun observeTakenLessons(): Flow<Result<List<TakenLesson>>>
+
+    suspend fun refresh()
 }

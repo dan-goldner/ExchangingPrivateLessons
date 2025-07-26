@@ -5,6 +5,7 @@ import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.data.remote.dto.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
@@ -266,6 +267,14 @@ class FirestoreDataSource @Inject constructor(
         }
 
         return lessons
+    }
+
+    suspend fun getUserPhotoUrl(uid: String): String? {
+        return db.collection("users").document(uid).get().await().getString("photoUrl")
+    }
+
+    suspend fun getUserName(uid: String): String {
+        return db.collection("users").document(uid).get().await().getString("name") ?: ""
     }
 
     fun getCurrentUserId(): String? = auth.currentUser?.uid

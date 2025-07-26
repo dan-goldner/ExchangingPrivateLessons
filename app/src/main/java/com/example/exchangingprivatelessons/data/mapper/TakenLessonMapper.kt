@@ -70,17 +70,13 @@ abstract class TakenLessonMapper {
     /* ------------------------------------------------------------------ */
 
     @Mappings(
-        Mapping(source = "lesson",
-            target = "lessonJson",
-            qualifiedByName = ["lessonDtoToJson"]),
-        Mapping(source = "takenAt",
-            target = "takenAt",
-            qualifiedByName = ["tsToEpochNullable"]),
-        Mapping(source = "lesson.status",
-        target = "status")
+        Mapping(source = "lesson", target = "lessonJson", qualifiedByName = ["lessonDtoToJson"]),
+        Mapping(source = "takenAt", target = "takenAt", qualifiedByName = ["tsToEpochNullable"]),
+        Mapping(source = "lesson.status", target = "status"),
+        Mapping(source = "ownerName", target = "ownerName"),
+        Mapping(source = "ownerPhotoUrl", target = "ownerPhotoUrl")  // ✅ This is the fix
     )
     abstract fun dtoToEntity(dto: TakenLessonDto): TakenLessonEntity
-
     @Mappings(
         Mapping(source = "lessonJson",
             target = "lesson",

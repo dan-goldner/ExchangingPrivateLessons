@@ -14,4 +14,6 @@ interface TakenLessonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(list: List<TakenLessonEntity>)
 
+    @Query("DELETE FROM taken_lessons")
+    suspend fun clearAll()
 }

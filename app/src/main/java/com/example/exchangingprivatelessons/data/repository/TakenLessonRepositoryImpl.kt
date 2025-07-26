@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,6 +41,11 @@ class TakenLessonRepositoryImpl @Inject constructor(
     override fun queryLocal()                  = dao.observeAll()
     /*override suspend fun fetchRemote()         = firestore.getTakenLessons()*/
 
+    override suspend fun refresh() {
+        val remote = fetchRemote()
+        saveRemote(remote)
+    }
+
     override suspend fun fetchRemote(): List<TakenLessonDto> {
         val currentUid = firestore.getCurrentUserId() ?: return emptyList()
 
@@ -49,22 +55,34 @@ class TakenLessonRepositoryImpl @Inject constructor(
 
         val lessonIds = approvedRequests.map { it.lessonId }
 
-        return lessonIds.mapNotNull { lessonId ->
+        val result = lessonIds.mapNotNull { lessonId ->
             val lesson = firestore.getLessonById(lessonId)
             Log.d("TakenLessonRepo", "Lesson [$lessonId] → ${lesson?.title} | status = ${lesson?.status}")
 
             if (lesson != null && lesson.status != LessonStatus.Archived) {
                 val req = approvedRequests.firstOrNull { it.lessonId == lessonId }
+                val ownerName = firestore.getUserName(lesson.ownerId)
+                val ownerPhotoUrl = firestore.getUserPhotoUrl(lesson.ownerId)
+
                 TakenLessonDto(
                     lesson = lesson,
                     takenAt = req?.requestedAt,
-                    canRate = false
+                    canRate = false,
+                    ownerName = ownerName,
+                    ownerPhotoUrl = ownerPhotoUrl
                 )
-            } else null
+            } else {
+                Log.d("TakenLessonRepo", "❌ Skipping lesson [$lessonId] because it is archived")
+                null
+            }
         }
+
+        Log.d("TakenLessonRepo", "✅ fetchRemote returning ${result.size} lessons")
+        return result
     }
 
     override suspend fun saveRemote(remote: List<TakenLessonDto>) {
+        dao.clearAll()
         val entities = remote.map(mapper::dtoToEntity)   // ← שם‑הפונקציה ייחודי
         dao.upsertAll(entities)
     }
