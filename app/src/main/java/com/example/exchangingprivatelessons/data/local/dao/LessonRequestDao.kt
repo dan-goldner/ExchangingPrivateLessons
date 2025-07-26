@@ -64,4 +64,10 @@ interface LessonRequestDao {
     suspend fun deleteMissingIncoming(uid: String, ids: List<String>)
 
 
+    @Query("DELETE FROM lesson_requests WHERE requesterId = :uid")
+    suspend fun clearSent(uid: String)
+
+    @Query("DELETE FROM lesson_requests WHERE ownerId = :uid")
+    suspend fun clearIncoming(uid: String)
+
 }

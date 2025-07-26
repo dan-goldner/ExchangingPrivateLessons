@@ -3,10 +3,12 @@ package com.example.exchangingprivatelessons.data.remote.dto
 
 import com.google.firebase.Timestamp   // ⬅️ חדש
 
+// data/remote/dto/TakenLessonDto.kt
 data class TakenLessonDto(
-    val lesson        : LessonDto,
-    val ownerName     : String   = "",
-    val ownerPhotoUrl : String?  = null,
-    val takenAt       : Timestamp? = null,  // ⬅️ היה Long
-    val canRate       : Boolean  = false
+    var lessonId      : String = "",
+    var takenAt       : Timestamp? = null,
+    var lesson        : LessonDto? = null,
+    var canRate       : Boolean    = false,
+    var ownerName     : String?    = null,
+    var ownerPhotoUrl : String?    = null
 )

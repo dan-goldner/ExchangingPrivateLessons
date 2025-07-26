@@ -8,9 +8,9 @@ package com.example.exchangingprivatelessons.domain.model
  * ‑ יכולת דירוג (business‑rule – נקבעה ע״י השרת)
  */
 data class TakenLesson(
-    val lesson:        Lesson,
-    val ownerName:     String,
-    val ownerPhotoUrl: String?,
-    val takenAt:       Long,
-    val canRate:       Boolean
+    val lesson        : Lesson,
+    val ownerName     : String,
+    val ownerPhotoUrl : String?,
+    val takenAt       : Long,     // ✅ Long
+    val canRate       : Boolean
 )

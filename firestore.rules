@@ -9,10 +9,15 @@ service cloud.firestore {
       // כתיבה רק על המסמך של עצמו
       allow write : if request.auth != null && request.auth.uid == uid;
 
-      match /takenLessons/{lessonId} {
-        allow read : if request.auth != null && request.auth.uid == uid;
-        allow write: if false;
-      }
+        match /users/{uid}/takenLessons/{lessonId} {
+          allow read : if request.auth != null &&
+                       (request.auth.uid == uid ||
+                        request.auth.uid ==
+                          get(/databases/$(db)/documents/users/$(uid)
+                                /takenLessons/$(lessonId)).data.ownerId);
+          allow write: if false;
+        }
+
     }
 
     /* -------- lessons -------- */
@@ -48,5 +53,8 @@ service cloud.firestore {
         allow write: if false;
       }
     }
+
+
+
   }
 }

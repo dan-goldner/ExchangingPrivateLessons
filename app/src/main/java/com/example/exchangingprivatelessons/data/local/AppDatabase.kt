@@ -20,7 +20,7 @@ import com.example.exchangingprivatelessons.data.local.entity.*
         TakenLessonEntity::class,
         UserEntity::class
     ],
-    version = 9,                // ⬅︎  bump
+    version = 11,                // ⬅︎  bump
     exportSchema = false
 )
 @TypeConverters(TimestampConverter::class)
@@ -119,11 +119,31 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+            CREATE TABLE taken_lessons_new (
+                lessonId TEXT PRIMARY KEY NOT NULL,
+                takenAt  INTEGER
+            )
+        """.trimIndent())
+                db.execSQL("""
+            INSERT INTO taken_lessons_new(lessonId, takenAt)
+            SELECT lessonId, takenAt
+            FROM taken_lessons
+        """.trimIndent())
+                db.execSQL("DROP TABLE taken_lessons")
+                db.execSQL("ALTER TABLE taken_lessons_new RENAME TO taken_lessons")
+            }
+        }
+
+
         /** מערך נוח לרישום בבילדר */
         val ALL_MIGRATIONS = arrayOf(
             MIGRATION_2_3,
             MIGRATION_3_4,
-            MIGRATION_5_6
+            MIGRATION_5_6,
+            MIGRATION_9_10
         )
     }
 }

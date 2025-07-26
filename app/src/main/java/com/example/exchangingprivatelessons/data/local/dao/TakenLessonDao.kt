@@ -6,9 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TakenLessonDao {
-
-
-    @Query("SELECT * FROM taken_lessons WHERE status != 'Archived' ORDER BY takenAt DESC")
+    @Query("SELECT * FROM taken_lessons ORDER BY takenAt DESC")
     fun observeAll(): Flow<List<TakenLessonEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -16,4 +14,5 @@ interface TakenLessonDao {
 
     @Query("DELETE FROM taken_lessons")
     suspend fun clearAll()
+
 }

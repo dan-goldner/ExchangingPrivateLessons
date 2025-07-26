@@ -29,11 +29,11 @@ object TimestampConverter {
     /* ---------- Firebase (Timestamp ↔ Long / Date) ---------- */
 
     /** Timestamp? → Long? */
-    @JvmStatic @Named("tsToEpochNullable")
+    @Named("tsToEpochNullable")
     fun tsToEpochNullable(ts: Timestamp?): Long? = ts?.toDate()?.time
 
     /** Long? → Timestamp? */
-    @JvmStatic @Named("epochToTsNullable")
+    @Named("epochToTsNullable")
     fun epochToTsNullable(epoch: Long?): Timestamp? =
         epoch?.let { Timestamp(Date(it)) }
 

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.tasks.await
+import com.google.firebase.Timestamp
 
 
 @Singleton
@@ -200,11 +201,11 @@ class FirestoreDataSource @Inject constructor(
 
     /* FirestoreDataSource.kt */
 
-    fun listenSentRequests(uid: String) = listenCollection<LessonRequestDto>(
-        db.collection("lessonRequests")
-            .whereEqualTo("requesterId", uid)
-            .orderBy("requestedAt", Query.Direction.DESCENDING)
-    )
+    fun listenSentRequests(uid: String) =
+        listenCollection<LessonRequestDto>(
+            db.collection("lessonRequests")
+                .whereEqualTo("requesterId", uid)        // ⬅️  ללא orderBy
+        )
 
     fun listenIncomingRequests(uid: String) = listenCollection<LessonRequestDto>(
         db.collection("lessonRequests")
@@ -341,11 +342,33 @@ class FirestoreDataSource @Inject constructor(
     }
 
 
-
-
     suspend fun updateUserFields(uid: String, map: Map<String, Any?>) {
         db.collection("users").document(uid).update(map).await()
     }
+
+
+
+    fun listenTakenLessons(uid: String) = callbackFlow {
+        val reg = db.collection("users")
+            .document(uid)
+            .collection("takenLessons")
+            .addSnapshotListener { qs, e ->
+                when {
+                    e != null -> trySend(Result.Failure(e))
+                    qs != null -> {
+                        val list = qs.documents.map { doc ->
+                            TakenLessonDto(
+                                lessonId = doc.id,
+                                takenAt  = doc["takenAt"] as? Timestamp    // ✅
+                            )
+                        }
+                        trySend(Result.Success(list))
+                    }
+                }
+            }
+        awaitClose { reg.remove() }
+    }
+
 }
 
 

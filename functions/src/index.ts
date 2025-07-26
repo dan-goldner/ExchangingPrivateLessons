@@ -220,9 +220,6 @@ export const signInOrUp = onCall<SignInOrUpInput>(async ({ data }) => {
 });
 
 
-
-
-
 /** 2️⃣ Firestore user deleted → remove Auth */
 export const onUserDocDelete = onDocumentDeleted(
   { document: "users/{uid}" },
@@ -250,15 +247,30 @@ async function adjustUserScore(uid: string, delta: 1 | -1) {
   logger.info(`ℹ️ Score ${delta > 0 ? "++" : "--"} for ${uid}`);
 }
 
+
 export const onTakenLessonCreated = onDocumentCreated(
   { document: "users/{uid}/takenLessons/{lessonId}" },
-  ({ params }) => adjustUserScore(params.uid, 1)
+  async ({ params, data }) => {
+
+    await adjustUserScore(params.uid, -1);
+
+
+    const ownerId = (data?.data() as TakenLesson | undefined)?.ownerId;
+    if (ownerId) await adjustUserScore(ownerId, +1);
+  }
 );
 
 export const onTakenLessonDeleted = onDocumentDeleted(
   { document: "users/{uid}/takenLessons/{lessonId}" },
-  ({ params }) => adjustUserScore(params.uid, -1)
+  async ({ params, data }) => {
+
+    await adjustUserScore(params.uid, +1);
+
+    const ownerId = (data?.data() as TakenLesson | undefined)?.ownerId;
+    if (ownerId) await adjustUserScore(ownerId, -1);
+  }
 );
+
 
 
 /** 4️⃣ Rating aggregation */
@@ -502,11 +514,17 @@ await db.runTransaction(async (tx) => {
     respondedAt : FieldValue.serverTimestamp(),
   });
 
-  tx.set(takenLessonsCol(req.requesterId).doc(req.lessonId), {
-    lessonId : req.lessonId,
-    ownerId  : ownerId,
-    takenAt  : FieldValue.serverTimestamp(),
-  });
+
+tx.set(
+  takenLessonsCol(req.requesterId).doc(req.lessonId),
+  {
+    lessonId : req.lessonId,          // ← חובה
+    ownerId  : ownerId,               // ← נשתמש ב‑trigger
+    takenAt  : FieldValue.serverTimestamp()
+  }
+);
+
+
 
   if (!chatSnap.exists) {
     tx.set(chatRef, {

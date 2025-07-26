@@ -48,6 +48,7 @@ class LessonRequestRepositoryImpl @Inject constructor(
         startIncomingSync()
     }
 
+
     private fun startSentSync() {
         if (sentJob != null) return
         val uid = auth.uidOrCrash()
@@ -56,8 +57,13 @@ class LessonRequestRepositoryImpl @Inject constructor(
             .mapNotNull { (it as? Result.Success)?.data }
             .onEach { remote ->
                 val entities = remote.map(mapper::toEntity)
-                dao.upsertAll(entities)
-                dao.deleteMissingSent(uid, entities.map { it.id })
+
+                if (entities.isEmpty()) {
+                    dao.clearSent(uid)                 // ⬅️   היו × ונעלמו כולם
+                } else {
+                    dao.upsertAll(entities)            // ⬅️   עדכון / הוספה
+                    dao.deleteMissingSent(uid, entities.map { it.id })
+                }
             }
             .flowOn(io)
             .launchIn(appScope)
@@ -71,8 +77,13 @@ class LessonRequestRepositoryImpl @Inject constructor(
             .mapNotNull { (it as? Result.Success)?.data }
             .onEach { remote ->
                 val entities = remote.map(mapper::toEntity)
-                dao.upsertAll(entities)
-                dao.deleteMissingIncoming(uid, entities.map { it.id })
+
+                if (entities.isEmpty()) {
+                    dao.clearIncoming(uid)             // ⬅️
+                } else {
+                    dao.upsertAll(entities)
+                    dao.deleteMissingIncoming(uid, entities.map { it.id })
+                }
             }
             .flowOn(io)
             .launchIn(appScope)
@@ -101,12 +112,26 @@ class LessonRequestRepositoryImpl @Inject constructor(
 
     /* ───────── Force‑refresh (רק במקרה הצורך) ───────── */
 
-    override suspend fun forceRefreshLessonRequests(): Result<Unit> = withContext(io) {
-        runCatching {
-            val remote = firestore.getLessonRequests()
-            dao.upsertAll(remote.map(mapper::toEntity))
-        }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
-    }
+    override suspend fun forceRefreshLessonRequests(): Result<Unit> =
+        withContext(io) {
+            runCatching {
+                val remote = firestore.getLessonRequests()
+                val entities = remote.map(mapper::toEntity)
+                if (entities.isEmpty()) {
+                    // שני הכיוונים – כי getLessonRequests() מחזיר Owner + Requester
+                    val uid = auth.uidOrCrash()
+                    dao.clearSent(uid)
+                    dao.clearIncoming(uid)
+                } else {
+                    dao.upsertAll(entities)
+                    val ids = entities.map { it.id }
+                    val uid = auth.uidOrCrash()
+                    dao.deleteMissingSent(uid, ids)
+                    dao.deleteMissingIncoming(uid, ids)
+                }
+            }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
+        }
+
 
     /* ───────── Mutations – כתיבה לענן + עדכון Room ───────── */
 
@@ -149,4 +174,6 @@ class LessonRequestRepositoryImpl @Inject constructor(
     override fun currentUid() = auth.currentUser?.uid
     private fun FirebaseAuth.uidOrCrash() =
         currentUser?.uid ?: throw IllegalStateException("Not logged‑in")
+
+
 }
