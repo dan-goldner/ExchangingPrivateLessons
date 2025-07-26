@@ -212,6 +212,16 @@ class FirestoreDataSource @Inject constructor(
             .orderBy("requestedAt", Query.Direction.DESCENDING)
     )
 
+    suspend fun getApprovedLessonRequestsForUser(userId: String): List<LessonRequestDto> {
+        return db.collection("lessonRequests")
+            .whereEqualTo("requesterId", userId)
+            .whereEqualTo("status", "Approved")
+            .get()
+            .await()
+            .documents
+            .mapNotNull { it.toObject(LessonRequestDto::class.java)?.withUid(it.id) }
+    }
+
 
 
 
@@ -319,6 +329,15 @@ class FirestoreDataSource @Inject constructor(
         return listenCollection(
             db.collection("chats").whereArrayContains("participantIds", uid)
         )
+    }
+
+    suspend fun fetchLessonRequestsForUser(userId: String): List<LessonRequestDto> {
+        return db.collection("lessonRequests")
+            .whereEqualTo("requesterId", userId)
+            .whereEqualTo("status", "Approved")
+            .get().await()
+            .documents
+            .mapNotNull { it.toObject(LessonRequestDto::class.java)?.withUid(it.id) }
     }
 
 

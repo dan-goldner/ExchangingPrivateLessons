@@ -4,6 +4,7 @@ import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.domain.model.*
 import com.example.exchangingprivatelessons.domain.repository.LessonRepository
 import com.example.exchangingprivatelessons.domain.repository.UserRepository
+import com.example.exchangingprivatelessons.domain.usecase.request.RequestLesson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -27,24 +28,40 @@ class ObserveLessons @Inject constructor(
             .map { res ->
                 when (res) {
                     is Result.Success -> {
+                        val allLessons = res.data
 
-                        /* ── 1. סינון לפי מצב ─────────────────────────── */
-                        val lessons = if (onlyMine) {
-                            /*  אני בעל‑השיעור →  כל השיעורים, גם Archived  */
-                            res.data
+                        // ── 1. סינון לפי מצב ───────────────────────────
+                        val filteredLessons = if (onlyMine) {
+                            // אני הבעלים – כולל גם שיעורים Archived
+                            allLessons
                         } else {
-                            /*  שיעורים של אחרים →  רק Active  */
-                            res.data.filter { it.status == LessonStatus.Active }
+                            // אחרים – רק שיעורים פעילים
+                            allLessons.filter { it.status == LessonStatus.Active }
                         }
 
-                        /* ── 2. העשרת נתוני הבעלים ───────────────────── */
-                        val ownerIds = lessons.map { it.ownerId }.distinct()
+                        // ── 2. סינון שיעורים שכבר נלקחו ───────────────
+                        val userId = userRepo.currentUid()
+                        val takenLessonIds = if (!onlyMine && userId != null) {
+                            val result = lessonRepo.getApprovedLessonRequestsForUser(userId)
+                            result.map { it.lessonId }
+                        } else emptyList()
+
+                        val availableLessons = if (onlyMine) {
+                            filteredLessons
+                        } else {
+                            filteredLessons.filter { it.id !in takenLessonIds }
+                        }
+
+                        // ── 3. העשרת נתוני הבעלים ─────────────────────
+                        val ownerIds = availableLessons.map { it.ownerId }.distinct()
                         val users = (userRepo.getUsers(ownerIds) as? Result.Success)
                             ?.data.orEmpty()
                             .associateBy { it.uid }
 
                         Result.Success(
-                            lessons.map { l -> mapToView(l, onlyMine, users[l.ownerId]) }
+                            availableLessons.map { lesson ->
+                                mapToView(lesson, onlyMine, users[lesson.ownerId])
+                            }
                         )
                     }
 

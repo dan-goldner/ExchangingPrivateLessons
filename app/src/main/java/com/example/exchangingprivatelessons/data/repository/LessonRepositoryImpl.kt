@@ -7,11 +7,13 @@ import com.example.exchangingprivatelessons.data.local.dao.LessonDao
 import com.example.exchangingprivatelessons.data.local.dao.LessonRequestDao
 import com.example.exchangingprivatelessons.data.local.entity.LessonEntity
 import com.example.exchangingprivatelessons.data.mapper.LessonMapper
+import com.example.exchangingprivatelessons.data.mapper.LessonRequestMapper
 import com.example.exchangingprivatelessons.data.remote.cloud.FunctionsDataSource
 import com.example.exchangingprivatelessons.data.remote.dto.LessonDto
 import com.example.exchangingprivatelessons.data.remote.firestore.FirestoreDataSource
 import com.example.exchangingprivatelessons.data.repository.base.NetworkCacheRepository
 import com.example.exchangingprivatelessons.domain.model.Lesson
+import com.example.exchangingprivatelessons.domain.model.LessonRequest
 import com.example.exchangingprivatelessons.domain.model.LessonStatus
 import com.example.exchangingprivatelessons.domain.repository.LessonRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +30,7 @@ class LessonRepositoryImpl @Inject constructor(
     private val dao: LessonDao,
     private val lessonRequestDao: LessonRequestDao, // added this clearly
     private val mapper: LessonMapper,
+    private val lessonRequestMapper: LessonRequestMapper,
     private val auth: FirebaseAuth,
     @IoDispatcher
     private val io: CoroutineDispatcher
@@ -60,6 +63,8 @@ class LessonRepositoryImpl @Inject constructor(
             onFailure = { Result.Failure(it) }
         )
     }
+
+
 
     override fun map(local: LessonEntity) = mapper.toDomain(local)
 
@@ -218,6 +223,17 @@ class LessonRepositoryImpl @Inject constructor(
         Log.e("Repo", "Failed to create lesson: ${it.localizedMessage}")
         Result.Failure(it)
     }
+
+    override suspend fun getApprovedLessonRequestsForUser(userId: String): List<LessonRequest> {
+        return firestore.getApprovedLessonRequestsForUser(userId)
+            .map(lessonRequestMapper::toDomain)
+    }
+
+   /*override suspend fun refreshApprovedLessonRequests(userId: String) {
+        val remoteRequests = firestore.fetchLessonRequestsForUser(userId)
+        val entities = remoteRequests.map(lessonRequestMapper::toEntity)
+        lessonRequestDao.upsertAll(entities)
+    }*/
 
     override suspend fun refreshMineLessons(userId: String) {
         val remote = firestore.getLessonsOfferedByUser(userId)

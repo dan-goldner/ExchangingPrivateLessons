@@ -3,6 +3,8 @@ package com.example.exchangingprivatelessons.domain.repository
 import com.example.exchangingprivatelessons.domain.model.Lesson
 import kotlinx.coroutines.flow.Flow
 import com.example.exchangingprivatelessons.common.util.Result
+import com.example.exchangingprivatelessons.domain.model.LessonRequest
+import com.example.exchangingprivatelessons.domain.usecase.request.RequestLesson
 
 interface LessonRepository {
 
@@ -12,6 +14,8 @@ interface LessonRepository {
     fun observeLesson(lessonId: String): Flow<Result<Lesson>>
 
     fun observeTakenLessons(userId: String): Flow<Result<List<Lesson>>>
+
+    suspend fun getApprovedLessonRequestsForUser(userId: String): List<LessonRequest>
 
     suspend fun refreshMineLessons(userId: String)
 
