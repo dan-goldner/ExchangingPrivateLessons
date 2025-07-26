@@ -156,7 +156,8 @@ class EditProfileSheet : BottomSheetDialogFragment() {
     }
 
     private fun launchCamera() {
-        val uri = vm.createTempCameraUri(requireContext())
-        cameraLauncher.launch(uri)
+        val uri = vm.createPersistentImageUri(requireContext())
+        cameraLauncher.launch(uri)          // אותו launcher בדיוק
     }
+
 }

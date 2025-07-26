@@ -120,7 +120,14 @@ class LessonRequestRepositoryImpl @Inject constructor(
 
     override suspend fun approveRequest(id: String)  = mutate(id) { functions.approveLessonRequest(id) }
     override suspend fun declineRequest(id: String)  = mutate(id) { functions.declineLessonRequest(id) }
-    override suspend fun cancelRequest (id: String)  = mutate(id) { functions.cancelLessonRequest(id) }
+
+    override suspend fun cancelRequest(id: String) = withContext(io) {
+        runCatching {
+            functions.cancelLessonRequest(id)   // מוחק בענן
+            dao.delete(id)                      // מוחק מה‑Room, לא מנסה fetch
+        }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
+    }
+
 
     private suspend fun mutate(id: String, call: suspend () -> Unit): Result<Unit> = withContext(io) {
         runCatching {

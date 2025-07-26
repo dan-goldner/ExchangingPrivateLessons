@@ -2,6 +2,7 @@ package com.example.exchangingprivatelessons.ui.profile
 
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
@@ -76,7 +77,9 @@ class ProfileViewModel @Inject constructor(
 
     /* ---------- Camera helper ---------- */
     var pendingCameraUri: Uri? = null; private set
+    /*
     fun createTempCameraUri(ctx: Context): Uri =
+
         File.createTempFile("avatar_", ".jpg", ctx.cacheDir)
             .apply { deleteOnExit() }
             .let {
@@ -84,6 +87,25 @@ class ProfileViewModel @Inject constructor(
                     ctx, "${ctx.packageName}.fileprovider", it
                 ).also { pendingCameraUri = it }
             }
+    */
+
+    fun createPersistentImageUri(ctx: Context): Uri {
+        val picturesDir = File(
+            ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "avatars"
+        ).apply { if (!exists()) mkdirs() }
+
+        val fileName = "avatar_${System.currentTimeMillis()}.jpg"
+        val file     = File(picturesDir, fileName)
+
+        return FileProvider.getUriForFile(
+            ctx,
+            "${ctx.packageName}.fileprovider",
+            file
+        ).also { pendingCameraUri = it }
+    }
+
+
 
     /* ---------- Sign‑out event ---------- */
     private val _signOut = MutableLiveData<SingleEvent<Unit>>()
