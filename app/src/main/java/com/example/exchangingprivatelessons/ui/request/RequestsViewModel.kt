@@ -7,6 +7,7 @@ import com.example.exchangingprivatelessons.domain.model.LessonRequest
 import com.example.exchangingprivatelessons.domain.model.RequestStatus
 import com.example.exchangingprivatelessons.domain.usecase.request.*
 import androidx.lifecycle.viewModelScope
+import com.example.exchangingprivatelessons.domain.model.ViewRequestItem
 import kotlinx.coroutines.launch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,15 +23,22 @@ class RequestsViewModel @Inject constructor(
     enum class Mode { SENT , RECEIVED }
 
     private val _mode   = MutableLiveData(Mode.RECEIVED)
-    private val _status = MutableLiveData(RequestStatus.Pending)   // רלוונטי רק ל‑SENT
+
+
+
     private val _snack  = MutableLiveData<String>()
 
-    private val trigger = MediatorLiveData<Pair<Mode,RequestStatus>>().apply {
-        fun Pair<Mode,RequestStatus>.post() { value = this }
-        postValue(Mode.RECEIVED to RequestStatus.Pending)
-        addSource(_mode)   { postValue(it to (_status.value ?: RequestStatus.Pending)) }
-        addSource(_status) { postValue((_mode.value ?: Mode.RECEIVED) to it) }
+    private val _status = MutableLiveData<RequestStatus?>(null)
+
+    private val trigger = MediatorLiveData<Pair<Mode, RequestStatus?>>().apply {
+        fun post(m: Mode, s: RequestStatus?) { value = m to s }
+        post(Mode.RECEIVED, null)
+        addSource(_mode)   { post(it, _status.value) }
+        addSource(_status) { post(_mode.value ?: Mode.RECEIVED, it) }
     }
+
+
+
 
     /** ‎UI‑items  עם כל הפרטים */
     val items: LiveData<List<ViewRequestItem>> =

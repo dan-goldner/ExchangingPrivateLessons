@@ -45,7 +45,10 @@
                     style="@style/TextAppearance.Material3.BodySmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorSecondary"/>
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:maxLines="3"
+                    android:ellipsize="end"/>
+
             </LinearLayout>
 
             <com.google.android.material.chip.Chip

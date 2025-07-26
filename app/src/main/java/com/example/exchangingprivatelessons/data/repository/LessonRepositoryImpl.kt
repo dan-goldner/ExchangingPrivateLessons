@@ -121,13 +121,23 @@ class LessonRepositoryImpl @Inject constructor(
         lessonId: String,
         title: String?,
         description: String?,
-    ): Result<Unit> = runCatching {
-        functions.updateLesson(lessonId, title, description)
-        Unit  // explicitly return Unit instead of trying to cast result
-    }.fold(
-        onSuccess = { Result.Success(it) },
-        onFailure = { Result.Failure(it) }
-    )
+    ): Result<Unit> = withContext(io) {
+        runCatching {
+            // 1. קריאה לפונקציה בענן
+            functions.updateLesson(lessonId, title, description)
+
+            // 2. קבלת הדוקומנט העדכני מהשרת
+            val dto = firestore.getLessonById(lessonId)
+                ?: throw IllegalStateException("Updated lesson not found in Firestore")
+
+            // 3. שמירה מקומית
+            dao.upsert(mapper.toEntity(dto))
+        }.fold(
+            onSuccess = { Result.Success(Unit) },
+            onFailure = { Result.Failure(it) }
+        )
+    }
+
 
     override suspend fun deleteLesson(lessonId: String): Result<Unit> {
         return runCatching {

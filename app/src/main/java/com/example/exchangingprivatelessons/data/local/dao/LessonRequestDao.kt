@@ -41,12 +41,16 @@ interface LessonRequestDao {
     fun observeIncoming(ownerUid: String): Flow<List<LessonRequestEntity>>
 
     @Query("""
-        SELECT * FROM lesson_requests
-        WHERE requesterId = :uid          -- בקשות שאני שלחתי
-          AND status     = :status
-        ORDER BY requestedAt DESC
-    """)
-    fun observeByStatus(uid: String, status: String): Flow<List<LessonRequestEntity>>
+    SELECT * FROM lesson_requests
+    WHERE requesterId = :uid
+      AND (:status IS NULL OR status = :status)
+    ORDER BY requestedAt DESC
+""")
+    fun observeByStatus(
+        uid: String,
+        status: String?            // ← String?  (nullable)
+    ): Flow<List<LessonRequestEntity>>
+
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

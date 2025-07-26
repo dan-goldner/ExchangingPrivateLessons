@@ -91,10 +91,13 @@ class LessonRequestRepositoryImpl @Inject constructor(
             .map { Result.Success(it.map(mapper::toDomain)) }
 
     override fun observeRequestsByStatus(
-        uid: String, status: String
+        uid: String,
+        status: String?
     ): Flow<Result<List<LessonRequest>>> =
         dao.observeByStatus(uid, status)
             .map { Result.Success(it.map(mapper::toDomain)) }
+
+
 
     /* ───────── Force‑refresh (רק במקרה הצורך) ───────── */
 

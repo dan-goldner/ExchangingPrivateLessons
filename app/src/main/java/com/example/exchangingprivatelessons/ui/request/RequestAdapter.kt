@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.common.util.asClockOrDate
+import com.example.exchangingprivatelessons.common.util.asFullDateTime
 import com.example.exchangingprivatelessons.databinding.ItemRequestCardBinding
+import com.example.exchangingprivatelessons.domain.model.RequestStatus
+import com.example.exchangingprivatelessons.domain.model.ViewRequestItem
 
 class RequestAdapter(
     private val approve: (String) -> Unit,
@@ -30,31 +33,59 @@ class RequestAdapter(
     override fun onBindViewHolder(h: VH, pos: Int) = h.bind(getItem(pos))
 
     /* ---------- View‑Holder ---------- */
+    /* ---------- View‑Holder ---------- */
     inner class VH(private val b: ItemRequestCardBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(item: ViewRequestItem) = with(b) {
 
-            titleTv.text = item.lessonTitle
-
-            /* -------- תת‑כותרת -------- */
-            subtitleTv.text = if (item.canRespond) {
-                "Requested by: ${item.requesterName} · ${item.requestedAt.asClockOrDate()}"
-            } else {
-                "${item.ownerName} · ${item.requestedAt.asClockOrDate()}"
-            }
-
-            /* -------- אוואטר -------- */
-            val photoUrl = if (item.canRespond) item.requesterPhotoUrl else item.ownerPhotoUrl
+            /* --- Avatar (ללא שינוי) --- */
+            val photoUrl = if (item.viewMode == RequestsViewModel.Mode.RECEIVED)
+                item.requesterPhotoUrl
+            else item.ownerPhotoUrl
             avatarIv.load(photoUrl) {
                 placeholder(R.drawable.ic_profile_placeholder)
                 error      (R.drawable.ic_profile_placeholder)
             }
 
-            /* -------- סטטוס -------- */
-            statusChip.text       = item.status.name
-            statusChip.isClickable = false       // לא להיראות ככפתור
+            /* --- Title (שם השיעור) --- */
+            titleTv.text = item.lessonTitle
+
+            /* -------- Subtitle (2 שורות גמישות) -------- */
+            val rqTime = item.requestedAt.asFullDateTime()
+            val rsTime = item.respondedAt
+                ?.takeIf { it > 0 }        // ← מסנן 0
+                ?.asFullDateTime()
+
+
+            val line1 = if (item.viewMode == RequestsViewModel.Mode.RECEIVED)
+                "Requested by ${item.requesterName} at $rqTime"
+            else
+                "Requested to ${item.ownerName} at $rqTime"
+
+            val line2 = when {
+                rsTime == null -> null                                         // עדיין בהמתנה
+                item.viewMode == RequestsViewModel.Mode.RECEIVED ->
+                    if (item.status == RequestStatus.Approved)
+                        "You approved at $rsTime"
+                    else
+                        "You declined at $rsTime"
+                else /* SENT */ ->
+                    if (item.status == RequestStatus.Approved)
+                        "He approved at $rsTime"
+                    else
+                        "He declined at $rsTime"
+            }
+
+            subtitleTv.text = buildString {
+                append(line1)
+                line2?.let { append('\n'); append(it) }
+            }
+
+            /* --- Status chip (ללא שינוי) --- */
+            statusChip.text        = item.status.name
+            statusChip.isClickable = false
             statusChip.isCheckable = false
 
-            /* -------- כפתורים -------- */
+            /* --- Action buttons (ללא שינוי) --- */
             approveBtn.isVisible = item.canRespond
             declineBtn.isVisible = item.canRespond
             cancelBtn .isVisible = item.canCancel
@@ -64,9 +95,7 @@ class RequestAdapter(
                 approveBtn.setOnClickListener { approve(item.id) }
                 declineBtn.setOnClickListener { decline(item.id) }
             }
-            if (item.canCancel) {
-                cancelBtn.setOnClickListener { cancel(item.id) }
-            }
+            if (item.canCancel)   cancelBtn.setOnClickListener { cancel(item.id) }
         }
     }
 }

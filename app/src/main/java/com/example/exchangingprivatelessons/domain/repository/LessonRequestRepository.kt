@@ -13,7 +13,15 @@ interface LessonRequestRepository {
     suspend fun cancelRequest(requestId: String): Result<Unit>
 
     suspend fun getMyRequest(lessonId: String, myUid: String): Result<LessonRequest?>
-    fun observeIncomingRequests(): Flow<Result<List<LessonRequest>>>          // Owner
-    fun observeRequestsByStatus(uid: String, status: String): Flow<Result<List<LessonRequest>>>
+    fun observeIncomingRequests(): Flow<Result<List<LessonRequest>>>
+
+
+    fun observeRequestsByStatus(
+        uid: String,
+        status: String?            // ←  String?
+    ): Flow<Result<List<LessonRequest>>>
+
+
+
     suspend fun forceRefreshLessonRequests(): Result<Unit>
 }

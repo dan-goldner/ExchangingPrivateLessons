@@ -85,6 +85,8 @@ class AddEditLessonViewModel @Inject constructor(
         }
     }
 
+    fun clearSavedLessonId() = updateUi { copy(savedLessonId = null) }
+
 
 
     /* ---------- private ---------- */

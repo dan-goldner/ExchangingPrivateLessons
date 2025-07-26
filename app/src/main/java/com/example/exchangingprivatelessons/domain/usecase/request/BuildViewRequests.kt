@@ -1,16 +1,10 @@
 package com.example.exchangingprivatelessons.domain.usecase.request
 
-import com.example.exchangingprivatelessons.domain.model.LessonRequest
-import com.example.exchangingprivatelessons.domain.model.RequestStatus
-import com.example.exchangingprivatelessons.domain.repository.LessonRepository
-import com.example.exchangingprivatelessons.domain.repository.LessonRequestRepository
-import com.example.exchangingprivatelessons.domain.repository.UserRepository
-import com.example.exchangingprivatelessons.ui.request.RequestsViewModel
-import com.example.exchangingprivatelessons.ui.request.ViewRequestItem
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
 import com.example.exchangingprivatelessons.common.util.Result
-import kotlinx.coroutines.flow.flowOf
+import com.example.exchangingprivatelessons.domain.model.*
+import com.example.exchangingprivatelessons.domain.repository.*
+import com.example.exchangingprivatelessons.ui.request.RequestsViewModel
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,33 +15,37 @@ class BuildViewRequests @Inject constructor(
     private val userRepo  : UserRepository
 ) {
 
-    /** stream של ViewRequestItem עפ״י mode+status */
+    /** זרם ‎ViewRequestItem לפי mode + status (‑status רלוונטי רק SENT) */
     operator fun invoke(
-        mode: RequestsViewModel.Mode,
+        mode  : RequestsViewModel.Mode,
         status: RequestStatus?
-    ): Flow<Result<List<ViewRequestItem>>> = when (mode) {
-        RequestsViewModel.Mode.RECEIVED ->
-            reqRepo.observeIncomingRequests().enrich { it }      // אין סינון סטטוס
-        RequestsViewModel.Mode.SENT ->
-            reqRepo.observeRequestsByStatus(
-                reqRepo.currentUid() ?: "", status!!.name
-            ).enrich { it.filter { r -> r.status == status } }
-    }
+    ): Flow<Result<List<ViewRequestItem>>> =
+        when (mode) {
+            RequestsViewModel.Mode.RECEIVED ->
+                reqRepo.observeIncomingRequests()
+                    .enrich(mode) { it }            // בלי סינון נוסף
 
+            RequestsViewModel.Mode.SENT     ->
+                reqRepo.observeRequestsByStatus(
+                    reqRepo.currentUid() ?: "",
+                    status?.name                    // null ⇒ כל הסטטוסים
+                ).enrich(mode) { it }
+        }
 
+    /* ---------- helper ---------- */
     private fun Flow<Result<List<LessonRequest>>>.enrich(
-        filter: (List<LessonRequest>) -> List<LessonRequest>
+        viewMode: RequestsViewModel.Mode,
+        filter  : (List<LessonRequest>) -> List<LessonRequest>
     ): Flow<Result<List<ViewRequestItem>>> =
         flatMapLatest { res ->
-            if (res !is Result.Success) return@flatMapLatest flowOf(res as Result<List<ViewRequestItem>>)
+            if (res !is Result.Success)
+                return@flatMapLatest flowOf(res as Result<List<ViewRequestItem>>)
 
             val list = filter(res.data).distinctBy { it.id }
 
-            /* מקבץ שאילתות – ללא בלוקים N+1 */
+            /* --- שליפת נתונים מרוכזת --- */
             val lessonIds = list.map { it.lessonId }.distinct()
-            val userIds = list                     // ← אוספים *גם* את בעלי השיעור וגם את המבקשים
-                .flatMap { listOf(it.ownerId, it.requesterId) }
-                .distinct()
+            val userIds   = list.flatMap { listOf(it.ownerId, it.requesterId) }.distinct()
 
             val lessons = lessonIds.associateWith { id ->
                 (lessonRepo.getLesson(id) as? Result.Success)?.data
@@ -56,26 +54,36 @@ class BuildViewRequests @Inject constructor(
                 (userRepo.getUser(uid) as? Result.Success)?.data
             }
 
-
             val myUid = userRepo.currentUid() ?: ""
 
             val items = list.map { req ->
                 val owner     = users[req.ownerId]
                 val requester = users[req.requesterId]
 
+                val canRespond = viewMode == RequestsViewModel.Mode.RECEIVED &&
+                        req.ownerId  == myUid &&
+                        req.status   == RequestStatus.Pending
+
+                val canCancel  = viewMode == RequestsViewModel.Mode.SENT &&
+                        req.requesterId == myUid &&
+                        req.status      == RequestStatus.Pending
+
                 ViewRequestItem(
-                    id               = req.id,
-                    lessonTitle      = lessons[req.lessonId]?.title ?: "—",
-                    ownerName      = owner?.displayName     ?: "—",
-                    ownerPhotoUrl  = owner?.photoUrl,
-                    requesterName    = requester?.displayName ?: "—",
-                    requesterPhotoUrl= requester?.photoUrl,
-                    requestedAt      = req.requestedAt,
-                    status           = req.status,
-                    canRespond = req.ownerId     == myUid && req.status == RequestStatus.Pending,
-                    canCancel  = req.requesterId == myUid && req.status == RequestStatus.Pending
+                    id                = req.id,
+                    lessonTitle       = lessons[req.lessonId]?.title ?: "—",
+                    ownerName         = owner?.displayName     ?: "—",
+                    ownerPhotoUrl     = owner?.photoUrl,
+                    requesterName     = requester?.displayName ?: "—",
+                    requesterPhotoUrl = requester?.photoUrl,
+                    requestedAt       = req.requestedAt,
+                    respondedAt       = req.respondedAt,
+                    status            = req.status,
+                    canRespond        = canRespond,
+                    canCancel         = canCancel,
+                    viewMode          = viewMode
                 )
             }
+
             flowOf(Result.Success(items))
         }
 }

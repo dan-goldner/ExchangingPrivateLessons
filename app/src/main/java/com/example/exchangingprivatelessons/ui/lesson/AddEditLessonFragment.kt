@@ -72,24 +72,6 @@ class AddEditLessonFragment : Fragment() {
         errorTv.isVisible       = state.errorMsg != null
         errorTv.text            = state.errorMsg
 
-        /* בשלב טעינת שיעור קיים */
-
-
-        /*state.existingLesson?.let { lesson ->
-            if (args.lessonId != null) {
-                titleEt.setText(lesson.title)
-                descEt.setText(lesson.description)
-            }
-
-            metaTv.apply {
-                text = getString(
-                    R.string.lesson_meta,
-                    lesson.createdAt.pretty(),
-                    lesson.ratingCount
-                )
-                isVisible = true
-            }
-        }*/
 
         if (!args.lessonId.isNullOrEmpty() && state.existingLesson != null) {
             val lesson = state.existingLesson
@@ -105,26 +87,24 @@ class AddEditLessonFragment : Fragment() {
             }
         }
 
-        /* הצלחנו לשמור? נחזיר תשובה */
-        /*state.savedLessonId?.let {
-            setFragmentResult(RESULT_KEY, Bundle().apply { putString(RESULT_ID, it) })
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }*/
+        state.savedLessonId?.let { id ->
+            // Snackbar
+            Snackbar.make(root,
+                if (state.justDeleted) R.string.lesson_deleted_successfully
+                else                    R.string.lesson_saved_successfully,
+                Snackbar.LENGTH_SHORT
+            ).show()
 
-        state.savedLessonId?.let {
-            if (state.justDeleted) {
-                Snackbar.make(b.root, R.string.lesson_deleted_successfully, Snackbar.LENGTH_SHORT).show()
-            } else {
-                Snackbar.make(b.root, R.string.lesson_saved_successfully, Snackbar.LENGTH_SHORT).show()
-            }
+            // 🔄 אפס את הדגל – שלא ניכנס לפה שוב ברינדור הבא
+            vm.clearSavedLessonId()
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                setFragmentResult(RESULT_KEY, Bundle().apply { putString(RESULT_ID, it) })
+            // 🧭 ניווט מיידי
+            findNavController().previousBackStackEntry
+                ?.savedStateHandle?.set(RESULT_ID, id)
 
-                // 🧭 This will go back to the fragment with the given destination ID (e.g., LessonListFragment)
-                findNavController().popBackStack(R.id.lessonListFragment,false)
-            }, 1000)
+            findNavController().popBackStack(R.id.lessonListFragment, false)
         }
+
     }
 
     override fun onDestroyView() { _b = null; super.onDestroyView() }

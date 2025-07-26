@@ -63,3 +63,10 @@ fun Long.toRelativeTime(ctx: Context): String =
         DateUtils.FORMAT_ABBREV_RELATIVE
     ).toString()
 
+
+private val fullDf by lazy {                         // ‑24 Jul 2025 · 17:30
+    SimpleDateFormat("d MMM yyyy · HH:mm", Locale.getDefault())
+}
+
+fun Long.asFullDateTime(): String = fullDf.format(Date(this))
+
