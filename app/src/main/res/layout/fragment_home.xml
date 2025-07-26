@@ -82,47 +82,47 @@
                     android:icon="@drawable/ic_book"
                     app:iconPadding="8dp"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGave"
-                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_m"
-                    android:text="@string/tab_gave"
-                    android:icon="@drawable/ic_person"
-                    app:iconPadding="8dp"/>
+                <!--    <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGave"
+                style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_m"
+                android:text="@string/tab_gave"
+                android:icon="@drawable/ic_person"
+                app:iconPadding="8dp"/>
+-->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMyRequests"
+                style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_m"
+                android:text="@string/tab_requests_i_sent"
+                android:icon="@drawable/ic_swap_horizontal"
+                app:iconPadding="8dp"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMyRequests"
-                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_m"
-                    android:text="@string/tab_requests_i_sent"
-                    android:icon="@drawable/ic_swap_horizontal"
-                    app:iconPadding="8dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRequestsToMe"
-                    style="@style/Widget.SkillSwap.Button.TonalSecondary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_m"
-                    android:text="@string/tab_requests_i_received"
-                    android:icon="@drawable/ic_swap_horizontal"
-                    app:iconPadding="8dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRequestsToMe"
+                style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_m"
+                android:text="@string/tab_requests_i_received"
+                android:icon="@drawable/ic_swap_horizontal"
+                app:iconPadding="8dp"/>
 
 
 
-        <!--        <com.google.android.material.button.MaterialButton
-                     android:id="@+id/btnChats"
-                     style="@style/Widget.SkillSwap.Button.TonalSecondary"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="@dimen/space_m"
-                     android:text="@string/nav_chats"
-                     android:icon="@drawable/ic_chat"
-                     app:iconPadding="8dp"/>    -->
+    <!--        <com.google.android.material.button.MaterialButton
+                 android:id="@+id/btnChats"
+                 style="@style/Widget.SkillSwap.Button.TonalSecondary"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="@dimen/space_m"
+                 android:text="@string/nav_chats"
+                 android:icon="@drawable/ic_chat"
+                 app:iconPadding="8dp"/>    -->
 
                  <com.google.android.material.button.MaterialButton
                      android:id="@+id/btnProfile"
