@@ -2,7 +2,7 @@ package com.example.exchangingprivatelessons.common.di
 
 import javax.inject.Qualifier
 
-/** Qualifier ל‑CoroutineScope גלובלי החי כל זמן חיי‑האפליקציה */
+/** Qualifier for a global CoroutineScope that lives for the duration of the application */
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ApplicationScope
