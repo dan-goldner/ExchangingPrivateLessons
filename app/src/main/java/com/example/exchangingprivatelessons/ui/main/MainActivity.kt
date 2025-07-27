@@ -68,14 +68,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         /* -------- Quick Firestore sanity check -------- */
-        Firebase.firestore
-            .collection("users")
-            .document(auth.currentUser!!.uid)
-            .collection("takenLessons")
-            .limit(1)
-            .get()
-            .addOnSuccessListener { Log.d("FS", "read OK") }
-            .addOnFailureListener { e -> Log.e("FS", "read failed", e) }
+        auth.currentUser?.let { user ->
+            Firebase.firestore
+                .collection("users")
+                .document(user.uid)
+                .collection("takenLessons")
+                .limit(1)
+                .get()
+                .addOnSuccessListener { Log.d("FS", "read OK") }
+                .addOnFailureListener { e -> Log.e("FS", "read failed", e) }
+        }
+
 
         /* -------- Toolbar -------- */
         setSupportActionBar(binding.toolbar)
