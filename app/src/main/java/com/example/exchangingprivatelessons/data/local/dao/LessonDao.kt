@@ -69,4 +69,9 @@ interface LessonDao {
     @Query("SELECT * FROM lessons WHERE id IN (:ids)")
     fun observeLessonsByIds(ids: List<String>): Flow<List<LessonEntity>>
 
+
+    @Query("DELETE FROM lessons WHERE id NOT IN (:ids)")
+    suspend fun deleteAllExcept(ids: List<String>)
+
+
 }

@@ -42,11 +42,13 @@ class LessonRepositoryImpl @Inject constructor(
 
     // LessonRepositoryImpl.saveRemote(...)
     override suspend fun saveRemote(remote: List<LessonDto>) {
-        remote.forEach {
-            Log.d("DBG/SaveRemote", "→ upsert ${it.id} owner=${it.ownerId} status=${it.status}")
-        }
-        dao.upsertAll(remote.map(mapper::toEntity))
+        val entities = remote.map(mapper::toEntity)
+        val ids      = entities.map { it.id }
+
+        dao.upsertAll(entities)
+        dao.deleteAllExcept(ids)
     }
+
 
 
     override suspend fun getLesson(lessonId: String): Result<Lesson> = withContext(io) {
