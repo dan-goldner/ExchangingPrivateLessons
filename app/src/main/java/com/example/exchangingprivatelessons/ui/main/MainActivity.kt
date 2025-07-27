@@ -19,6 +19,7 @@ import com.example.exchangingprivatelessons.ui.lesson.AddEditLessonFragmentArgs
 import com.example.exchangingprivatelessons.ui.lesson.LessonListFragmentArgs
 import com.example.exchangingprivatelessons.ui.request.RequestsFragmentArgs
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.ktx.firestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -129,6 +130,18 @@ class MainActivity : AppCompatActivity() {
             }
             binding.toolbar.title = title
         }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+        auth.currentUser?.reload()
+            ?.addOnFailureListener { e ->
+                if (e is FirebaseAuthInvalidUserException) {
+                    auth.signOut()
+                }
+            }
     }
 
     /* -------- Up‑button -------- */
