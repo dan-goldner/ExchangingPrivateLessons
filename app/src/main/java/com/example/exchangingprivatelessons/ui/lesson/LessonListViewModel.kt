@@ -87,13 +87,15 @@ class LessonListViewModel @Inject constructor(
 
         _refreshing.value = false
     }
+
     fun onArchiveToggle(id: String, archived: Boolean) = viewModelScope.launch {
-            _snackbar.value = if (archived) "הועבר לארכיון" else "הוחזר מהרשימה"
-            when (archiveLesson(id, archived)) {
-                    is Result.Failure -> _snackbar.value = "הפעולה נכשלה – נסה שוב"
-                    else              -> {}   // ה‑UI יתעדכן אוטומטית מה‑Flow
-            }
+        _snackbar.value = if (archived) "Moved to archive" else "Restored from the archive"
+        when (archiveLesson(id, archived)) {
+            is Result.Failure -> _snackbar.value = "Action failed – please try again"
+            else              -> {}   // The UI will update automatically from the Flow
+        }
     }
+
 
     fun snackbarShown() { _snackbar.value = null }
 
