@@ -45,7 +45,7 @@
                 android:ellipsize="end" />
 
             <TextView
-                android:id="@+id/dateTv"
+                android:id="@+id/creationTv"
                 style="@style/TextAppearance.Material3.BodySmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

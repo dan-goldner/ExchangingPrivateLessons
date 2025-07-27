@@ -28,7 +28,7 @@ class LessonAdapter(
             /* טקסטים */
             titleTv.text       = v.title
             descPreviewTv.text = v.description
-            dateTv.text        = "Listed at: ${formatDate(v.createdAt)}"
+            creationTv.text    = "Listed by ${v.ownerName} | ${formatDate(v.createdAt)}"
             ratingTv.text      = "Lesson Rating: %.1f".format(v.ratingAvg)
 
             /* ⬇️ תמונת בעל‑השיעור */
