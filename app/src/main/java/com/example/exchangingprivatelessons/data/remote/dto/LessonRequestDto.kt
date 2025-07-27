@@ -10,6 +10,6 @@ data class LessonRequestDto(
     val ownerId     : String          = "",
     val requesterId : String          = "",
     val status      : RequestStatus   = RequestStatus.Pending,
-    val requestedAt : Timestamp?      = null,   // ⬅️ היה Long?
-    val respondedAt : Timestamp?      = null    // ⬅️ היה Long?
+    val requestedAt : Timestamp?      = null,
+    val respondedAt : Timestamp?      = null
 )

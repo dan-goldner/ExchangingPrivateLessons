@@ -31,7 +31,7 @@ class LessonAdapter(
             creationTv.text    = "Listed by ${v.ownerName} | ${formatDate(v.createdAt)}"
             ratingTv.text      = "Lesson Rating: %.1f".format(v.ratingAvg)
 
-            /* ⬇️ תמונת בעל‑השיעור */
+            /*  תמונת בעל‑השיעור */
             lessonImg.load(v.ownerPhotoUrl?.takeIf { it.isNotBlank() }) {
                 crossfade(true)
                 placeholder(R.drawable.ic_profile_placeholder)

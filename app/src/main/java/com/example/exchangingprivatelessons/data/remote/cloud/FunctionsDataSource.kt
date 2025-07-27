@@ -26,8 +26,8 @@ class FunctionsDataSource @Inject constructor(
         val data = result.await().data
 
         return when (R::class) {
-            Unit::class -> Unit as R  // 🔒 Return Unit if requested
-            else        -> data as R  // ✅ Otherwise cast to R
+            Unit::class -> Unit as R  // Return Unit if requested
+            else        -> data as R  // Otherwise cast to R
         }
     }
 
@@ -68,7 +68,6 @@ class FunctionsDataSource @Inject constructor(
 
 
     suspend fun deleteMyAccount() {
-        // הפונקציה מחזירה Map; אנחנו פשוט מתעלמים מה‑payload
         invoke<Map<*, *>>("deleteMyAccount")
     }
 
