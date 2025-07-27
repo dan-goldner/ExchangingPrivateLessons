@@ -1,7 +1,7 @@
 // data/remote/dto/TakenLessonDto.kt
 package com.example.exchangingprivatelessons.data.remote.dto
 
-import com.google.firebase.Timestamp   // ⬅️ חדש
+import com.google.firebase.Timestamp
 
 // data/remote/dto/TakenLessonDto.kt
 data class TakenLessonDto(

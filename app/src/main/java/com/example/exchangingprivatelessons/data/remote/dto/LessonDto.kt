@@ -12,6 +12,6 @@ data class LessonDto(
     val status      : LessonStatus    = LessonStatus.Active,
     val ratingSum   : Int             = 0,
     val ratingCount : Int             = 0,
-    val createdAt   : Timestamp?      = null,   // ⬅️ היה Long?
-    val lastUpdatedAt : Timestamp?      = null    // ⬅️ היה Long?
+    val createdAt   : Timestamp?      = null,
+    val lastUpdatedAt : Timestamp?      = null
 )

@@ -12,5 +12,5 @@ data class UserDto(
     var score:        Int        = 0,
     var createdAt:    Timestamp? = null,
     var lastLoginAt:  Timestamp? = null,
-    var lastUpdatedAt:  Timestamp? = null      // 👈 עכשיו ‎var‎, ולא ‎val‎
+    var lastUpdatedAt:  Timestamp? = null
 )
