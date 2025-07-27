@@ -152,7 +152,7 @@ class FirestoreDataSource @Inject constructor(
     /** one‑shot –  כל הבקשות שקשורות אליי (owner *או* requester) */
     suspend fun getLessonRequests(): List<LessonRequestDto> {
         val uid = auth.currentUser?.uid ?: error("User not logged‑in")
-
+        Log.d("DBG/Remote", "Fetching lessonRequests for user $uid")
         val sent = db.collection("lessonRequests")
             .whereEqualTo("requesterId", uid)
             .get().await()
@@ -201,17 +201,34 @@ class FirestoreDataSource @Inject constructor(
 
     /* FirestoreDataSource.kt */
 
-    fun listenSentRequests(uid: String) =
-        listenCollection<LessonRequestDto>(
+    /* ---------- Lesson Requests – live stream של כל הבקשות שלי ---------- */
+    fun listenLessonRequests(uid: String): Flow<Result<List<LessonRequestDto>>> {
+
+        val sent     = listenCollection<LessonRequestDto>(
             db.collection("lessonRequests")
-                .whereEqualTo("requesterId", uid)        // ⬅️  ללא orderBy
+                .whereEqualTo("requesterId", uid)
+                .orderBy("requestedAt", Query.Direction.DESCENDING)
+        )
+        val incoming = listenCollection<LessonRequestDto>(
+            db.collection("lessonRequests")
+                .whereEqualTo("ownerId", uid)
+                .orderBy("requestedAt", Query.Direction.DESCENDING)
         )
 
-    fun listenIncomingRequests(uid: String) = listenCollection<LessonRequestDto>(
-        db.collection("lessonRequests")
-            .whereEqualTo("ownerId", uid)
-            .orderBy("requestedAt", Query.Direction.DESCENDING)
-    )
+        return combine(sent, incoming) { s, i ->
+            when {
+                s is Result.Failure      -> s                 // שהזרימה הראשונה נכשלה
+                i is Result.Failure      -> i
+                s is Result.Success &&
+                        i is Result.Success      ->
+                    Result.Success(          // מאחד + מסיר כפילויות
+                        (s.data + i.data).distinctBy { it.id }
+                    )
+                else -> Result.Loading
+            }
+        }
+    }
+
 
     suspend fun getApprovedLessonRequestsForUser(userId: String): List<LessonRequestDto> {
         return db.collection("lessonRequests")
@@ -362,7 +379,9 @@ class FirestoreDataSource @Inject constructor(
                                 takenAt  = doc["takenAt"] as? Timestamp    // ✅
                             )
                         }
-                        trySend(Result.Success(list))
+                        trySend(Result.Success(list)).also {
+                            Log.d("TakenFlow", "snapshot size=${list.size}")
+                        }
                     }
                 }
             }

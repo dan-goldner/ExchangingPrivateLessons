@@ -266,6 +266,8 @@ class UserRepositoryImpl @Inject constructor(
     override fun currentUid(): String?   = auth.currentUser?.uid
 
 
-
-
+    override suspend fun getCachedMe(): User? =
+        auth.currentUser?.uid
+            ?.let { dao.get(it) }        // ← השתמש במתודה הקיימת
+            ?.let(mapper::toDomain)
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/* domain/usecase/lesson/ObserveTakenLessons.kt */
 @Singleton
 class ObserveTakenLessons @Inject constructor(
     private val repo: TakenLessonRepository
@@ -21,9 +22,7 @@ class ObserveTakenLessons @Inject constructor(
                 is Result.Success -> {
                     val mapped = res.data.mapNotNull { tk ->
                         val l = tk.lesson
-
-                        // ❌ Skip archived lessons
-                        if (l.status == LessonStatus.Archived) return@mapNotNull null
+                        if (l.status == LessonStatus.Archived) return@mapNotNull null   // סינון ארכיון
 
                         ViewLesson(
                             lesson          = l,
@@ -32,33 +31,33 @@ class ObserveTakenLessons @Inject constructor(
                             isTaken         = true,
                             isMine          = false,
 
-                            /* ---------- flattened ---------- */
+                            /* --------------- ✱ flattened ✱ --------------- */
                             id              = l.id,
                             title           = l.title,
                             description     = l.description,
                             ownerId         = l.ownerId,
                             ownerName       = tk.ownerName,
                             ownerPhotoUrl   = tk.ownerPhotoUrl,
-                            createdAt       = l.createdAt,
+
+                            /**  ⬅️ כאן מחליפים  */
+                            createdAt       = tk.takenAt,      // ← במקום l.createdAt
                             ratingAvg       = l.avgRating.toDouble(),
                             ratingCount     = l.ratingCount,
 
-                            /* ---------- permissions ---------- */
+                            /* --------------- permissions --------------- */
                             canEdit         = false,
                             canRequest      = false,
                             canRate         = tk.canRate,
 
-                            /* ---------- archive ---------- */
+                            /* --------------- archive --------------- */
                             archived        = false,
                             canArchive      = false
                         )
                     }
-
                     Result.Success(mapped)
                 }
 
                 is Result.Failure -> res
-
                 is Result.Loading -> Result.Loading
             }
         }

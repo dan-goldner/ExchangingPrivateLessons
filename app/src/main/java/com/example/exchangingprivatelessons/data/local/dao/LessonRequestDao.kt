@@ -52,7 +52,6 @@ interface LessonRequestDao {
     ): Flow<List<LessonRequestEntity>>
 
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(list: List<LessonRequestEntity>)
 
@@ -69,5 +68,44 @@ interface LessonRequestDao {
 
     @Query("DELETE FROM lesson_requests WHERE ownerId = :uid")
     suspend fun clearIncoming(uid: String)
+
+
+    @Query("DELETE FROM lesson_requests")
+    suspend fun clearAll()
+
+    @Transaction
+    suspend fun replaceSent(uid: String, list: List<LessonRequestEntity>) {
+        clearSent(uid)              // DELETE WHERE requesterId = :uid
+        if (list.isNotEmpty()) upsertAll(list)
+    }
+
+    @Transaction
+    suspend fun replaceIncoming(uid: String, list: List<LessonRequestEntity>) {
+        clearIncoming(uid)          // DELETE WHERE ownerId = :uid
+        if (list.isNotEmpty()) upsertAll(list)
+    }
+
+
+
+
+    @Query("DELETE FROM lesson_requests WHERE requesterId = :uid OR ownerId = :uid")
+    suspend fun deleteAllOfUser(uid: String)
+
+
+    @Transaction
+    suspend fun replaceAllForUser(uid: String, list: List<LessonRequestEntity>) {
+        if (list.isEmpty()) {
+            clearAll()
+        } else {
+            deleteAllExcept(list.map { it.id })
+            upsertAll(list)
+        }
+    }
+
+
+    @Query("DELETE FROM lesson_requests WHERE id NOT IN (:ids)")
+    suspend fun deleteAllExcept(ids: List<String>)
+
+
 
 }

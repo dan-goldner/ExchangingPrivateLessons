@@ -42,7 +42,7 @@ interface UserRepository {
 
     fun currentUid(): String?
 
-
+    suspend fun getCachedMe(): User?
 
 
 

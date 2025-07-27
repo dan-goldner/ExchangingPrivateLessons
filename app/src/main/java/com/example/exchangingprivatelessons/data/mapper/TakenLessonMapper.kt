@@ -45,12 +45,13 @@ abstract class TakenLessonMapper {
 
     fun dtoToEntity(dto: TakenLessonDto): TakenLessonEntity = TakenLessonEntity(
         lessonId       = dto.lessonId,
-        lessonJson     = lessonDtoToJson(dto.lesson!!),   // לא null אחרי enrich
+        lessonJson     = dto.lesson?.let { lessonDtoToJson(it) } ?: "{}",
         ownerName      = dto.ownerName ?: "",
         ownerPhotoUrl  = dto.ownerPhotoUrl,
         canRate        = dto.canRate,
         takenAt        = TimestampConverter.tsToEpochNullable(dto.takenAt)
     )
+
 
     /* ---------- Named helpers ---------- */
 

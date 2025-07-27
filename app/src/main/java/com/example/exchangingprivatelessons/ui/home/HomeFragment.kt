@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/exchangingprivatelessons/ui/home/HomeFragment.kt
 package com.example.exchangingprivatelessons.ui.home
 
 import android.os.Bundle
@@ -34,6 +33,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             b.txtGreeting.text = getString(R.string.greeting, finalName)
         }
+
+
+        vm.userScore.observe(viewLifecycleOwner) { score ->
+            // ▸ הצג/הסתר Chip
+
+            // ▸ אנימציה רק אם באמת השתנה
+            val newText = getString(R.string.score_placeholder, score)
+            if (b.txtScore.text != newText) {
+                b.txtScore.animate()
+                    .alpha(0f).setDuration(120)
+                    .withEndAction {
+                        b.txtScore.text = newText
+                        b.txtScore.animate().alpha(1f).setDuration(120).start()
+                    }.start()
+            }
+        }
+
 
         /* ───── כפתורי ניווט ───── */
 
@@ -73,12 +89,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         // צ'אטים
-    /*    b.btnChats.setOnClickListener {
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToAllChatsFragment()
-            )
-        }
-    */
+        /*    b.btnChats.setOnClickListener {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToAllChatsFragment()
+                )
+            }
+        */
         // פרופיל
         b.btnProfile.setOnClickListener {
             findNavController().navigate(

@@ -28,6 +28,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -39,7 +40,7 @@ import javax.inject.Singleton
 @Singleton
 class TakenLessonRepositoryImpl @Inject constructor(
     private val firestore   : FirestoreDataSource,
-    private val functions   : FunctionsDataSource,   // ← שמרנו, אולי תצטרך בהמשך
+    private val functions   : FunctionsDataSource,
     private val dao         : TakenLessonDao,
     private val mapper      : TakenLessonMapper,
     private val lessonMapper: LessonMapper,
@@ -48,18 +49,41 @@ class TakenLessonRepositoryImpl @Inject constructor(
 ) : NetworkCacheRepository<TakenLessonEntity, TakenLessonDto, TakenLesson>(io),
     TakenLessonRepository {
 
-    /* ---------- Realtime sync ---------- */
-    private var syncJob: Job? = null
-    init { startRealtimeSync() }
+    /* ----- state ----- */
+    private var currentUid: String? = auth.currentUser?.uid
+    private var syncJob   : Job?    = null
+
+    init {
+        /* מאזין לשינוי‑משתמש */
+        auth.addAuthStateListener { fb ->
+            val newUid = fb.currentUser?.uid
+            if (newUid != currentUid) {
+                currentUid = newUid
+                restartSync()
+            }
+        }
+        restartSync()          // הפעלה ראשונית
+    }
+
+    /* ----- sync helpers ----- */
+    private fun restartSync() {
+        syncJob?.cancel()
+        syncJob = null
+
+        CoroutineScope(io).launch { dao.clearAll() }
+
+        // אם אין משתמש – לא מפעילים מאזין
+        if (currentUid != null) startRealtimeSync()
+    }
 
     private fun startRealtimeSync() {
-        if (syncJob != null) return           // כבר רץ
-        val uid = auth.currentUser?.uid ?: return
+        val uid = currentUid ?: return
+        if (syncJob != null) return      // כבר רץ
 
         syncJob = firestore.listenTakenLessons(uid)
             .mapNotNull { (it as? Result.Success)?.data }
             .onEach { docs ->
-                val enriched = enrichDtos(docs)           // suspend
+                val enriched = enrichDtos(docs)
                 dao.clearAll()
                 dao.upsertAll(enriched.map(mapper::dtoToEntity))
             }
@@ -70,12 +94,23 @@ class TakenLessonRepositoryImpl @Inject constructor(
     /* enrich בונה DTO עשיר לשכבת ה‑UI */
     private suspend fun enrichDtos(docs: List<TakenLessonDto>): List<TakenLessonDto> =
         coroutineScope {
-            docs.map { doc ->
+            docs.map { doc ->                      // ← כאן המשתנה הוא doc
                 async(io) {
-                    val lesson = firestore.getLessonById(doc.lessonId) ?: return@async null
+
+                    // 1. מנסה למשוך את השיעור
+                    val lesson = firestore.getLessonById(doc.lessonId)
+
+                    // 2. אם השיעור לא קיים – מחזירים את ה‑doc המקורי כ‑placeholder
+                    if (lesson == null) {
+                        Log.w("Taken", "lesson ${doc.lessonId} missing – keeping placeholder")
+                        return@async doc
+                    }
+
+                    // 3. העשרה (ownerName, ownerPhoto…)
                     val ownerName     = firestore.getUserName(lesson.ownerId)
                     val ownerPhotoUrl = firestore.getUserPhotoUrl(lesson.ownerId)
 
+                    // 4. מחזירים עותק מועשר
                     doc.copy(
                         lesson        = lesson,
                         canRate       = false,
@@ -83,8 +118,9 @@ class TakenLessonRepositoryImpl @Inject constructor(
                         ownerPhotoUrl = ownerPhotoUrl
                     )
                 }
-            }.awaitAll().filterNotNull()
+            }.awaitAll()          // אין צורך ב‑filterNotNull – אנחנו תמיד מחזירים ערך
         }
+
 
 
     /* ---------- Network‑Bound API ---------- */

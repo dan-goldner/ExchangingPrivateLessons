@@ -40,58 +40,26 @@ class LessonRequestRepositoryImpl @Inject constructor(
 ) : LessonRequestRepository {
 
 
-    private var sentJob     : Job? = null
-    private var incomingJob : Job? = null
 
-    init {
-        startSentSync()
-        startIncomingSync()
-    }
+    private var job: Job? = null
 
+    init { startLiveSync() }
 
-    private fun startSentSync() {
-        if (sentJob != null) return
+    private fun startLiveSync() {
+        if (job != null) return
         val uid = auth.uidOrCrash()
 
-        sentJob = firestore.listenSentRequests(uid)
+        job = firestore.listenLessonRequests(uid)
             .mapNotNull { (it as? Result.Success)?.data }
             .onEach { remote ->
-                val entities = remote.map(mapper::toEntity)
-
-                if (entities.isEmpty()) {
-                    dao.clearSent(uid)                 // ⬅️   היו × ונעלמו כולם
-                } else {
-                    dao.upsertAll(entities)            // ⬅️   עדכון / הוספה
-                    dao.deleteMissingSent(uid, entities.map { it.id })
-                }
+                dao.replaceAllForUser(
+                    uid,
+                    remote.map(mapper::toEntity)
+                )
             }
             .flowOn(io)
             .launchIn(appScope)
     }
-
-    private fun startIncomingSync() {
-        if (incomingJob != null) return
-        val uid = auth.uidOrCrash()
-
-        incomingJob = firestore.listenIncomingRequests(uid)
-            .mapNotNull { (it as? Result.Success)?.data }
-            .onEach { remote ->
-                val entities = remote.map(mapper::toEntity)
-
-                if (entities.isEmpty()) {
-                    dao.clearIncoming(uid)             // ⬅️
-                } else {
-                    dao.upsertAll(entities)
-                    dao.deleteMissingIncoming(uid, entities.map { it.id })
-                }
-            }
-            .flowOn(io)
-            .launchIn(appScope)
-    }
-
-
-
-
 
 
 
@@ -109,28 +77,14 @@ class LessonRequestRepositoryImpl @Inject constructor(
             .map { Result.Success(it.map(mapper::toDomain)) }
 
 
-
-    /* ───────── Force‑refresh (רק במקרה הצורך) ───────── */
-
-    override suspend fun forceRefreshLessonRequests(): Result<Unit> =
-        withContext(io) {
-            runCatching {
-                val remote = firestore.getLessonRequests()
-                val entities = remote.map(mapper::toEntity)
-                if (entities.isEmpty()) {
-                    // שני הכיוונים – כי getLessonRequests() מחזיר Owner + Requester
-                    val uid = auth.uidOrCrash()
-                    dao.clearSent(uid)
-                    dao.clearIncoming(uid)
-                } else {
-                    dao.upsertAll(entities)
-                    val ids = entities.map { it.id }
-                    val uid = auth.uidOrCrash()
-                    dao.deleteMissingSent(uid, ids)
-                    dao.deleteMissingIncoming(uid, ids)
-                }
-            }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
-        }
+    override suspend fun forceRefreshLessonRequests(): Result<Unit> = withContext(io) {
+        runCatching {
+            val uid      = auth.uidOrCrash()
+            val remote   = firestore.getLessonRequests()
+            Log.d("DBG/Remote", "Got ${remote.size} requests")
+            dao.replaceAllForUser(uid, remote.map(mapper::toEntity))
+        }.fold({ Result.Success(Unit) }, { Result.Failure(it) })
+    }
 
 
     /* ───────── Mutations – כתיבה לענן + עדכון Room ───────── */
@@ -174,6 +128,8 @@ class LessonRequestRepositoryImpl @Inject constructor(
     override fun currentUid() = auth.currentUser?.uid
     private fun FirebaseAuth.uidOrCrash() =
         currentUser?.uid ?: throw IllegalStateException("Not logged‑in")
+
+
 
 
 }

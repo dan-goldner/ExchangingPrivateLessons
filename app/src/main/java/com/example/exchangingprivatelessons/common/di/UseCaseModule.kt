@@ -47,7 +47,13 @@ object UseCaseModule {
     ) = GetLessonDetails(l, r, ra, u)
 
     /* ---------- request ---------- */
-    @Provides fun requestLesson   (r: LessonRequestRepository)                = RequestLesson(r)
+    /* ---------- request ---------- */
+    @Provides
+    fun requestLesson(
+        r: LessonRequestRepository,
+        u: UserRepository
+    ) = RequestLesson(r, u)
+
     @Provides fun observeIncoming (r: LessonRequestRepository)                = ObserveIncomingRequests(r)
     @Provides fun refreshRequests (r: LessonRequestRepository)                = RefreshLessonRequests(r)
     @Provides fun observeByStatus (r: LessonRequestRepository)                = ObserveRequestsByStatus(r)

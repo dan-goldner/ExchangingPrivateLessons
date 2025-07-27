@@ -451,38 +451,92 @@ export const deleteMyAccount = onCall(async ({ auth }) => {
 type LessonRequestInput = { lessonId: string; ownerId: string };
 export const createLessonRequest = onCall<LessonRequestInput>(
   async ({ data, auth }) => {
-    const requesterId = assertAuth(auth?.uid);
+
+    /* ─── אימות בסיסי ─── */
+    if (!auth) {
+      throw new HttpsError('unauthenticated', 'login-required');
+    }
+    const uid   = auth.uid;
     const { lessonId, ownerId } = data;
 
-    if (!lessonId?.trim() || !ownerId?.trim())
-      throw new HttpsError("invalid-argument", "Invalid lessonId or ownerId");
+    if (!lessonId?.trim() || !ownerId?.trim()) {
+      throw new HttpsError('invalid-argument', 'Invalid lessonId or ownerId');
+    }
 
-    const docId = `${requesterId}_${lessonId}`;
+    /* ─── חסימת ניקוד ─── */
+    const score = (await db.doc(`users/${uid}`).get()).data()?.score ?? 0;
+    if (score <= -3) {
+      throw new HttpsError('failed-precondition', 'LOW_SCORE');
+    }
+
+    /* ─── business‑logic הרגיל ─── */
+    const docId  = `${uid}_${lessonId}`;
     const reqRef = lessonReqCol.doc(docId);
 
-    await db.runTransaction(async (tx) => {
+    await db.runTransaction(async tx => {
       const snap = await tx.get(reqRef);
 
       if (snap.exists) {
-        const data = snap.data() as LessonRequest;
-        if (data.status === RequestStatus.Pending) {
-          throw new HttpsError("already-exists", "Request already pending");
+        const existing = snap.data() as LessonRequest;
+        if (existing.status === RequestStatus.Pending) {
+          throw new HttpsError('already-exists', 'Request already pending');
         }
       }
 
       tx.set(reqRef, {
         lessonId,
         ownerId,
-        requesterId,
-        status: RequestStatus.Pending,
-        requestedAt: FieldValue.serverTimestamp(),
-        respondedAt: null,
+        requesterId : uid,
+        status      : RequestStatus.Pending,
+        requestedAt : FieldValue.serverTimestamp(),
+        respondedAt : null,
       });
     });
 
+
+    logger.info(`lessonRequest ${docId} created by ${uid}`);
     return { success: true, id: docId };
   }
 );
+
+
+export const enrichLegacyTakenLessons = onCall(async ({ auth }) => {
+  const uid = assertAuth(auth?.uid);
+
+  const missing = await takenLessonsCol(uid)
+      .where("lesson", "==", null)
+      .get();
+
+  if (missing.empty) return { updated: 0 };
+
+  const bw = db.bulkWriter();
+  let count = 0;
+
+  for (const doc of missing.docs) {
+    const { lessonId, ownerId } = doc.data() as TakenLesson;
+
+    const [lessonSnap, ownerSnap] = await Promise.all([
+      lessonsCol.doc(lessonId).get(),
+      usersCol.doc(ownerId).get(),
+    ]);
+    if (!lessonSnap.exists) continue;
+
+    const ownerData = ownerSnap.data() as User | undefined;
+
+
+    bw.update(doc.ref, {
+      lesson        : { id: lessonId, ...lessonSnap.data() },
+      ownerName     : ownerData?.displayName ?? "",
+      ownerPhotoUrl : ownerData?.photoUrl    ?? "",
+      canRate       : true,
+    });
+    ++count;
+  }
+  await bw.close();
+  logger.info(`🩹 enriched ${count} legacy takenLessons for ${uid}`);
+  return { updated: count };
+});
+
 
 
 type ApprovalInput = { requestId: string };
@@ -490,54 +544,62 @@ export const approveLessonRequest = onCall<ApprovalInput>(async ({ data, auth })
   const ownerId = assertAuth(auth?.uid);
   const { requestId } = data;
 
-  if (!requestId?.trim())
-    throw new HttpsError("invalid-argument", "Missing requestId");
+  if (!requestId?.trim()) throw new HttpsError('invalid-argument', 'Missing requestId');
 
   const reqRef = lessonReqCol.doc(requestId);
 
-await db.runTransaction(async (tx) => {
+  await db.runTransaction(async (tx) => {
 
-  const reqSnap  = await tx.get(reqRef);
-  if (!reqSnap.exists) throw new HttpsError('not-found', 'Request not found');
+    const reqSnap     = await tx.get(reqRef);
+    if (!reqSnap.exists) throw new HttpsError('not-found', 'Request not found');
 
-  const req      = reqSnap.data() as LessonRequest;
-  if (req.ownerId !== ownerId)          throw new HttpsError('permission-denied','Not your request');
-  if (req.status !== RequestStatus.Pending)
-      throw new HttpsError('failed-precondition','Request already handled');
+    const req = reqSnap.data() as LessonRequest;
+    if (req.ownerId !== ownerId)               throw new HttpsError('permission-denied', 'Not your request');
+    if (req.status  !== RequestStatus.Pending) throw new HttpsError('failed-precondition', 'Request already handled');
 
-  const chatId   = chatIdFor(ownerId, req.requesterId);
-  const chatRef  = chatsCol.doc(chatId);
-  const chatSnap = await tx.get(chatRef);
+    const lessonRef  = lessonsCol.doc(req.lessonId);
+    const lessonSnap = await tx.get(lessonRef);
+    if (!lessonSnap.exists) throw new HttpsError('not-found', 'Lesson not found');
 
-  tx.update(reqRef, {
-    status      : RequestStatus.Approved,
-    respondedAt : FieldValue.serverTimestamp(),
-  });
+    const lessonData = { id: lessonRef.id, ...lessonSnap.data() };
 
+    const ownerSnap  = await tx.get(usersCol.doc(ownerId));
+    const ownerData  = ownerSnap.data() as User | undefined;
 
-tx.set(
-  takenLessonsCol(req.requesterId).doc(req.lessonId),
-  {
-    lessonId : req.lessonId,          // ← חובה
-    ownerId  : ownerId,               // ← נשתמש ב‑trigger
-    takenAt  : FieldValue.serverTimestamp()
-  }
-);
+    const chatId     = chatIdFor(ownerId, req.requesterId);
+    const chatRef    = chatsCol.doc(chatId);
+    const chatSnap   = await tx.get(chatRef);
 
-
-
-  if (!chatSnap.exists) {
-    tx.set(chatRef, {
-      participantIds : [ownerId, req.requesterId],
-      lastMessage    : '',
-      lastMessageAt  : FieldValue.serverTimestamp(),
+    tx.update(reqRef, {
+      status     : RequestStatus.Approved,
+      respondedAt: FieldValue.serverTimestamp(),
     });
-  }
-});
 
+    tx.set(
+      takenLessonsCol(req.requesterId).doc(req.lessonId),
+      {
+        lessonId      : req.lessonId,
+        ownerId       : ownerId,
+        lesson        : lessonData,
+        ownerName     : ownerData?.displayName ?? '',
+        ownerPhotoUrl : ownerData?.photoUrl    ?? '',
+        canRate       : true,
+        takenAt       : FieldValue.serverTimestamp(),
+      } as TakenLesson
+    );
+
+    if (!chatSnap.exists) {
+      tx.set(chatRef, {
+        participantIds: [ownerId, req.requesterId],
+        lastMessage   : '',
+        lastMessageAt : FieldValue.serverTimestamp(),
+      });
+    }
+  });
 
   return { success: true };
 });
+
 
 export const declineLessonRequest = onCall<ApprovalInput>(async ({ data, auth }) => {
     const ownerId = assertAuth(auth?.uid);

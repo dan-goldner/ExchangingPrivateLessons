@@ -11,6 +11,6 @@ data class TakenLesson(
     val lesson        : Lesson,
     val ownerName     : String,
     val ownerPhotoUrl : String?,
-    val takenAt       : Long,     // ✅ Long
+    val takenAt       : Long,
     val canRate       : Boolean
 )

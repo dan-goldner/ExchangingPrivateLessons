@@ -1,12 +1,15 @@
 package com.example.exchangingprivatelessons.ui.lesson
 
 import androidx.lifecycle.*
+import com.example.exchangingprivatelessons.common.di.UseCaseModule.requestLesson
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.domain.model.RequestStatus
 import com.example.exchangingprivatelessons.domain.model.ViewLesson
 import com.example.exchangingprivatelessons.domain.usecase.lesson.GetLessonDetails
 import com.example.exchangingprivatelessons.domain.usecase.request.RequestLesson
 import com.example.exchangingprivatelessons.domain.usecase.request.RefreshLessonRequests
+import com.google.android.material.snackbar.Snackbar
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,19 +53,34 @@ class LessonDetailsViewModel @Inject constructor(
 
     fun onRequestLesson() {
         val lesson = _state.value?.lesson ?: return
+
         viewModelScope.launch {
-            when (val r = requestLessonUse.requestLesson(lesson.id, lesson.ownerId)) {
-                is Result.Success -> {
-                    _snackbar.postValue("בקשה נשלחה")
-                    refreshRequests()                 // מסנכרן לטבלה המקומית  (Room)
-                    refresh()                         // מביא את ה‑pending ל‑UI
+            // ❶ ה‑Use‑case נקרא כ‑invoke
+            when (val res = requestLessonUse(lesson.id, lesson.ownerId)) {
+
+                /* ☑︎ הצלחה */
+                is Result.Success<*> -> {                 // ❸ star‑projection
+                    _snackbar.postValue("✔ Request sent")
+                    refreshRequests()
+                    refresh()
                 }
-                is Result.Failure -> _snackbar.postValue(
-                    r.throwable?.localizedMessage ?: "הבקשה נכשלה")
-                else -> {}
+
+                /* ❌ כשל */
+                is Result.Failure -> {
+                    val msg = when (res.throwable.message ?: "") {
+                        "LOW_SCORE_LOCAL", "LOW_SCORE"  -> "You have –3 points — to request a new lesson, you must first give one."
+                        "already-exists"                -> "There is already an open request for this lesson."
+                        else                            -> "The action failed — please try again."
+                    }
+                    _snackbar.postValue(msg)
+                }
+
+
+                Result.Loading -> TODO()
             }
         }
     }
+
 
     fun snackbarShown() { _snackbar.value = null }
 

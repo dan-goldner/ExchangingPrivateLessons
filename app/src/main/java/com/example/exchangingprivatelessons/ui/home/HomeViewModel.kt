@@ -1,11 +1,13 @@
 // app/src/main/java/com/example/exchangingprivatelessons/ui/home/HomeViewModel.kt
 package com.example.exchangingprivatelessons.ui.home
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.exchangingprivatelessons.common.util.Result
 import com.example.exchangingprivatelessons.domain.usecase.lesson.*
 import com.example.exchangingprivatelessons.domain.usecase.request.*
 import com.example.exchangingprivatelessons.domain.usecase.user.ObserveUser
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map          // ⬅️ הוסף import
@@ -35,6 +37,16 @@ class HomeViewModel @Inject constructor(
                         else u.email.substringBefore('@')        // fallback
                     }
                     else -> ""                                   // Loading / Failure
+                }
+            }
+            .asLiveData()
+
+    val userScore: LiveData<Int> =
+        observeUser()                      // Flow<Result<User>>
+            .map { res ->
+                when (res) {
+                    is Result.Success -> res.data.score      // ← מפה ל‑Int
+                    else              -> 0                   // Loading / Failure
                 }
             }
             .asLiveData()
@@ -77,5 +89,7 @@ class HomeViewModel @Inject constructor(
     fun refresh() = viewModelScope.launch {
         refreshLessons()
         refreshLessonRequests()
+        Log.d("Auth", "current uid = ${FirebaseAuth.getInstance().currentUser?.uid}")
+
     }
 }

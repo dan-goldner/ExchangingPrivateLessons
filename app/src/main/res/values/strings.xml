@@ -114,13 +114,12 @@
     <string name="write_message">Write a message…</string>
 
     <!-- Score -->
-    <string name="score_placeholder">Score: %1$d</string>
+    <string name="score_placeholder">Score: %1$d</string>
 
     <!-- Hints -->
     <string name="hint_bio">Bio</string>
     <string name="hint_display_name">Display Name</string>
     <string name="remove_photo">Remove Photo</string>
-
 
     <string name="err_camera_permission">Camera permission is denied</string>
     <string name="err_camera_permission_rationale">Camera permission is required in order to take a photo
@@ -137,6 +136,5 @@
     <string name="take_a_picture">Take a picture</string>
     <string name="choose_from_the_galery">Choose from the galery</string>
     <string name="tab_gave">Lessons I\'m Giving</string>
-
 
 </resources>

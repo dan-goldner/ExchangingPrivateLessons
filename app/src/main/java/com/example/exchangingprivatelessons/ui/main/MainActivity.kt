@@ -1,10 +1,10 @@
-/* ui/main/MainActivity.kt */
 package com.example.exchangingprivatelessons.ui.main
 
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -14,31 +14,46 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.exchangingprivatelessons.R
 import com.example.exchangingprivatelessons.databinding.ActivityMainBinding
+import com.example.exchangingprivatelessons.domain.repository.TakenLessonRepository
 import com.example.exchangingprivatelessons.ui.lesson.AddEditLessonFragmentArgs
 import com.example.exchangingprivatelessons.ui.lesson.LessonListFragmentArgs
 import com.example.exchangingprivatelessons.ui.request.RequestsFragmentArgs
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.ktx.firestore
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding      : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var appBarConfig : AppBarConfiguration
+    private lateinit var appBarConfig: AppBarConfiguration
 
-    /** יוצר את MainViewModel – מפעיל את ה‑Live‑Sync הגלובלי */
+    @Inject lateinit var auth: FirebaseAuth
+    @Inject lateinit var takenRepo: TakenLessonRepository
+
+    /** MainViewModel – מפעיל את הסנכרון החי הגלובלי */
     private val mainVm: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate called")
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        FirebaseAuth.getInstance().addAuthStateListener { auth ->
-            if (auth.currentUser == null) {
-                // לא מחובר → נווט ל‑Auth אם לא שם כבר
+        /* -------- Debug: observe taken lessons -------- */
+        takenRepo.observeTakenLessons()
+            .onEach { Log.d("TakenTest", it.toString()) }
+            .launchIn(lifecycleScope)
+
+        /* -------- Auth listener -------- */
+        auth.addAuthStateListener { a ->
+            if (a.currentUser == null) {
                 val nav = findNavController(R.id.nav_host_fragment)
                 if (nav.currentDestination?.id != R.id.authFragment) {
                     nav.navigate(
@@ -52,75 +67,72 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        /* Toolbar */
+        /* -------- Quick Firestore sanity check -------- */
+        Firebase.firestore
+            .collection("users")
+            .document(auth.currentUser!!.uid)
+            .collection("takenLessons")
+            .limit(1)
+            .get()
+            .addOnSuccessListener { Log.d("FS", "read OK") }
+            .addOnFailureListener { e -> Log.e("FS", "read failed", e) }
+
+        /* -------- Toolbar -------- */
         setSupportActionBar(binding.toolbar)
 
-        /* NavController */
+        /* -------- NavController -------- */
         val navHost =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.navController
 
-        appBarConfig = AppBarConfiguration
-            .Builder(R.id.homeFragment, R.id.authFragment)
-            .build()
+        appBarConfig = AppBarConfiguration.Builder(
+            R.id.homeFragment,
+            R.id.authFragment
+        ).build()
+
         setupActionBarWithNavController(navController, appBarConfig)
 
-        /* כפתור Logout מוצג רק במסך הבית */
+        /* -------- Logout button visibility -------- */
         navController.addOnDestinationChangedListener { _, dest, _ ->
             invalidateOptionsMenu()
             binding.toolbar.menu.findItem(R.id.action_logout)?.isVisible =
                 dest.id == R.id.homeFragment
         }
-        // MainActivity.kt  – בתוך onCreate אחרי שהגדרת navController
+
+        /* -------- Dynamic toolbar titles -------- */
         navController.addOnDestinationChangedListener { _, dest, args ->
-
             val title = when (dest.id) {
-
-                /* -------- Lessons list -------- */
                 R.id.lessonListFragment -> {
-                    val mode = LessonListFragmentArgs.fromBundle(args!!).mode
-                    when (mode) {
+                    when (LessonListFragmentArgs.fromBundle(args!!).mode) {
                         "AVAILABLE" -> getString(R.string.tab_available)
                         "TAKEN"     -> getString(R.string.tab_took)
                         "MINE"      -> getString(R.string.tab_my)
-                        else        -> dest.label          // fallback
+                        else        -> dest.label
                     }
                 }
-
-                /* -------- Requests -------- */
                 R.id.requestsFragment -> {
                     val mode = RequestsFragmentArgs.fromBundle(args!!).mode
                     if (mode == "RECEIVED")
                         getString(R.string.tab_requests_i_received)
                     else getString(R.string.tab_requests_i_sent)
                 }
-
-                /* -------- Add / Edit Lesson -------- */
                 R.id.addEditLessonFragment -> {
-                    val lessonId = AddEditLessonFragmentArgs
-                        .fromBundle(args!!)
-                        .lessonId
+                    val lessonId = AddEditLessonFragmentArgs.fromBundle(args!!).lessonId
                     if (lessonId.isNullOrBlank())
                         getString(R.string.title_add_lesson)
-                    else  getString(R.string.title_edit_lesson)
+                    else getString(R.string.title_edit_lesson)
                 }
-
-                /* -------- מסכים אחרים – השתמש בלייבל מה‑navGraph -------- */
                 else -> dest.label
             }
-
             binding.toolbar.title = title
         }
-
     }
 
-
-
-    /* Up‑button */
+    /* -------- Up‑button -------- */
     override fun onSupportNavigateUp(): Boolean =
         navController.navigateUp(appBarConfig) || super.onSupportNavigateUp()
 
-    /* תפריט */
+    /* -------- Menu -------- */
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -128,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: android.view.MenuItem) = when (item.itemId) {
         R.id.action_logout -> {
-            FirebaseAuth.getInstance().signOut()
+            auth.signOut()
             navController.navigate(R.id.authFragment)
             true
         }
